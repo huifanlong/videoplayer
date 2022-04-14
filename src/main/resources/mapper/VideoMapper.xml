@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hf.videoplayer.mapper.VideoMapper">
+
+    <resultMap id="VideoEntityMap" type="com.hf.videoplayer.entity.Video">
+        <id column="id" property="id"></id>
+        <result column="videoname" property="videoName"></result>
+        <result column="like_numbers" property="likeNumbers"></result>
+        <result column="collect_numbers" property="collectNumbers"></result>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO video_2020autumn (cid,videoname,src) VALUES (#{cid},#{videoName},#{src})
+    </insert>
+
+    <select id="findByVideoName" resultMap="VideoEntityMap">
+        SELECT * FROM video_2020autumn WHERE videoname = #{videoName}
+    </select>
+
+    <select id="findByVideoId" resultMap="VideoEntityMap">
+        SELECT * FROM video_2020autumn WHERE id = #{id}
+    </select>
+
+    <update id="updateLikeNumbersByVideoId">
+        UPDATE video_2020autumn SET like_numbers = #{likeNumbers} WHERE id = #{id}
+    </update>
+
+    <update id="updateCollectNumbersByVideoId">
+        UPDATE video_2020autumn SET collect_numbers = #{collectNumbers} WHERE id = #{id}
+    </update>
+
+</mapper>

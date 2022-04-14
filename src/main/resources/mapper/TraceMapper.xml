@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hf.videoplayer.mapper.TraceMapper">
+
+    <resultMap id="TraceEntityMap" type="com.hf.videoplayer.entity.Trace">
+        <id column="id" property="id"></id>
+        <result column="uname" property="userName"></result>
+        <result column="total_trace" property="totalTrace"></result>
+        <result column="login_time" property="loginTime"></result>
+        <result column="logout_time" property="logoutTime"></result>
+
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO learning_trace (uname,total_trace,video_ids,login_time,logout_time) VALUES (#{userName},#{totalTrace},#{videoIds},#{loginTime},#{logoutTime})
+    </insert>
+
+    <select id="findByUserName" resultMap="TraceEntityMap">
+        SELECT * FROM learning_trace WHERE uname = #{userName}
+    </select>
+
+    <select id="findById" resultMap="TraceEntityMap">
+        SELECT * FROM learning_trace WHERE id = #{id}
+    </select>
+</mapper>

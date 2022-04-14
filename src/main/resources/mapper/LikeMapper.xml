@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hf.videoplayer.mapper.LikeMapper">
+
+    <resultMap id="LikeEntityMap" type="com.hf.videoplayer.entity.Like">
+        <id column="id" property="id"></id>
+        <result column="is_like" property="isLike"></result>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO like_list (uid,vid,is_like) VALUES (#{uid},#{vid},#{isLike})
+    </insert>
+
+    <select id="findStatusByUidAndVid" resultMap="LikeEntityMap">
+        SELECT * FROM like_list WHERE uid = #{uid} AND vid=#{vid}
+    </select>
+
+    <delete id="delete">
+        DELETE FROM like_list WHERE uid = #{uid} AND vid=#{vid}
+    </delete>
+
+    <select id="findStatusByUid" resultMap="LikeEntityMap">
+        SELECT * FROM like_list WHERE uid = #{uid}
+    </select>
+
+    <update id="update">
+        UPDATE like_list SET is_like=#{isLike} WHERE uid = #{uid} AND vid=#{vid}
+    </update>
+
+
+</mapper>

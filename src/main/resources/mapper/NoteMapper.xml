@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hf.videoplayer.mapper.NoteMapper">
+
+    <resultMap id="NoteEntityMap" type="com.hf.videoplayer.entity.Note">
+        <id column="id" property="id"></id>
+        <result column="second_time" property="secondTime"></result>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO notebook (uid,vid,second_time,notes,title) VALUES (#{uid},#{vid},#{secondTime},#{notes},#{title})
+    </insert>
+
+    <select id="findNotesByUid" resultMap="NoteEntityMap">
+        SELECT * FROM notebook WHERE uid = #{uid}
+    </select>
+
+    <select id="findNotesByUidAndVid" resultMap="NoteEntityMap">
+        SELECT * FROM notebook WHERE uid = #{uid} AND vid=#{vid}
+    </select>
+
+    <select id="findNoteByUidVidAndSecondTime" resultMap="NoteEntityMap">
+        SELECT * FROM notebook WHERE uid = #{uid} AND vid=#{vid} AND second_time=#{secondTime}
+    </select>
+
+    <delete id="delete">
+        DELETE FROM notebook WHERE uid = #{uid} AND vid=#{vid} AND second_time=#{secondTime}
+    </delete>
+
+    <update id="updateNotes">
+        UPDATE notebook SET notes=#{notes} AND titile=#{title} WHERE uid = #{uid} AND vid=#{vid} AND second_time=#{secondTime}
+    </update>
+
+
+</mapper>

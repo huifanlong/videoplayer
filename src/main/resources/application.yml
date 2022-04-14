@@ -1,0 +1,11 @@
+
+mybatis:
+  mapper-locations: classpath*:/mapper/**Mapper.xml
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/videoplayer?useUnicode=true&useSSL=false&ch&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+

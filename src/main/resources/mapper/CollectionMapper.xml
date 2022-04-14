@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hf.videoplayer.mapper.CollectionMapper">
+
+    <resultMap id="CollectionEntityMap" type="com.hf.videoplayer.entity.Collection">
+        <id column="id" property="id"></id>
+        <result column="is_collect" property="isCollect"></result>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO collection_list (uid,vid,is_collect) VALUES (#{uid},#{vid},#{isCollect})
+    </insert>
+
+    <select id="findStatusByUidAndVid" resultMap="CollectionEntityMap">
+        SELECT * FROM collection_list WHERE uid = #{uid} AND vid=#{vid}
+    </select>
+
+    <delete id="delete">
+        DELETE FROM collection_list WHERE uid = #{uid} AND vid=#{vid}
+    </delete>
+
+    <select id="findStatusByUid" resultMap="CollectionEntityMap">
+        SELECT * FROM collection_list WHERE uid = #{uid}
+    </select>
+
+    <update id="update">
+        UPDATE collection_list SET is_collect=#{isCollect} WHERE uid = #{uid} AND vid=#{vid}
+    </update>
+
+
+</mapper>

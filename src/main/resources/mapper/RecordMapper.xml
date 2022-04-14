@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hf.videoplayer.mapper.RecordMapper">
+
+    <resultMap id="RecordEntityMap" type="com.hf.videoplayer.entity.Record">
+        <id column="id" property="id"></id>
+        <result column="create_time" property="createTime"></result>
+        <result column="watch_times" property="watchTimes"></result>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO time_record_etm_2021 (uid,vid,time,rate,create_time,watch_times) VALUES (#{uid},#{vid},#{time},#{rate},#{createTime},#{watchTimes})
+    </insert>
+
+    <select id="findRecordByUidAndVid" resultMap="RecordEntityMap">
+        SELECT * FROM time_record_etm_2021 WHERE uid = #{uid} AND vid=#{vid}
+    </select>
+
+    <update id="update">
+        UPDATE time_record_etm_2021 SET time=#{time},rate=#{rate},create_time=#{createTime},watch_times=#{watchTimes} WHERE uid = #{uid} AND vid=#{vid}
+    </update>
+</mapper>

@@ -1,0 +1,191 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Video</title>
+    <meta charset="utf-8">
+<!--    样式表-->
+    <link href="../css/video-js.css" rel="stylesheet">
+    <link href="../css/videoplayer.css" rel="stylesheet">
+    <link href="../bootstrap-3.4.1-dist/css/bootstrap.min.css" rel="stylesheet">
+<!--    引入jquery-->
+    <script src="../js/jquery.min.js"></script>
+<!--    video.js-->
+    <script src="../js/video.js"></script>
+<!--bootstrap.js-->
+    <script src="../bootstrap-3.4.1-dist/js/bootstrap.js"></script>
+
+<!--    <script type="text/javascript">-->
+<!--        var uname = "{$_SESSION['username']}";-->
+<!--        if (uname=="") {-->
+<!--            alert("请先登录！");-->
+<!--            window.location.href = "{:U('Index/index')}";-->
+<!--        }-->
+<!--    </script>-->
+    <style>
+        body{
+            height: 1000px;
+        }
+        .notes .panel{
+            padding-left: 0px;
+            padding-right: 0px;
+        }
+        .write-notes .form-horizontal{
+            /* width: 800px; */
+            border: lightgrey 1px solid;
+            border-radius: 5px;
+            padding-top: 10px;
+            padding-bottom: 5px;
+            margin-bottom: 5px;
+            /* background-color: lightseagreen; */
+        }
+        .notes .panel-heading{
+            position: relative;
+        }
+        .notes .btn-group{
+            position: absolute;
+            right: 10px;
+            top: 3px;
+        }
+    </style>
+</head>
+<body>
+<div class="main container" style="position: relative; padding-left: 50px; padding-right: 50px;">
+    <div class="userinfo" style="width: 300px; height: 50px;float: right; color: red">
+        <h3>
+<!--            <present name="_SESSION['username']">你好！{$_SESSION['name']}&nbsp;<a href="javascript:void(0)" onclick="goodbye()">返回</a>&nbsp;-->
+<!--                <a href="{:U('Index/index')}">退出登录</a>-->
+<!--                <else />未登录 <a href="{:U('Index/index')}">请先登录</a></present>-->
+            <span class="login-yes login-span-yes">你好！</span><a href="course2020.html" class="login-yes" id="back">返回</a>
+            <a href="../index.html" id="login-out" class="login-yes">退出登录</a>
+            <span class="login-no" > 未登录 </span><a href="../index.html" class="login-no">请先登录</a>
+        </h3>
+    </div>
+    <div class="tip">
+        <h2>观看视频可通过视频下方按钮进行调速</h2>
+    </div>
+    <h2 id="demo">视频名：</h2>
+    <!---------------------- 需要修改poster --- poster="__PUBLIC__/images/poster_li.jpg"-------------------->
+<!--    <video id="media1" class="video-js vjs-default-skin" autoplay width="800px" height="600px" data-setup='{ "asdf": true }'></video>-->
+<!--        <video id="media" controls preload="auto" width="800px" height="600px"  ></video>-->
+<!--        <video id="media" class="video-js vjs-default-skin" controls preload width="800px" height="600px" >-->
+        <!-- __PUBLIC__/Home/video/overview_1.mp4 -->
+        <!-- <source src="" type="video/mp4">
+        <source src="doe" type="video/ogg">
+        Your browser s not support HTML5 video. -->
+    <div class="container">
+
+        <div class="row">
+            <!-- Then, in the player -->
+            <!-- <video class="video-js vjs-theme-city" ></video>-->
+            <video id="media" controls preload="auto"  width="800px" height="600px"></video>
+            <!-- <video
+                id="my-video"
+                class="video-js"
+                controls
+                preload="auto"
+                width="640"
+                height="264"
+                poster="MY_VIDEO_POSTER.jpg"
+                data-setup="{}"
+            >
+                <source src="MY_VIDEO.mp4" type="video/mp4" />
+                <source src="MY_VIDEO.webm" type="video/webm" />
+                <p class="vjs-no-js">
+                To view this video please enable JavaScript, and consider upgrading to a
+                web browser that
+                <a href="https://videojs.com/html5-video-support/" target="_blank"
+                    >supports HTML5 video</a
+                >
+                </p>
+            </video> -->
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <p id="video" class="lead"><!-- <button onclick="previous()">上一个</button>
+                <button onclick="next()">下一个</button> -->
+                      选择播放速率：
+                    <select id="selRate" οnchange="speedChange()">
+                        <option value="0.5">0.5</option>
+                        <option value="1.0" selected>1.0</option>
+                        <option value="1.25">1.25</option>
+                        <option value="1.5">1.5</option>
+                        <option value="2.0">2.0</option>
+                    </select>
+                </p>
+            </div>
+
+            <div class="col-lg-4 col-lg-offset-1">
+                <div class="btn-group btn-group-lg">
+                    <button type="button" class="btn btn-default like-btn" ><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>赞</button>
+                    <button type="button" class="btn btn-default collect-btn"><span class="glyphicon glyphicon-heart" aria-hidden="true"></span>收藏</button>
+                    <button type="button" class="btn btn-default write-notes-btn"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>记笔记</button>
+                </div>
+            </div>
+        </div>
+
+        <div class=row>
+            <div class="notes-container">
+                <h3>笔记</h3>
+                <div class="write-notes" style="display: none;">
+                    <p class="write-notes-time">笔记对应视频时间：</p>
+                    <div style="height: 200px;width: 100%;">
+                        <!-- <textarea style="height: 200px;width: 80%;" class="write-notes-content"></textarea>
+                        <button type="button" class="btn btn-default notes-submit" style=" display: inline-block;position: absolute;bottom: 0px;">提交</button> -->
+                        <div class="form-horizontal col-md-7">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">主题</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control write-notes-title" id="inputTitle" placeholder="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">内容</label>
+                                <div class="col-sm-9">
+                                    <textarea class="form-control write-notes-content" rows="5"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-3">
+                                    <button type="button" class="btn btn-default notes-submit">提交</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 左对齐 -->
+                <div class="notes">
+<!--                    <div class="panel panel-default col-md-8">-->
+<!--                        <div class="panel-heading ">Panel heading-->
+<!--                            <div class="btn-group" role="group" >-->
+<!--                                <button type="button" class="btn btn-default btn-play" >查看</button>-->
+<!--                                <button type="button" class="btn btn-default btn-delete">删除</button>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="panel-body">-->
+<!--                            <p>...</p>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="panel panel-default col-md-8">-->
+<!--                        <div class="panel-heading">Panel heading-->
+<!--                            <div class="btn-group" role="group" >-->
+<!--                                <button type="button" class="btn btn-default btn-play">查看</button>-->
+<!--                                <button type="button" class="btn btn-default btn-delete">删除</button>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="panel-body">-->
+<!--                            <p>...</p>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="../js/jquery.min.js"></script>
+<!--    自己的js-->
+<script tyle="text/javascript"src="../js/videoplayer.js"></script>
+<script type="text/javascript" src="../js/base_trace.js"></script>
+</body>
+</html>

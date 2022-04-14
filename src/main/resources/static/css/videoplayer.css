@@ -1,0 +1,18 @@
+#under-video{
+    width: 800px;
+    height: 40px;
+}
+#likes{
+    height: 100%;
+    width: 24px;
+    margin-left: 50px;
+}
+#likes>img{
+    width: 24px;
+    height: 60%;
+}
+#likes-numbers{
+    width: 24px;
+    height: 40%;
+
+}

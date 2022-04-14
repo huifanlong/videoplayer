@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <meta charset="utf-8">
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+</head>
+<body>
+<div class="main">
+    <div class="mainin">
+        <h1 style="font-size: 30px; color: white;">LOGIN</h1>
+        <form method="post" class="mainin1" id='form'>
+            <ul>
+                <li><span>USERNAME</span><input type="text" name="userName" id="loginName" placeholder="Your username" class="SearchKeyword"></li>
+                <li><span>PASSWORD</span><input type="password" name="userPass" id="Password" placeholder="Your password" class="SearchKeyword2"></li>
+                <li><button type="button" class="tijiao">Log in</button></li>
+            </ul>
+        </form>
+    </div>
+</div>
+<div style="margin-top: 50px">
+    <!-- <p style="display: block; text-align: center; color: white; font-size: 10">备案号：鄂ICP备2020021640号-1&nbsp;</p><a href="http://beian.miit.gov.cn/" style="display: block; text-align: center; color: white; font-size: 10" target="_blank">工信部链接</a> -->
+    <a href="http://beian.miit.gov.cn/" style="display: block; text-align: center; color: white; font-size: 10px" target="_blank">备案号：鄂ICP备2020021640号-1</a>
+</div>
+
+<script src="js/jquery.min.js"></script>
+
+<script type="text/javascript">
+    $('.tijiao').click(function () {
+        var user_name = $('.SearchKeyword').val();//获取键盘输入的账号，动态获取
+        var user_pass = $('.SearchKeyword2').val();//获取键盘输入的密码
+
+        // console.log(user_name + ',' + user_pass);
+
+
+        //下面两条if好像没用上
+        if (user_name == '') {
+            $('.SearchKeyword').focus();
+            $('.SearchKeyword').css('background',"pink");
+            return;
+        }
+        if (user_pass == '') {
+            $('.SearchKeyword2').focus();
+            $('.SearchKeyword2').css('background',"pink");
+            return;
+        }
+        // if ((user_name == 'teacher2')&(user_pass == '13579')) {
+        //     window.location.href = "{:U('Index/score')}";
+        //     return;
+        // }
+
+        $.ajax({
+            type: "POST",
+            url: "/users/login",
+            data: $('#form').serialize(),// 序列化表单值LogLLLLLL
+            // data:"userName="+user_name+"&userPass="+user_pass,
+            dataType:"JSON",
+            async: true,
+            error: function (request) {
+                alert("Connection error"+request.message);
+            },
+            success: function (json) {
+                if(json.state==200) {
+                    // alert(data.message);   //打印登陆成功
+                    alert("登陆成功");
+                    if(json.data.authority == 0){//学生用户
+                        window.location.href = "web/course2020.html";
+                    }else{//管理员
+                        window.location.href = "www.baidu.com";
+                    }
+                }else if (json.state==2) {  //管理员账号
+                    window.location.href = "{:U('Index/admin')}";
+                }
+                else {
+                    alert(json.message);
+                }
+            }
+        });
+    });
+
+    $(document).keyup(function(event){
+        if(event.keyCode ==13){
+            $(".tijiao").trigger("click");
+        }
+    });
+</script>
+</body>
+</html>
