@@ -30,7 +30,7 @@ public class TraceController extends BaseController {
      */
     @RequestMapping("update")
     public JsonResult<Void> update(HttpSession session,String trace){
-        System.out.println("用户："+getUserNameFromSession(session)+"轨迹："+trace);
+//        System.out.println("用户："+getUserNameFromSession(session)+"轨迹："+trace);
         traceService.updateInSameLearning(getUserNameFromSession(session),trace);
         return new JsonResult<>(OK);
     }
@@ -47,7 +47,7 @@ public class TraceController extends BaseController {
      */
     @RequestMapping("duration")
     public JsonResult<Void> onlineDuration(HttpSession session) {
-        System.out.println("已访问duration，timer是否有该用户"+timers.containsKey(getUserNameFromSession(session)));
+//        System.out.println("已访问duration，timer是否有该用户"+timers.containsKey(getUserNameFromSession(session)));
         if(!timers.containsKey(getUserNameFromSession(session))) {//是初次访问
             Timer timer = new Timer();
             timers.put(getUserNameFromSession(session), timer);
@@ -61,12 +61,12 @@ public class TraceController extends BaseController {
                     SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     if (time > 1000 * 60 * 2) {//三十分钟,就可以判断用户已经退出，可以生成一条轨迹记录
                         traceService.createTrace(userName, dateformat.format(session.getLastAccessedTime()));
-                        System.out.println("createTrace"+userName);
+//                        System.out.println("createTrace"+userName);
                         timer.cancel();
                         timers.remove(userName);
                     } else {
-                        System.out.println("session的名字" + userName);
-                        System.out.println("session的使用时间" + time);
+//                        System.out.println("session的名字" + userName);
+//                        System.out.println("session的使用时间" + time);
                     }
                 }
             }, 1000, 1000 * 60 * 1);//每15分钟判断一次，其实三十分钟以内判断一次效果都是一样的。

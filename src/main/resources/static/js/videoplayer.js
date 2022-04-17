@@ -7,7 +7,7 @@
 
         // var vname = "";
         // console.log(src)
-        // console.log(vid)
+        console.log(vid)
         // console.log(vname)
         var myVideo=document.getElementById("media");
         // myVideo.src = src;
@@ -16,7 +16,7 @@
         var timeString = "";
         var tol;
         var timeId;
-        var qid;
+        // var qid;
 
         var rateSelect = document.getElementById("selRate"); //拿到select对象
         var rate;//用于记录每次改变速率后的速率，存储到rateString当中;
@@ -25,76 +25,88 @@
         var flag=true;
 
         var is_like=0;//默认当前视频没有点赞，点赞按钮是黑色？从数据库中请求得来的数据，点赞的话才改为1，按钮改为红色
-        var origin_is_like = 0;//方便观察用户是否有修改点赞状态，离开页面是判断是否存储和怎么存储(添加还是删除)
+        // var origin_is_like = 0;//方便观察用户是否有修改点赞状态，离开页面是判断是否存储和怎么存储(添加还是删除)
         var is_collect=0;//同上
-        var origin_is_collect = 0;//同上
+        // var origin_is_collect = 0;//同上
         var likesNumbers;
-        var originLikesNumbers;//该视频从数据中取出的点赞人数 通过比较这个和likeNumber的大小来决定 离开页面时视频的点赞数是增加还是减少
+        // var originLikesNumbers;//该视频从数据中取出的点赞人数 通过比较这个和likeNumber的大小来决定 离开页面时视频的点赞数是增加还是减少
         var collectNumbers;
-        var originCollectNumbers;//同上
+        // var originCollectNumbers;//同上
 
-        /**页面加载好时方法3+1:*/
-        /** 从数据库中获取笔记数据 并加载*/
+        /**页面加载好时方法:*/
+        /* 找到用户名 页面右上角 欢迎的初始化*/
+        loadUserInfo();
+        /* 加载视频信息：视频文件、名称、点赞数、收藏数，以及用户是否点赞或收藏*/
+        window.onpageshow = function(){
+            console.log("loadVideoInfo");
+            loadVideoInfo();
+        }
+        /* 从数据库中获取笔记数据 并加载*/
         getNotesFromDbs();
-        /**展示笔记*/
         // loadNotes();上面的方法一起load 否则可能因为执行顺序 localstorage里面的内容没有load。
-        /**点赞图标修改红色 如果点赞的话*/
-        loadLikeBtnColor();
-        /**收藏图标修改红色 如果收藏的话*/
-        loadCollectBtnColor();
         updateBegin("video_trace");//开始记录此页面登录时间
 
-        /**页面加载好时操作1： 找到用户名 页面右上角 欢迎的初始化*/
-        $.ajax({type: "GET", url: "/users/find_by_id", dataType:"JSON", async: true,
-            // data: $('#form').serialize(),// 序列化表单值LogLLLLLL
-            // data:"userName="+user_name+"&userPass="+user_pass,
-            // data:"",
-            error: function (request) {
-                //为啥没登陆直接跳转到这个页面会是error？
-                $(".login-yes").prop("style","display:none");
-                // alert("未登录，请先登录");
-            },
-            success: function (json) {
-                if(json.state==200) {
-                    // alert("成功");
-                    $(".login-no").prop("style","display:none");
-                    $(".login-span-yes").html("你好！"+json.data.userName+"&nbsp;&nbsp");
-                }else if (json.state==2) {  //管理员账号
-                    window.location.href = "{:U('Index/admin')}";
+        /** 加载视频信息：视频文件、名称、点赞数、收藏数，以及用户是否点赞或收藏*/
+        function loadVideoInfo(){
+            /*页面加载好时操作2： 到视频对象 并且根据src初始化视频 ；根据videoName初始化视频名字；根据点赞人数初始化originLikesNumbers和likesNumbers两个变量 ；根据点赞人数初始化originCollectNumbers和collectNumbers两个变量*/
+            $.ajax({type: "POST", url: "/videos/find_by_id", data: "id="+vid, dataType:"JSON", async: true,
+                // data:"userName="+user_name+"&userPass="+user_pass,
+                error: function (request) {
+                    alert("Connection error"+request.message+request.status);
+                },
+                success: function (json) {
+                    if(json.state==200) {
+                        $("#media").prop("src",json.data.src);
+                        $("#demo").text("视频名："+json.data.videoName);
+                        likesNumbers = json.data.likeNumbers;
+                        // originLikesNumbers = json.data.likeNumbers;//初始化originLikeNumbers和likesNumbers
+                        $(".like-btn ").html("<span class='glyphicon glyphicon-thumbs-up' aria-hidden='true'></span>"+likesNumbers);
+                        collectNumbers = json.data.collectNumbers;
+                        // originCollectNumbers = json.data.collectNumbers;//同上
+                        $(".collect-btn ").html("<span class='glyphicon glyphicon-heart' aria-hidden='true'></span>"+collectNumbers);
+                        //glyphicon glyphicon-heart
+                        // console.log(json.data.likeNumbers);
+                        // alert("likenumbers:"+originLikesNumbers+"collectnumbers"+originCollectNumbers);
+                    }else {
+                        alert(json.message);
+                    }
                 }
-                else {
-                    $(".login-yes").prop("style","display:none");
+            });
+            /*页面加载好时方法2： 从数据库中调取用户对视频的点赞状态 调整变量is_like的值*/
+            $.ajax({
+                type:"POST",
+                url:"/likes/find_like_status",
+                data:"vid="+vid, dataType:"JSON", async: true,
+                error: function (request) {
+                    alert("Connection error"+request.message+request.status);
+                    // alert(vid);
+                },
+                success: function (json) {
+                    if(json.state==200) {//返回200表示已经点赞,初始化is_like为1，并调整点赞按钮样式为红色
+                        is_like = 1;
+                        // origin_is_like = 1;
+                        $(".like-btn").css("color","red");
+                    }//如果是8001表示没有点赞 那就时默认样式
                 }
-            }
-        })
-        /**页面加载好时操作2： 到视频对象 并且根据src初始化视频 ；根据videoName初始化视频名字；根据点赞人数初始化originLikesNumbers和likesNumbers两个变量 ；根据点赞人数初始化originCollectNumbers和collectNumbers两个变量*/
-        $.ajax({type: "POST", url: "/videos/find_by_id", data: "id="+vid, dataType:"JSON", async: true,
-            // data:"userName="+user_name+"&userPass="+user_pass,
-            error: function (request) {
-                alert("Connection error"+request.message+request.status);
-                alert(vid);
-            },
-            success: function (json) {
-                if(json.state==200) {
-                    // alert("dd");
-                    $("#media").prop("src",json.data.src);
-                    $("#demo").text("视频名："+json.data.videoName);
-                    likesNumbers = json.data.likeNumbers;
-                    originLikesNumbers = json.data.likeNumbers;//初始化originLikeNumbers和likesNumbers
-                    $(".like-btn ").html("<span class='glyphicon glyphicon-thumbs-up' aria-hidden='true';></span>"+likesNumbers);
-                    collectNumbers = json.data.collectNumbers;
-                    originCollectNumbers = json.data.collectNumbers;//同上
-                    $(".collect-btn ").html("<span class='glyphicon glyphicon-heart' aria-hidden='true';></span>"+collectNumbers);
-                    //glyphicon glyphicon-heart
-                    // console.log(json.data.likeNumbers);
-                    alert("likenumbers:"+originLikesNumbers+"collectnumbers"+originCollectNumbers);
-                }else {
-                    alert(json.message);
+            })
+            /*页面加载好时方法3： 从数据库中调取用户对视频的收藏状态 调整变量is_collect的值*/
+            $.ajax({
+                type:"POST",
+                url:"/collects/find_collection_status",
+                data:"vid="+vid, dataType:"JSON", async: true,
+                error: function (request) {
+                    alert("Connection error"+request.message+request.status);
+                    // alert(vid);
+                },
+                success: function (json) {
+                    if(json.state==200) {//返回200表示已经点赞,初始化is_like为1，并调整点赞按钮样式为红色
+                        is_collect = 1;
+                        // origin_is_collect = 1;
+                        $(".collect-btn").css("color","red");
+                    }//如果是6001表示没有点赞 那就时默认样式
                 }
-            }
-        });
-
-
+            })
+        }
         /**页面加载好时方法1： 从数据库中调取笔记的内容；*/
         function getNotesFromDbs(){
             $.ajax({
@@ -121,168 +133,116 @@
                 }
             })
         }
-        /**页面加载好时方法2： 从数据库中调取用户对视频的点赞状态 调整变量is_like的值*/
-        function loadLikeBtnColor(){
+
+        function userAddLike(){
+            /*视频点赞数+1*/
             $.ajax({
-                type:"POST",
-                url:"/likes/find_like_status",
+                type:"POST", url:"/videos/add_like_numbers",
                 data:"vid="+vid, dataType:"JSON", async: true,
                 error: function (request) {
-                    alert("Connection error"+request.message+request.status);
-                    alert(vid);
+                    alert("点赞更新发生错误"+request.message+request.status);
                 },
                 success: function (json) {
-                    if(json.state==200) {//返回200表示已经点赞,初始化is_like为1，并调整点赞按钮样式为红色
-                        is_like = 1;
-                        origin_is_like = 1;
-                        $(".like-btn").css("color","red");
-                    }//如果是8001表示没有点赞 那就时默认样式
+                    if(json.state==200) {
+                        console.log("点赞更新成功");
+                    }
+                }
+            })
+            /*更改点赞状态，在另一张表*/
+            $.ajax({
+                type:"POST", url:"/likes/creat_like",
+                data:"vid="+vid, dataType:"JSON", async: true,
+                error: function (request) {
+                    alert("修改用户对这个视频的点赞发生错误"+request.message+request.status);
+                },
+                success: function (json) {
+                    if(json.state==200) {
+                        console.log("修改用户对这个视频的点赞成功");
+                    }
                 }
             })
         }
-        /**页面加载好时方法3： 从数据库中调取用户对视频的收藏状态 调整变量is_collect的值*/
-        function loadCollectBtnColor(){
+        function userDeleteLike(){
+            /*视频点赞数-1*/
             $.ajax({
-                type:"POST",
-                url:"/collects/find_collection_status",
+                type:"POST", url:"/videos/minus_like_numbers",
                 data:"vid="+vid, dataType:"JSON", async: true,
                 error: function (request) {
-                    alert("Connection error"+request.message+request.status);
-                    alert(vid);
+                    alert("点赞更新发生错误"+request.message+request.status);
                 },
                 success: function (json) {
-                    if(json.state==200) {//返回200表示已经点赞,初始化is_like为1，并调整点赞按钮样式为红色
-                        is_collect = 1;
-                        origin_is_collect = 1;
-                        $(".collect-btn").css("color","red");
-                    }//如果是6001表示没有点赞 那就时默认样式
+                    if(json.state==200) {
+                        console.log("点赞更新成功");
+                    }
+                }
+            })
+            /*更改点赞状态，在另一张表*/
+            $.ajax({
+                type:"POST", url:"/likes/delete_like",
+                data:"vid="+vid, dataType:"JSON", async: true,
+                error: function (request) {
+                    alert("修改用户对这个视频的点赞发生错误"+request.message+request.status);
+                },
+                success: function (json) {
+                    if(json.state==200) {
+                        console.log("修改用户对这个视频的点赞成功");
+                    }
                 }
             })
         }
 
-        /**页面离开时方法1：存储视频的点赞人数 */
-        function saveLikesNumbersToDbs(){
-            if(originLikesNumbers < likesNumbers){//这个用户增加了一次点赞，该视频的点赞人数加1
-                alert("点赞数+1存入数据库");
-                $.ajax({
-                    type:"POST", url:"/videos/add_like_numbers",
-                    data:"vid="+vid, dataType:"JSON", async: true,
-                    error: function (request) {
-                        alert("点赞更新发生错误"+request.message+request.status);
-                    },
-                    success: function (json) {
-                        if(json.state==200) {
-                            console.log("点赞更新成功");
-                        }
+        function userAddCollection(){
+            $.ajax({
+                type:"POST", url:"/videos/add_collect_numbers",
+                data:"vid="+vid, dataType:"JSON", async: true,
+                error: function (request) {
+                    alert("收藏更新发生错误"+request.message+request.status);
+                },
+                success: function (json) {
+                    if(json.state==200) {
+                        console.log("收藏更新成功");
                     }
-                })
-            }else if(originLikesNumbers > likesNumbers){//这个用户取消了已有点赞，该视频的点赞人数减1
-                alert("点赞数-1存入数据库");
-                $.ajax({
-                    type:"POST", url:"/videos/minus_like_numbers",
-                    data:"vid="+vid, dataType:"JSON", async: true,
-                    error: function (request) {
-                        alert("点赞更新发生错误"+request.message+request.status);
-                    },
-                    success: function (json) {
-                        if(json.state==200) {
-                            console.log("点赞更新成功");
-                        }
+                }
+            })
+            $.ajax({
+                type:"POST", url:"/collects/creat_collection",
+                data:"vid="+vid, dataType:"JSON", async: true,
+                error: function (request) {
+                    alert("修改用户对这个视频的点赞发生错误"+request.message+request.status);
+                },
+                success: function (json) {
+                    if(json.state==200) {
+                        console.log("修改用户对这个视频的点赞成功");
                     }
-                })
-            }//第三种情况二者相等 就不需要改变点赞人数
+                }
+            })
         }
-        /**页面离开时方法2：存储视频的收藏人数 与上面基本相似*/
-        function saveCollectLikesNumbersToDbs(){
-            if(originCollectNumbers < collectNumbers){//这个用户增加了一次收藏，该视频的收藏人数加1
-                $.ajax({
-                    type:"POST", url:"/videos/add_collect_numbers",
-                    data:"vid="+vid, dataType:"JSON", async: true,
-                    error: function (request) {
-                        alert("收藏更新发生错误"+request.message+request.status);
-                    },
-                    success: function (json) {
-                        if(json.state==200) {
-                            console.log("收藏更新成功");
-                        }
+        function userDeleteCollection(){
+            $.ajax({
+                type:"POST", url:"/videos/minus_collect_numbers",
+                data:"vid="+vid, dataType:"JSON", async: true,
+                error: function (request) {
+                    alert("收藏更新发生错误"+request.message+request.status);
+                },
+                success: function (json) {
+                    if(json.state==200) {
+                        console.log("收藏更新成功");
                     }
-                })
-            }else if(originCollectNumbers > collectNumbers){//这个用户取消了已有收藏，该视频的收藏人数减1
-                $.ajax({
-                    type:"POST", url:"/videos/minus_like_numbers",
-                    data:"vid="+vid, dataType:"JSON", async: true,
-                    error: function (request) {
-                        alert("收藏更新发生错误"+request.message+request.status);
-                    },
-                    success: function (json) {
-                        if(json.state==200) {
-                            console.log("收藏更新成功");
-                        }
+                }
+            })
+            $.ajax({
+                type:"POST", url:"/collects/delete_collection",
+                data:"vid="+vid, dataType:"JSON", async: true,
+                error: function (request) {
+                    alert("修改用户对这个视频的点赞发生错误"+request.message+request.status);
+                },
+                success: function (json) {
+                    if(json.state==200) {
+                        console.log("修改用户对这个视频的点赞成功");
                     }
-                })
-            }//第三种情况二者相等 就不需要改变点赞人数
+                }
+            })
         }
-        /**页面离开时方法3: 存储用户对这个视频的点赞状态*/
-        function savaLikeStatusToDbs(){
-            if( is_like === 0 && origin_is_like === 1){//说明用户本来是点赞的，离开时取消了点赞
-                $.ajax({
-                    type:"POST", url:"/likes/delete_like",
-                    data:"vid="+vid, dataType:"JSON", async: true,
-                    error: function (request) {
-                        alert("修改用户对这个视频的点赞发生错误"+request.message+request.status);
-                    },
-                    success: function (json) {
-                        if(json.state==200) {
-                            console.log("修改用户对这个视频的点赞成功");
-                        }
-                    }
-                })
-            }else if( is_like === 1 && origin_is_like === 0){//说明用户本来没有点赞的，离开时已经点了赞
-                $.ajax({
-                    type:"POST", url:"/likes/creat_like",
-                    data:"vid="+vid, dataType:"JSON", async: true,
-                    error: function (request) {
-                        alert("修改用户对这个视频的点赞发生错误"+request.message+request.status);
-                    },
-                    success: function (json) {
-                        if(json.state==200) {
-                            console.log("修改用户对这个视频的点赞成功");
-                        }
-                    }
-                })
-            }
-        }
-        /**页面离开时方法4: 存储用户对这个视频的点赞状态*/
-        function savaCollectStatusToDbs(){
-            if( is_collect === 0 && origin_is_collect === 1){//说明用户本来是收藏的，离开时取消了收藏
-                $.ajax({
-                    type:"POST", url:"/collects/delete_collection",
-                    data:"vid="+vid, dataType:"JSON", async: true,
-                    error: function (request) {
-                        alert("修改用户对这个视频的点赞发生错误"+request.message+request.status);
-                    },
-                    success: function (json) {
-                        if(json.state==200) {
-                            console.log("修改用户对这个视频的点赞成功");
-                        }
-                    }
-                })
-            }else if( is_collect === 1 && origin_is_collect === 0){//说明用户本来没有收藏的，离开时已经点了收藏
-                $.ajax({
-                    type:"POST", url:"/collects/creat_collection",
-                    data:"vid="+vid, dataType:"JSON", async: true,
-                    error: function (request) {
-                        alert("修改用户对这个视频的点赞发生错误"+request.message+request.status);
-                    },
-                    success: function (json) {
-                        if(json.state==200) {
-                            console.log("修改用户对这个视频的点赞成功");
-                        }
-                    }
-                })
-            }
-        }
-
         /** 改变播放速率*/
         rateSelect.addEventListener('change', function () {
             //调整视频播放速率
@@ -304,9 +264,9 @@
 
         /**
          * 写这样一个方法 向后端存储观看记录， 因为三种清空下都会存储数据 避免重复代码 直接写个函数
-         * @param vid
-         * @param timeString
-         * @param rateString
+         * @param v vid
+         * @param t timeString
+         * @param r rateString
          */
         function savaRecord(v,t,r){
             $.ajax({
@@ -393,11 +353,11 @@
 
         /**onbeforeunload 事件在即将离开当前页面（刷新或关闭）时触发
          * 方法4+2操作*/
-        window.onbeforeunload = function(){
-            console.log("退出视频页面事件激活0");
-            alert("退出视频页面事件激活0");
+        window.onpagehide = function(){
+            // console.log("退出视频页面事件激活0");
+            // alert("退出视频页面事件激活0");
             updateLeaving();
-            alert("退出视频页面事件激活");
+            // alert("退出视频页面事件激活");
             /**1.存储视频观看数据*/
             if(timeString!=""&&flag==true){
                 flag=false;
@@ -420,15 +380,6 @@
                     }
                 })
             })
-            /**3.存储视频的点赞人数 + 存储用户对这个视频的点赞状态*/
-            saveLikesNumbersToDbs();
-            savaLikeStatusToDbs();
-            alert("存储点赞数据成功");
-            console.log("存储点赞数据成功");
-            /**4.存储视频的收藏人数 + 存储用户对这个视频的点赞状态*/
-            saveCollectLikesNumbersToDbs();
-            savaCollectStatusToDbs();
-
             localStorage.removeItem("notes");
             // alert("清除数据");
             // localStorage.clear();
@@ -443,22 +394,13 @@
         })
         /**点击退出，则执行一次ajax请求，到后端清除session数据*/
         $('#login-out').click(function () {
-            $.ajax({
-                type: "GET",
-                url: "/users/login_out",
-                // data: $('#form').serialize(),// 序列化表单值LogLLLLLL
-                // data:"userName="+user_name+"&userPass="+user_pass,
-                // data:"",
-                dataType:"JSON",
-                async: true,
+            $.ajax({type: "GET", url: "/users/login_out", dataType:"JSON", async: true,
                 error: function (request) {
-                    alert("Connection error"+request.message+request.status);
+                    alert("logout error"+request.message+request.status);
                 },
                 success: function (json) {
                     if(json.state==200) {
-                        alert("退出成功");
-                    }else if (json.state==2) {  //管理员账号
-                        window.location.href = "{:U('Index/admin')}";
+                        console.log("退出成功");
                     }
                 }
             })
@@ -490,16 +432,12 @@
         /** 给笔记的提交按钮和内容输入框的回车键绑定事件，增加一条笔记 ，还要存储到数据库当中？ 还是最后离开页面再存储？---->解答 ： 先存储到浏览器的本地内存，当用户离开页面时 再统一从本地中进行存储？*/
         $(".notes-submit").on("click",function (){
             if($(".write-notes-content").val() === "" || $(".write-notes-title").val() === ""){
-                alert("没有内容");
+                alert("请将内容填写完整哦！");
             }else{
-                //获取地中的所有笔记
-                var local = getNotes();
-                //增加这条新的笔记
-                local.push({time:parseInt(myVideo.currentTime),content:$(".write-notes-content").val(),title:$(".write-notes-title").val(),state:"new"});
-                //保存到内存中
-                savaNotes(local);
-                //重新加载
-                loadNotes();
+                var local = getNotes();//获取地中的所有笔记
+                local.push({time:parseInt(myVideo.currentTime),content:$(".write-notes-content").val(),title:$(".write-notes-title").val(),state:"new"});//增加这条新的笔记
+                savaNotes(local);//保存到内存中
+                loadNotes();//重新加载
                 $(".write-notes-content").val("");//内容文本框清空
                 $(".write-notes-title").val("");//主题文本框清空
             }
@@ -529,30 +467,34 @@
         $(".like-btn").on("click",function(){
             alert("is_like="+is_like);
             if(is_like === 0){//没有点赞时 才可以修改其点赞样式为红色
-                alert("成功进入islike=0");
+                userAddLike();//向数据库增加视频点赞数，存储用户点赞状态
+                console.log("成功进入islike=0");
                 $(this).css("color","red");
                 likesNumbers++;
-                $(".like-btn").html("<span class='glyphicon glyphicon-thumbs-up' aria-hidden='true';></span>"+likesNumbers);//这个前面的span是固定的样式。主要是为了修改显示的点赞人数。
+                $(".like-btn").html("<span class='glyphicon glyphicon-thumbs-up' aria-hidden='true'></span>"+likesNumbers);//这个前面的span是固定的样式。主要是为了修改显示的点赞人数。
                 is_like=1;
             }else{//点赞时，（再点击），那就修该样式为黑色
-                alert("成功进入islike=1");
+                userDeleteLike();//向数据库减少视频点赞数，存储用户点赞状态
+                console.log("成功进入islike=1");
                 $(this).css("color","black");
                 likesNumbers--;
-                $(".like-btn").html("<span class='glyphicon glyphicon-thumbs-up' aria-hidden='true';></span>"+likesNumbers);//同上
+                $(".like-btn").html("<span class='glyphicon glyphicon-thumbs-up' aria-hidden='true'></span>"+likesNumbers);//同上
                 is_like=0;
             }
         })
         /** 给收藏按钮创建点击事件 ；这个方法跟上面代码重叠率很高*/
         $(".collect-btn").on("click",function(){
             if(is_collect === 0){
+                userAddCollection();
                 $(this).css("color","red");
                 collectNumbers++;
-                $(".collect-btn").html("<span class='glyphicon glyphicon-heart' aria-hidden='true';></span>"+collectNumbers);
+                $(".collect-btn").html("<span class='glyphicon glyphicon-heart' aria-hidden='true'></span>"+collectNumbers);
                 is_collect=1;
             }else{
+                userDeleteCollection();
                 $(this).css("color","black");
                 collectNumbers--;
-                $(".collect-btn").html("<span class='glyphicon glyphicon-heart' aria-hidden='true';></span>"+collectNumbers);
+                $(".collect-btn").html("<span class='glyphicon glyphicon-heart' aria-hidden='true'></span>"+collectNumbers);
                 is_collect=0;
             }
         })

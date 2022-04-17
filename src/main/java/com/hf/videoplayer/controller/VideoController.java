@@ -50,7 +50,7 @@ public class VideoController extends BaseController{
      */
     @RequestMapping("minus_like_numbers")
     public  JsonResult<Void> minusLikeNumbersByVideoId(Integer vid) {
-        videoService.addLikeNumbersByVideoId(vid);
+        videoService.minusLikeNumbersByVideoId(vid);
         System.out.println("向数据库减少一条点赞");
         return new JsonResult<>(OK);
     }
@@ -62,7 +62,7 @@ public class VideoController extends BaseController{
      */
     @RequestMapping("minus_collect_numbers")
     public  JsonResult<Void> minusCollectNumbersByVideoId(Integer vid) {
-        videoService.addCollectNumbersByVideoId(vid);
+        videoService.minusCollectNumbersByVideoId(vid);
         return new JsonResult<>(OK);
     }
 

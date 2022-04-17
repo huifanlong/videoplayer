@@ -95,14 +95,14 @@ public class TraceServiceImpl implements ITraceService {
             List<String> leavingTraces = new ArrayList<>();
             leavingTraces.add(time);
            userLeavingTraces.put(userName,leavingTraces);//将其姓名和创建好的list<>加入到离开轨迹HashMap中
-            System.out.println("添加一条离开时间"+time+"到leavingTrace");
+//            System.out.println("添加一条离开时间"+time+"到leavingTrace");
         }
     }
 
     @Override
     public List<Trace> findByUserName(String userName) {
         List<Trace> traces = traceMapper.findByUserName(userName);
-        if(traces.size() == 0){
+        if(traces == null){
             throw new NoTraceException("该用户没有轨迹数据");
         }
         else{//打包清空不必要数据

@@ -1,20 +1,15 @@
 $(function(){
     var from = new Date();//登陆时间
     var to;//退出时间
-    window.onpageshow = function(){//可以实现返回时也触发该事件，但是IE不知道支不支持
-        alert("page show");
+
+    /* 初始化右上角登录显示 */
+    loadUserInfo();
+    /*每次到达这个页面都要判单是否需要初始化计时器，直接给后台一个GET请求就行*/
+    window.onpageshow = function(){//onpageshow比最外层的document.ready可以放置back-force-cache：即实现点击浏览器左上角返回按钮时也触发该事件。但是IE好像不支持这个事件
         updateBegin("index_trace");//开始记录此页面登录时间
         $.ajax({type: "GET", url: "/trace/duration", dataType:"JSON", async: true,
             error: function (request) {
-                alert("计时器激活出错error");
-            },
-            success: function (json) {
-                if(json.state==200) {
-                    // alert("计时器激活成功");
-                }
-                else{
-                    // alert("计时器激活出错state");
-                }
+                console.log(request.message);
             }
         })
         console.log("/trace/duration已访问？");
@@ -37,28 +32,6 @@ $(function(){
             }
         })
     });
-
-    /* 初始化右上角登录显示 */
-    $.ajax({type: "GET", url: "/users/find_by_id", dataType:"JSON", async: true,
-        error: function (request) {
-            //为啥没登陆直接跳转到这个页面会是error？
-            $(".login-yes").prop("style","display:none");
-        },
-        success: function (json) {
-            if(json.state==200) {
-                // alert(json.data.userName);
-                $(".login-no").prop("style","display:none");
-                $(".login-span-yes").html("你好！"+json.data.userName+"&nbsp;&nbsp");
-                // alert("首页初始化成功");
-            }else if (json.state==2) {  //管理员账号
-                window.location.href = "{:U('Index/admin')}";
-            }
-            else {
-                $(".login-yes").prop("style","display:none");
-            }
-        }
-    })
-
 
     /** 导航栏切换显示《课程》和《反思》*/
     $(".nav-items").click(function(ele){//对两个元素一起添加点击事件

@@ -32,3 +32,22 @@ function updateLeaving(){
         }
     })
 }
+/* 初始化右上角登录显示 */
+function loadUserInfo(){
+    $.ajax({type: "GET", url: "/users/find_by_id", dataType:"JSON", async: true,
+        error: function (request) {
+            //为啥没登陆直接跳转到这个页面会是error？
+            $(".login-yes").prop("style","display:none");
+        },
+        success: function (json) {
+            if(json.state==200) {
+                // alert(json.data.userName);
+                $(".login-no").prop("style","display:none");
+                $(".login-span-yes").html("你好！"+json.data.userName+"&nbsp;&nbsp");
+                // alert("首页初始化成功");
+            }else {
+                $(".login-yes").prop("style","display:none");
+            }
+        }
+    })
+}
