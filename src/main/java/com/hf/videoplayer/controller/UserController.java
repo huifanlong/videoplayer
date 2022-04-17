@@ -75,7 +75,7 @@ public class UserController extends BaseController{
 
    @RequestMapping("find_by_id")
     public JsonResult<User> findById(HttpSession session){
-       System.out.println("根据id查找用户：find_by_id的controller层测试");
+//       System.out.println("根据id查找用户：find_by_id的controller层测试");
        User user = userService.findById(getIdFromSession(session));
        return new JsonResult<>(OK,user);
    }

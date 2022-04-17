@@ -48,12 +48,12 @@ public class NoteController extends BaseController{
     @RequestMapping("find_video_notes")
     public JsonResult<Note[]> findVideoNote(Integer vid,HttpSession session){
         String uid = getUserNameFromSession(session);
-        System.out.println(uid+"查看笔记");
+//        System.out.println(uid+"查看笔记");
         Note[] notes = noteService.findNotesByUidAndVid(uid,vid);
-        System.out.println("笔记数量"+notes.length);
-        for(int i = 0;i < notes.length;i++){
-            System.out.println(notes[i].getNotes());
-        }
+//        System.out.println("笔记数量"+notes.length);
+//        for(int i = 0;i < notes.length;i++){
+//            System.out.println(notes[i].getNotes());
+//        }
         return new JsonResult<Note[]>(OK,notes);
     }
 

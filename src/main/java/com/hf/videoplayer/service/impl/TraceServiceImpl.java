@@ -34,8 +34,11 @@ public class TraceServiceImpl implements ITraceService {
         SimpleDateFormat ft2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String loginTime = ft2.format(ft1.parse(tracespics[1]+" "+tracespics[2]));//第二个是登陆时间，还要将其从前端传来的格式1转换成格式2，格式2才能插入到数据库中的date类型数据中。如果在数据库中设置成varchar类型，其实就不需要转换
         List<String> leavingTrace = userLeavingTraces.get(userName);
-        Date finalLeavingTimeRecorded = ft1.parse(leavingTrace.get(leavingTrace.size()-1)); //leavingTrace所记录的最后的离开时间
-        Date finalVisitingTimeRecorded = ft1.parse(tracespics[tracespics.length-2]+" "+tracespics[tracespics.length-1]);
+        Date finalVisitingTimeRecorded = ft1.parse(tracespics[tracespics.length-2]+" "+tracespics[tracespics.length-1]);//userTrace的最后访问某页面事件点，必定是有的
+        Date finalLeavingTimeRecorded = finalVisitingTimeRecorded;//放置leavingTrace没有记录，先令其等于最后访问记录，使其至少不能通过下面的第一个else if语句。
+        if(leavingTrace != null){//如果leavingTrace不为空-----不能判断其size是否大于0，为空时这个方法就执行不了
+            finalLeavingTimeRecorded = ft1.parse(leavingTrace.get(leavingTrace.size()-1)); //leavingTrace所记录的最后的离开时间
+        }
 //        for(int i = 0;i<tracespics.length;i++){
 //            System.out.println(tracespics[i]);
 //        }
@@ -77,7 +80,7 @@ public class TraceServiceImpl implements ITraceService {
     @Override
     public void updateInSameLearning(String userName, String totalTraces) {
         if(userTraces.containsKey(userName)){//已有用户轨迹数据，则追加
-            totalTraces = totalTraces + userTraces.get(userName)+" ";
+            totalTraces = userTraces.get(userName) + totalTraces + " ";
             userTraces.put(userName,totalTraces);
         }else{
             userTraces.put(userName,totalTraces);//还没有，则说明是第一次登录，开始记录的是第一次的登陆时间："xxx_trace **/**/** **:**:**"

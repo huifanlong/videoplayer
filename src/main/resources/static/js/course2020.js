@@ -1,8 +1,8 @@
 $(function(){
     var from = new Date();//登陆时间
     var to;//退出时间
-
-    window.onload = function (){
+    window.onpageshow = function(){//可以实现返回时也触发该事件，但是IE不知道支不支持
+        alert("page show");
         updateBegin("index_trace");//开始记录此页面登录时间
         $.ajax({type: "GET", url: "/trace/duration", dataType:"JSON", async: true,
             error: function (request) {
@@ -18,27 +18,7 @@ $(function(){
             }
         })
         console.log("/trace/duration已访问？");
-        /*判断是否需要激活计时器，需要则激活*/
-        // $.ajax({type: "GET", url: "/trace/isFirstVisit", dataType:"JSON", async: true,
-        //     error: function (request) {
-        //         alert("计时器激活出错error");
-        //     },
-        //     success: function (json) {
-        //         console.log("isFirstVisit"+json.data)
-        //         if(json.data === 1) {
-        //             alert("初次访问，需要激活计时器");
-        //             /* 开始激活登陆时长 */
-
-        //         }
-        //         else{
-        //             alert("不是初次访问，无需激活计时器");
-        //         }
-        //     }
-        // })
-    };
-    // updateBegin("index_trace");//开始记录此页面登录时间
-
-
+    }
 
     /* 点击退出登录按钮，进行退出登录操作*/
     $('#login-out').click(function () {
@@ -188,6 +168,9 @@ $(function(){
 
     window.onbeforeunload = function (){
         updateLeaving();
+    }
+    window.onpagehide = function (){
+        console.log("onpagehide执行")
     }
 
 })
