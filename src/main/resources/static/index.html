@@ -62,7 +62,7 @@
             success: function (json) {
                 if(json.state==200) {
                     // alert(data.message);   //打印登陆成功
-                    alert("登陆成功");
+                    // alert("登陆成功");
                     if(json.data.authority == 0){//学生用户
                         window.location.href = "web/course2020.html";
                     }else{//管理员
