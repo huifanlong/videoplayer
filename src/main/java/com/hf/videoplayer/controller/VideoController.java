@@ -7,6 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("videos")
 public class VideoController extends BaseController{
@@ -64,6 +69,37 @@ public class VideoController extends BaseController{
     public  JsonResult<Void> minusCollectNumbersByVideoId(Integer vid) {
         videoService.minusCollectNumbersByVideoId(vid);
         return new JsonResult<>(OK);
+    }
+
+    /**
+     * 动态显示前端页面
+     * @return
+     */
+    @RequestMapping("show_video")
+    public JsonResult<List<String>[]> showVideo() throws IOException {
+        List<String> video_name = new ArrayList<>();
+        List<String> video_src = new ArrayList<>();
+        String path = "G:\\video";
+        File file = new File(path);
+        File[] files = file.listFiles();
+        for(int i = 0;i < files.length;i++){
+            File f = files[i];
+            if(f.isDirectory()){
+                File[] finalFile = f.listFiles();//获取到最终文件
+                for(int j=0;j<finalFile.length;j++){
+                    if(finalFile[j].getName().endsWith(".mp4")){
+                        video_name.add(finalFile[j].getName());
+                        video_src.add(finalFile[j].getCanonicalPath());
+                    }
+                }
+            }
+        }
+        List<String>[] video = new List[2];
+        System.out.println(video_name);
+        System.out.println(video_src);
+        video[0] = video_name;
+        video[1] = video_src;
+        return new JsonResult<>(OK, video);
     }
 
 }

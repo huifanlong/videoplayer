@@ -146,4 +146,21 @@ $(function(){
         console.log("onpagehide执行")
     }
 
+    /*进入页面时从数据库爬取课程名称来在前端动态显示*/
+    $.ajax({type: "GET", url: "/videos/show_video", dataType:"JSON", async: true,
+        error: function (request) {
+            console.log(request.message);
+        },
+        success: function (json) {
+            if(json.state==200) {
+                let video_name = json.data[0];
+                let video_src = json.data[1];
+                let src
+                for(let i=0;i<video_name.length;i++){
+                    src = "D:\\".concat(video_src[i].substr(2));
+                    $(".nav-contents").append("<p><a href='"+src+"'>"+video_name[i]+"</a></p>");
+                }
+            }
+        }
+    })
 })

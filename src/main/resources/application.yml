@@ -9,3 +9,6 @@ spring:
     username: root
     password: 123456
 
+accessFile:
+  resourceHandler: /video/**
+  location: E:\video\
