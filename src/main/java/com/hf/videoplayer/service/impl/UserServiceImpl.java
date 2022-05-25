@@ -79,7 +79,9 @@ public class UserServiceImpl implements IUserService {
     @Override
     public void creatRecord(Record record) {
         String uid = record.getUid();
-        Integer vid = record.getVid();
+        String vid = record.getVid();
+        System.out.println("uid"+uid);
+        System.out.println("vid"+vid);
         /**根据用户id和视频id去Record表里面查找是否有记录*/
         Record result = recordMapper.findRecordByUidAndVid(uid,vid);
 
@@ -92,6 +94,7 @@ public class UserServiceImpl implements IUserService {
             if(rows != 1){
                 throw new RecordUpdateException("观看数据更新异常");
             }
+            System.out.println("Record success --not first time");
         }else{
             /**否则就是正常插入一条数据*/
             record.setWatchTimes(1);
@@ -99,9 +102,11 @@ public class UserServiceImpl implements IUserService {
             if(rows != 1){
                 throw new RecordUpdateException("观看数据存储异常");
             }
+            System.out.println("Record success --first time");
         }
 
     }
-
+//    http://localhost:8080/web/videoplayer_etm2021.html?src=../video/1/13590931-1-208.mp4
+//    http://localhost:8080/web/videoplayer_etm2021.html?src=../\video\1\13590176-1-208.mp4
 
 }

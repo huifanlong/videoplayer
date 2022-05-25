@@ -79,7 +79,7 @@ public class VideoController extends BaseController{
     public JsonResult<List<String>[]> showVideo() throws IOException {
         List<String> video_name = new ArrayList<>();
         List<String> video_src = new ArrayList<>();
-        String path = "G:\\video";
+        String path = "D:\\simpletest\\videoplayer\\src\\main\\resources\\static\\video";
         File file = new File(path);
         File[] files = file.listFiles();
         for(int i = 0;i < files.length;i++){

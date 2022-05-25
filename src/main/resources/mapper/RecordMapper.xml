@@ -10,14 +10,14 @@
     </resultMap>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO time_record_etm_2021 (uid,vid,time,rate,create_time,watch_times) VALUES (#{uid},#{vid},#{time},#{rate},#{createTime},#{watchTimes})
+        INSERT INTO time_record (uid,vid,time,rate,create_time,watch_times) VALUES (#{uid},#{vid},#{time},#{rate},#{createTime},#{watchTimes})
     </insert>
 
     <select id="findRecordByUidAndVid" resultMap="RecordEntityMap">
-        SELECT * FROM time_record_etm_2021 WHERE uid = #{uid} AND vid=#{vid}
+        SELECT * FROM time_record WHERE uid = #{uid} AND vid=#{vid}
     </select>
 
     <update id="update">
-        UPDATE time_record_etm_2021 SET time=#{time},rate=#{rate},create_time=#{createTime},watch_times=#{watchTimes} WHERE uid = #{uid} AND vid=#{vid}
+        UPDATE time_record SET time=#{time},rate=#{rate},create_time=#{createTime},watch_times=#{watchTimes} WHERE uid = #{uid} AND vid=#{vid}
     </update>
 </mapper>

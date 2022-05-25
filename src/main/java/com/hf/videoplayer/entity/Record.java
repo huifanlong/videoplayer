@@ -14,7 +14,7 @@ public class Record implements Serializable {
 
     private String uid;//在这个表中，uid实际上是user表的user_name
 
-    private Integer vid;
+    private String vid;
 
     private String time;
 

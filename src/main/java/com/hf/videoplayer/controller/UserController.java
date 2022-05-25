@@ -99,6 +99,7 @@ public class UserController extends BaseController{
        String uid= getUserNameFromSession(session);//Record数据表里面的uid实际上是用户名userName
        record.setUid(uid);
        userService.creatRecord(record);
+       System.out.println("Record success");
        return new JsonResult<>(OK);
    }
 }

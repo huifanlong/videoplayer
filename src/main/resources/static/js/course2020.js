@@ -157,7 +157,7 @@ $(function(){
                 let video_src = json.data[1];
                 let src
                 for(let i=0;i<video_name.length;i++){
-                    src = "D:\\".concat(video_src[i].substr(2));
+                    src = "videoplayer_etm2021.html?src=..".concat(video_src[i].substr("D:\\simpletest\\videoplayer\\src\\main\\resources\\static".length).replaceAll("\\","/"));
                     $(".nav-contents").append("<p><a href='"+src+"'>"+video_name[i]+"</a></p>");
                 }
             }
