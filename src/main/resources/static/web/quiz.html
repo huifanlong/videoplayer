@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>在线测试</title>
+    <script>
+        var uname = "{$_SESSION['userName']}";
+        if (uname=="") {
+            alert("请先登录！");
+            window.location.href = "../index.html";
+        }
+    </script>
+</head>
+
+<body>
+<div class="main" style="position: relative; padding: 80px;">
+    <div class="userinfo" style="width: 300px; height: 50px;float: right; color: red">
+        <h3>
+            <span class="login-yes login-span-yes">你好！</span><a href="course2020.html" class="login-yes" id="back">返回</a>
+            <a href="../index.html" id="login-out" class="login-yes">退出登录</a>
+            <span class="login-no" > 未登录 </span><a href="../index.html" class="login-no">请先登录</a>
+        </h3>
+    </div>
+<!--    <div class="userinfo" style="width: 300px; height: 50px; position: absolute; right: 0;">-->
+<!--        <h3>-->
+<!--            <present name="_SESSION['username']">你好！ {$_SESSION['name']}</a>&nbsp;&nbsp;<a href="../index.html">退出登录</a><else />未登录 <a href="{:U('Index/index')}">请先登录</a></present>-->
+<!--        </h3>-->
+<!--    </div>-->
+
+    <div class="tip">
+        <center>
+            <font size="6" color="green"><b>在线检测</b></font>
+            <h1>测试已开始 请开始作答  <span id="mytime">00:00:00</span></h1>
+        </center>
+        <br>
+        <hr>
+    </div>
+
+    <!-- 单选题 -->
+    <div id=questions_list>
+<!--        <div id="question_0">-->
+<!--            <p>1只想获得学生数据表中的学号和姓名属性，可以对学生数据表进行（）操作。<br></p>-->
+<!--            <p>-->
+<!--                <label for="optionA1"><input type="radio" name="Q1" id="optionA1" value="A">A.投影<br></label>-->
+<!--                <label for="optionB1"><input type="radio" name="Q1" id="optionB1" value="B">B.选择<br></label>-->
+<!--                <label for="optionC1"><input type="radio" name="Q1" id="optionC1" value="C">C.并 <br></label>-->
+<!--                <label for="optionD1"><input type="radio" name="Q1" id="optionD1" value="D">D.差 <br> </label>-->
+<!--            </p>-->
+<!--        </div>-->
+    </div>
+
+    <button id="button1">提交</button>
+
+    <div id="answer_check" style="visibility:hidden;">
+        <h3>
+            选择题您一共答对了
+            <font color="red"><span id="num_of_right"></span></font> 题，花了
+            <font color="red"><span id="time"></span></font>秒
+            <!-- <br>
+            其中答对的题号有:<span id="right_questionID" style="color:red"></span> -->
+            <br>
+            其中答错的题号为:<span id="error_questionID" style="color:red"></span>
+            <br>
+            选择题正确答案为:<span id="correct_answer" style="color:red"></span>
+        </h3>
+        <button id="button2" disabled="disabled">返回课程页面</button>
+        <!-- <button id="button3" onclick="gouserinfo();" disabled="disabled">查看当前成绩</button> -->
+    </div>
+</div>
+<script src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/quiz.js"></script>
+<script type="text/javascript" src="../js/base_trace.js"></script>
+</body>
+</html>

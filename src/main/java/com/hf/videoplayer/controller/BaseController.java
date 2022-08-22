@@ -35,6 +35,9 @@ public class BaseController {
         }else if(e instanceof VideoNotFoundException){
             result.setState(5001);
             result.setMessage("视频文件找不到");
+        }else if(e instanceof QuestionsNotFoundException){
+            result.setState(5002);
+            result.setMessage("题目找不到");
         }else if(e instanceof CollectionNotFoundException){
             result.setState(6001);
             result.setMessage("收藏记录不存在或未收藏");
@@ -68,15 +71,43 @@ public class BaseController {
         }else if(e instanceof NoTraceException){
             result.setState(4003);
             result.setMessage("查询不到用户的轨迹");
+        }else if(e instanceof QuizRecordCreatException){
+            result.setState(4004);
+            result.setMessage("答题记录录入错误");
+        }else if(e instanceof QuizRecordNotFoundException){
+            result.setState(5003);
+            result.setMessage("查询不到答题记录");
+        }else if(e instanceof SessionFoundNoLoginInformationException){
+            result.setState(2000);
+            result.setMessage("尚未登录");
         }
         return result;
     }
 
+    /**
+     * 该ExceptionHandler用户处理用户未登录时 抛出的session异常。
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(SessionFoundNoLoginInformationException.class)
+    public JsonResult<Void> handleSessionFoundNoLoginInformationException(Throwable e){
+        JsonResult<Void> result = new JsonResult<>(e);
+        result.setState(2000);
+        result.setMessage("尚未登录");
+        return result;
+    }
+
     protected final Integer getIdFromSession(HttpSession session){
+        if(session.getAttribute("id")== null){
+            throw new SessionFoundNoLoginInformationException("尚未登录");
+        }
         return Integer.valueOf(session.getAttribute("id").toString());
     }
 
     protected final String getUserNameFromSession(HttpSession session){
+        if(session.getAttribute("id")== null){
+            throw new SessionFoundNoLoginInformationException("尚未登录");
+        }
         return session.getAttribute("userName").toString();
     }
     protected final String getNameFromSession(HttpSession session){

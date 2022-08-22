@@ -27,8 +27,8 @@ public class NoteController extends BaseController{
     public JsonResult<Void> createNotes(Note note, String state, HttpSession session){
         String uid = getUserNameFromSession(session);
         note.setUid(uid);
-        System.out.println(state);
-        System.out.println(state.equals("new"));
+//        System.out.println(state);
+//        System.out.println(state.equals("new"));
 //        System.out.println("创建笔记controller层的测试1");
         if(state.equals("new")){
             noteService.createNote(note);
