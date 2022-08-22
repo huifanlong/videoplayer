@@ -30,7 +30,7 @@ public class CollectionController extends BaseController{
     public JsonResult<Void> creatCollection(Integer vid, HttpSession session){
         String uid = getUserNameFromSession(session);
         collectionService.createCollection(uid,vid);
-        return new JsonResult<>(OK);
+        return new JsonResult<>(OK,"添加收藏记录");
     }
 
     /**
@@ -43,7 +43,7 @@ public class CollectionController extends BaseController{
     public JsonResult<Void> deleteCollection(Integer vid,HttpSession session){
         String uid = getUserNameFromSession(session);
         collectionService.deleteCollection(uid,vid);
-        return new JsonResult<>(OK);
+        return new JsonResult<>(OK,"取消收藏记录");
     }
 
     /**

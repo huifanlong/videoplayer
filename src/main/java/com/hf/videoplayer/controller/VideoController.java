@@ -29,8 +29,8 @@ public class VideoController extends BaseController{
      @RequestMapping("add_like_numbers")
     public  JsonResult<Void> addLikeNumbersByVideoId(Integer vid) {
          videoService.addLikeNumbersByVideoId(vid);
-         System.out.println("向数据库已经增加一条点赞");
-         return new JsonResult<>(OK);
+//         System.out.println("向数据库已经增加一条点赞");
+         return new JsonResult<>(OK,"点赞+1");
      }
 
     /**
@@ -41,7 +41,7 @@ public class VideoController extends BaseController{
     @RequestMapping("add_collect_numbers")
     public  JsonResult<Void> addCollectNumbersByVideoId(Integer vid) {
         videoService.addCollectNumbersByVideoId(vid);
-        return new JsonResult<>(OK);
+        return new JsonResult<>(OK,"收藏+1");
     }
     /**
      *
@@ -51,8 +51,8 @@ public class VideoController extends BaseController{
     @RequestMapping("minus_like_numbers")
     public  JsonResult<Void> minusLikeNumbersByVideoId(Integer vid) {
         videoService.minusLikeNumbersByVideoId(vid);
-        System.out.println("向数据库减少一条点赞");
-        return new JsonResult<>(OK);
+//        System.out.println("向数据库减少一条点赞");
+        return new JsonResult<>(OK,"点赞-1");
     }
 
     /**
@@ -63,7 +63,7 @@ public class VideoController extends BaseController{
     @RequestMapping("minus_collect_numbers")
     public  JsonResult<Void> minusCollectNumbersByVideoId(Integer vid) {
         videoService.minusCollectNumbersByVideoId(vid);
-        return new JsonResult<>(OK);
+        return new JsonResult<>(OK,"收藏-1");
     }
 
 }

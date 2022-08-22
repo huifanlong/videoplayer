@@ -163,7 +163,7 @@ $(function(){
 
         $.post("/quiz_record/create",
             {"quizId": qid, "answer": answer, "rightQuestionID": right_questionID, "errorQuestionID": error_questionID, "startTime": starttime, "endTime": endtime, "usedTime": time,"score":Math.round(num_of_right/count*100),"numOfRight": num_of_right},
-            function (data) {
+            function (json) {
                 // console.log(data);
                 // console.log("传值成功");
             });

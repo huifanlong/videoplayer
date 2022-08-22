@@ -31,7 +31,7 @@ public class LikeController extends BaseController{
     public JsonResult<Void> creatLike(Integer vid, HttpSession session){
         String uid = getUserNameFromSession(session);
         likeService.createLike(uid,vid);
-        return new JsonResult<>(OK);
+        return new JsonResult<>(OK,"添加点赞记录");
     }
 
     /**
@@ -44,7 +44,7 @@ public class LikeController extends BaseController{
     public JsonResult<Void> deleteLike(Integer vid,HttpSession session){
         String uid = getUserNameFromSession(session);
         likeService.deleteLike(uid,vid);
-        return new JsonResult<>(OK);
+        return new JsonResult<>(OK,"取消点赞记录");
     }
 
     /**

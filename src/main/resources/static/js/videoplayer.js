@@ -45,12 +45,9 @@
         /** 加载视频信息：视频文件、名称、点赞数、收藏数，以及用户是否点赞或收藏*/
         function loadVideoInfo(){
             /*页面加载好时操作2： 到视频对象 并且根据src初始化视频 ；根据videoName初始化视频名字；根据点赞人数初始化originLikesNumbers和likesNumbers两个变量 ；根据点赞人数初始化originCollectNumbers和collectNumbers两个变量*/
-            $.ajax({type: "POST", url: "/videos/find_by_id", data: "id="+vid, dataType:"JSON", async: true,
-                // data:"userName="+user_name+"&userPass="+user_pass,
-                error: function (request) {
-                    alert("Connection error"+request.message+request.status);
-                },
-                success: function (json) {
+            $.post("/videos/find_by_id",
+                {"id":vid},
+                function(json){
                     if(json.state==200) {
                         $("#media").prop("src",json.data.src);
                         $("#demo").text("视频名："+json.data.videoName);
@@ -60,184 +57,81 @@
                         collectNumbers = json.data.collectNumbers;
                         // originCollectNumbers = json.data.collectNumbers;//同上
                         $(".collect-btn ").html("<img src=\"../icon/heart.svg\" alt=\"收藏\" width=\"20\" height=\"20\">"+collectNumbers);
-                        //glyphicon glyphicon-heart
                         // console.log(json.data.likeNumbers);
                         // alert("likenumbers:"+originLikesNumbers+"collectnumbers"+originCollectNumbers);
                     }else {
                         alert(json.message);
                     }
-                }
-            });
+                })
             /*页面加载好时方法2： 从数据库中调取用户对视频的点赞状态 调整变量is_like的值*/
-            $.ajax({
-                type:"POST",
-                url:"/likes/find_like_status",
-                data:"vid="+vid, dataType:"JSON", async: true,
-                error: function (request) {
-                    alert("Connection error"+request.message+request.status);
-                    // alert(vid);
-                },
-                success: function (json) {
+            $.post("/likes/find_like_status",
+                {"vid":vid},
+                function(json){
                     if(json.state==200) {//返回200表示已经点赞,初始化is_like为1，并调整点赞按钮样式为红色
                         is_like = 1;
                         // origin_is_like = 1;
                         $(".like-btn").css("color","red");
                     }//如果是8001表示没有点赞 那就时默认样式
-                }
-            })
+            });
             /*页面加载好时方法3： 从数据库中调取用户对视频的收藏状态 调整变量is_collect的值*/
-            $.ajax({
-                type:"POST",
-                url:"/collects/find_collection_status",
-                data:"vid="+vid, dataType:"JSON", async: true,
-                error: function (request) {
-                    alert("Connection error"+request.message+request.status);
-                    // alert(vid);
-                },
-                success: function (json) {
-                    if(json.state==200) {//返回200表示已经点赞,初始化is_like为1，并调整点赞按钮样式为红色
+            $.post("/collects/find_collection_status",
+                {"vid":vid},
+                function(json){
+                    if(json.state==200) {
                         is_collect = 1;
                         // origin_is_collect = 1;
                         $(".collect-btn").css("color","red");
                     }//如果是6001表示没有点赞 那就时默认样式
-                }
-            })
+            });
         }
         /**页面加载好时方法1： 从数据库中调取笔记的内容；*/
         function getNotesFromDbs(){
-            $.ajax({
-                type:"POST",
-                url:"/notes/find_video_notes",
-                data:"vid="+vid, dataType:"JSON", async: true,
-                error: function (request) {
-                    alert("Connection error"+request.message+request.status);
-                    alert(vid);
-                },
-                success: function (json) {
+            $.post("/notes/find_video_notes",
+                {"vid":vid},
+                function(json){
                     if(json.state==200) {
                         var local = [];
-                        $.each(json.data,function (index,ele){
+                        $.each(json.data, function (index, ele) {
                             // alert(ele.notes);
-                            local.push({time:ele.secondTime,content:ele.notes,title:ele.title,state:"fromdbs"});
+                            local.push({time: ele.secondTime, content: ele.notes, title: ele.title, state: "fromdbs"});
                         })
                         savaNotes(local);
                         loadNotes();
-                    } else if(json.state == 7002){
-                        //米有笔记就什么都不做吧
-                        // alert(json.message);
+                    }else if(json.state == 7002){
+                            //米有笔记就什么都不做吧
+                            // alert(json.message);
                     }
-                }
-            })
+                });
         }
-
+        function likeAndCollectManage(url){
+            $.post(url,
+                {"vid":vid},
+                function(json){
+                    if(json.state==200) {
+                        console.log(json.message);
+                    }
+                });
+        }
         function userAddLike(){
             /*视频点赞数+1*/
-            $.ajax({
-                type:"POST", url:"/videos/add_like_numbers",
-                data:"vid="+vid, dataType:"JSON", async: true,
-                error: function (request) {
-                    alert("点赞更新发生错误"+request.message+request.status);
-                },
-                success: function (json) {
-                    if(json.state==200) {
-                        console.log("点赞更新成功");
-                    }
-                }
-            })
+            likeAndCollectManage("/videos/add_like_numbers");
             /*更改点赞状态，在另一张表*/
-            $.ajax({
-                type:"POST", url:"/likes/creat_like",
-                data:"vid="+vid, dataType:"JSON", async: true,
-                error: function (request) {
-                    alert("修改用户对这个视频的点赞发生错误"+request.message+request.status);
-                },
-                success: function (json) {
-                    if(json.state==200) {
-                        console.log("修改用户对这个视频的点赞成功");
-                    }
-                }
-            })
+            likeAndCollectManage("/likes/creat_like");
         }
         function userDeleteLike(){
             /*视频点赞数-1*/
-            $.ajax({
-                type:"POST", url:"/videos/minus_like_numbers",
-                data:"vid="+vid, dataType:"JSON", async: true,
-                error: function (request) {
-                    alert("点赞更新发生错误"+request.message+request.status);
-                },
-                success: function (json) {
-                    if(json.state==200) {
-                        console.log("点赞更新成功");
-                    }
-                }
-            })
+            likeAndCollectManage("/videos/minus_like_numbers");
             /*更改点赞状态，在另一张表*/
-            $.ajax({
-                type:"POST", url:"/likes/delete_like",
-                data:"vid="+vid, dataType:"JSON", async: true,
-                error: function (request) {
-                    alert("修改用户对这个视频的点赞发生错误"+request.message+request.status);
-                },
-                success: function (json) {
-                    if(json.state==200) {
-                        console.log("修改用户对这个视频的点赞成功");
-                    }
-                }
-            })
+            likeAndCollectManage("/likes/delete_like");
         }
 
         function userAddCollection(){
-            $.ajax({
-                type:"POST", url:"/videos/add_collect_numbers",
-                data:"vid="+vid, dataType:"JSON", async: true,
-                error: function (request) {
-                    alert("收藏更新发生错误"+request.message+request.status);
-                },
-                success: function (json) {
-                    if(json.state==200) {
-                        console.log("收藏更新成功");
-                    }
-                }
-            })
-            $.ajax({
-                type:"POST", url:"/collects/creat_collection",
-                data:"vid="+vid, dataType:"JSON", async: true,
-                error: function (request) {
-                    alert("修改用户对这个视频的点赞发生错误"+request.message+request.status);
-                },
-                success: function (json) {
-                    if(json.state==200) {
-                        console.log("修改用户对这个视频的点赞成功");
-                    }
-                }
-            })
+            likeAndCollectManage("/videos/add_collect_numbers");
+            likeAndCollectManage("/collects/creat_collection");
         }
         function userDeleteCollection(){
-            $.ajax({
-                type:"POST", url:"/videos/minus_collect_numbers",
-                data:"vid="+vid, dataType:"JSON", async: true,
-                error: function (request) {
-                    alert("收藏更新发生错误"+request.message+request.status);
-                },
-                success: function (json) {
-                    if(json.state==200) {
-                        console.log("收藏更新成功");
-                    }
-                }
-            })
-            $.ajax({
-                type:"POST", url:"/collects/delete_collection",
-                data:"vid="+vid, dataType:"JSON", async: true,
-                error: function (request) {
-                    alert("修改用户对这个视频的点赞发生错误"+request.message+request.status);
-                },
-                success: function (json) {
-                    if(json.state==200) {
-                        console.log("修改用户对这个视频的点赞成功");
-                    }
-                }
-            })
+            likeAndCollectManage("/videos/minus_collect_numbers");
+            likeAndCollectManage("/collects/delete_collection");
         }
         /** 改变播放速率*/
         rateSelect.addEventListener('change', function () {
@@ -265,27 +159,13 @@
          * @param r rateString
          */
         function savaRecord(v,t,r){
-            $.ajax({
-                type: "POST",
-                url: "/users/create_record",
-                // data: $('#form').serialize(),// 序列化表单值LogLLLLLL
-                data:"vid="+v+"&time="+t+"&rate="+r,
-                dataType:"JSON",
-                async: true,
-                error: function (request) {
-                    alert("播放数据存储发生错误"+request.message+request.status);
-                },
-                success: function (json) {
+            $.post("/users/create_record",
+                {"vid":v,"time":t,"rate":t},
+                function(json){
                     if(json.state==200) {
-                        // alert("退出成功");
                         console.log("播放数据存储成功");
-                    }else if (json.state==2) {  //管理员账号
-                        window.location.href = "{:U('Index/admin')}";
                     }
-                    else {
-                    }
-                }
-            })
+            });
         }
 
         /**当用户点击播放的时候，会出发这个方法curveTime，获取时间曲线
@@ -343,18 +223,14 @@
              * 2.1暂时前端没有做笔记修改的操作*/
             var local = getNotes();//从本地中获取数据
             $.each(local,function (index,ele){
-                $.ajax({type:"POST", url:"/notes/create_notes",
-                    data:"vid="+vid+"&secondTime="+ele.time+"&title="+ele.title+"&notes="+ele.content+"&state="+ele.state, dataType:"JSON", async: true,
-                    error: function (request) {
-                        alert("笔记存储发生错误"+request.message+request.status);
-                    },
-                    success: function (json) {
+                $.post("/notes/create_notes",
+                    {"vid":vid,"secondTime":ele.time,"title":ele.title,"notes":ele.content,"state":ele.state},
+                    function(json){
                         if(json.state==200) {
                             // alert("退出成功");
                             console.log("笔记存储成功");
                         }
-                    }
-                })
+                });
             })
             localStorage.removeItem("notes");
             // alert("清除数据");
@@ -367,19 +243,15 @@
                 flag=false;
                 savaRecord(vid,timeString,rateString);
             }
-        })
+        });
         /**点击退出，则执行一次ajax请求，到后端清除session数据*/
         $('#login-out').click(function () {
-            $.ajax({type: "GET", url: "/users/login_out", dataType:"JSON", async: true,
-                error: function (request) {
-                    alert("logout error"+request.message+request.status);
-                },
-                success: function (json) {
+            $.get("/users/login_out",
+                function(json){
                     if(json.state==200) {
                         console.log("退出成功");
                     }
-                }
-            })
+            });
          });
 
         /**当点击记笔记的按钮时 才滑出一个输出框*/
@@ -403,7 +275,7 @@
                     myVideo.setAttribute("controls","controls");
                 }
             }
-        })
+        });
 
         /** 给笔记的提交按钮和内容输入框的回车键绑定事件，增加一条笔记 ，还要存储到数据库当中？ 还是最后离开页面再存储？---->解答 ： 先存储到浏览器的本地内存，当用户离开页面时 再统一从本地中进行存储？*/
         $(".notes-submit").on("click",function (){
@@ -417,7 +289,7 @@
                 $(".write-notes-content").val("");//内容文本框清空
                 $(".write-notes-title").val("");//主题文本框清空
             }
-        })
+        });
 
         /**给所有的播放button注册点击事件*/
         $(".notes").on("click",".btn-play",function(){
@@ -426,7 +298,7 @@
             myVideo.currentTime = $(this).attr("data-time");
             myVideo.play();
             // alert($(this).attr("data-time"));
-        })
+        });
         /**给所有的删除button注册点击事件*/
         $(".notes").on("click",".btn-delete",function(){
             var local = getNotes();
@@ -437,7 +309,7 @@
             local[$(this).attr("id")].state+="-delete";
             savaNotes(local);
             loadNotes();
-        })
+        });
 
         /** 给点赞按钮创建点击事件*/
         $(".like-btn").on("click",function(){
@@ -507,7 +379,7 @@
 
                  }
 
-             })
+             });
          }
      }
 

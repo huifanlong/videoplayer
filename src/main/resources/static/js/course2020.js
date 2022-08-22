@@ -7,30 +7,18 @@ $(function(){
     /*每次到达这个页面都要判单是否需要初始化计时器，直接给后台一个GET请求就行*/
     window.onpageshow = function(){//onpageshow比最外层的document.ready可以放置back-force-cache：即实现点击浏览器左上角返回按钮时也触发该事件。但是IE好像不支持这个事件
         updateBegin("index_trace");//开始记录此页面登录时间
-        $.ajax({type: "GET", url: "/trace/duration", dataType:"JSON", async: true,
-            error: function (request) {
-                console.log(request.message);
-            }
-        })
+        $.get("/trace/duration");
         console.log("/trace/duration已访问？");
     }
 
     /* 点击退出登录按钮，进行退出登录操作*/
     $('#login-out').click(function () {
-        $.ajax({type: "GET", url: "/users/login_out", dataType:"JSON", async: true,
-            error: function (request) {
-                alert("Connection error"+request.message+request.status);
-            },
-            success: function (json) {
+        $.get("/users/login_out",
+            function(json){
                 if(json.state==200) {
                     alert("退出成功");
-                }else if (json.state==2) {  //管理员账号
-                    window.location.href = "{:U('Index/admin')}";
                 }
-                else {
-                }
-            }
-        })
+            });
     });
 
     /** 导航栏切换显示《课程》和《反思》*/
