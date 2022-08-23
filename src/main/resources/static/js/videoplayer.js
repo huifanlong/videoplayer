@@ -4,7 +4,10 @@
          * 前端根据获取的值再设置<video>标签的src属性，这样就可以显示出相应的视频了*/
         var arr = location.search.substr(1).split('=');
         var vid = arr[1];
-
+        //如果是第一个视频，就把上一个（视频）按钮禁用
+        if(vid==1){
+            $("#playLast").attr('disabled',true);
+        }
         var myVideo=document.getElementById("media");
         // myVideo.src = src;
         // document.getElementById("demo").innerHTML = "视频名："+vname;
@@ -41,6 +44,28 @@
         getNotesFromDbs();
         // loadNotes();上面的方法一起load 否则可能因为执行顺序 localstorage里面的内容没有load。
         updateBegin("video_trace");//开始记录此页面登录时间
+        var vidNew
+        //上一个（视频）按钮
+        $("#playLast").on("click",function (){
+            window.location.href = "../web/videoplayer_etm2021.html?id="+(parseInt(vid) - 1);
+        })
+        //下一个（视频）按钮
+        $("#playNext").on("click",function (){
+            $.post("/videos/find_by_id",
+                {"id":vid+1},
+                function (json){
+                    if (json.state == 200){ //如果有下一个视频
+                        window.location.href = "../web/videoplayer_etm2021.html?id="+(parseInt(vid) + 1);
+                    }
+                    else{ //如果没有下一个视频，则返回到第一个视频
+                        if(window.confirm('该视频是最后一个视频，点击确实将播放第一个视频')){
+                            window.location.href = "../web/videoplayer_etm2021.html?id="+1;
+                        }else{
+                            return false;
+                        }
+                    }
+                })
+        })
 
         /** 加载视频信息：视频文件、名称、点赞数、收藏数，以及用户是否点赞或收藏*/
         function loadVideoInfo(){
@@ -381,6 +406,10 @@
 
              });
          }
+     }
+
+     function LastAndNextButtonControl(vid,video_num){
+
      }
 
     })
