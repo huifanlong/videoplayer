@@ -17,9 +17,14 @@ public class VideoController extends BaseController{
     @RequestMapping("find_by_id")
      public JsonResult<Video> findVideoById(Integer id){
          Video video = videoService.findByVideoId(id);
-//        System.out.println("dd");
          return new JsonResult<>(OK,video);
      }
+
+    @RequestMapping("find_all")
+    public JsonResult<Video[]> findAll(){
+        Video[] videos = videoService.findAllVideos();
+        return new JsonResult<>(OK,videos);
+    }
 
     /**
      *

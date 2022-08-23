@@ -66,13 +66,8 @@
                     if(json.data.authority == 0){//学生用户
                         window.location.href = "web/course2020.html";
                     }else{//管理员
-                        window.location.href = "www.baidu.com";
+                        window.location.href = "web/teachers.html";
                     }
-                }else if (json.state==2) {  //管理员账号
-                    window.location.href = "{:U('Index/admin')}";
-                }
-                else {
-                    alert(json.message);
                 }
             }
         });

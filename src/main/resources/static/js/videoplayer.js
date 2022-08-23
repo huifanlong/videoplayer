@@ -214,18 +214,23 @@
                 console.log(timeString);
                 console.log(rateString);
                 flag=false;
-                savaRecord(vid,timeString,rateString);
+                //没有答过题的记录才存储
+                $.get("/quiz_record/is_done",{"quizId":qid},function(json){
+                    if(json.state==200){
+                        savaRecord(vid,timeString,rateString);
+                        //做题
+                        qid = vid;
+                        // lianjie="<a href='http://etm2020.cn/index.php/Index/quiz_etm_2021?id="+qid+"'>测试链接</a>";
+                        // console.log(lianjie);
+                        // document.getElementById("showdiv1").innerHTML="<p>若未跳转成功点击此链接:</p>";
+                        // document.getElementById("showdiv2").innerHTML=lianjie;
+                        alert('视频播放结束!请同学们完成相关测验题，本次测验题的成绩也会作为学生总成绩的一部分，点击确定按钮跳转至测验部分');
 
-                qid = vid;
-                // lianjie="<a href='http://etm2020.cn/index.php/Index/quiz_etm_2021?id="+qid+"'>测试链接</a>";
-                // console.log(lianjie);
-                // document.getElementById("showdiv1").innerHTML="<p>若未跳转成功点击此链接:</p>";
-                // document.getElementById("showdiv2").innerHTML=lianjie;
-                alert('视频播放结束!请同学们完成相关测验题，本次测验题的成绩也会作为学生总成绩的一部分，点击确定按钮跳转至测验部分');
-
-                console.log(vid);
-                console.log(qid);
-                window.location.href = "../web/quiz.html?id="+qid;
+                        console.log(vid);
+                        console.log(qid);
+                        window.location.href = "../web/quiz.html?id="+qid;
+                    }
+                })
             }
             else
                 timeId = setTimeout(getCurTime,1000);

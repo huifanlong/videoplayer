@@ -21,6 +21,8 @@ public interface VideoMapper {
 
     Video findByVideoId(Integer id);
 
+    Video[] findAllVideos();
+
     /**
      *
      * @param likeNumbers 更新的点赞人数

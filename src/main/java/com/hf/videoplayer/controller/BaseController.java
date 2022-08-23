@@ -80,6 +80,12 @@ public class BaseController {
         }else if(e instanceof SessionFoundNoLoginInformationException){
             result.setState(2000);
             result.setMessage("尚未登录");
+        }else if(e instanceof VideoWatchingTimeRecordNotFoundException){
+            result.setState(5004);
+            result.setMessage("该视频没有学生数据流记录");
+        }else if(e instanceof CourseVideoHasNotRegisteredException){
+            result.setState(5005);
+            result.setMessage("该视频表尚未录入视频信息");
         }
         return result;
     }

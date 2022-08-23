@@ -35,6 +35,13 @@ public class VideoMapperTests {
         Video video = videoMapper.findByVideoId(1);
         System.out.println(video);
     }
+    @Test
+    public void findAllVideos(){
+        Video[] videos = videoMapper.findAllVideos();
+        for(int i = 0;i<videos.length;i++){
+            System.out.println(videos[i].getVideoName());
+        }
+    }
 
     @Test
     public void updateLikeNumbersByVideoId(){

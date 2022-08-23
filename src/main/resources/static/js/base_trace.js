@@ -31,8 +31,10 @@ function loadUserInfo(){
                 $(".login-no").prop("style","display:none");
                 $(".login-span-yes").html("你好！"+json.data.userName+"&nbsp;&nbsp");
                 // alert("首页初始化成功");
+                console.log("已登录");
             }else {
                 $(".login-yes").prop("style","display:none");
+                console.log("未登录");
             }
     })
 }

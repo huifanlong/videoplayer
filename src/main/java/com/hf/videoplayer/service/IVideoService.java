@@ -6,6 +6,8 @@ public interface IVideoService {
 
     Video findByVideoId(Integer id);
 
+    Video[] findAllVideos();
+
     /**
      * 根据视频id查找视频是否存在，存在则增加一个点赞人数
      */

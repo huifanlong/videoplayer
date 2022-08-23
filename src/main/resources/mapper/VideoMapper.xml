@@ -22,6 +22,10 @@
         SELECT * FROM video_2020autumn WHERE id = #{id}
     </select>
 
+    <select id="findAllVideos" resultMap="VideoEntityMap">
+        SELECT * FROM video_2020autumn
+    </select>
+
     <update id="updateLikeNumbersByVideoId">
         UPDATE video_2020autumn SET like_numbers = #{likeNumbers} WHERE id = #{id}
     </update>

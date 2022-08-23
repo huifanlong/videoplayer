@@ -3,6 +3,7 @@ package com.hf.videoplayer.service.impl;
 import com.hf.videoplayer.entity.Video;
 import com.hf.videoplayer.mapper.VideoMapper;
 import com.hf.videoplayer.service.IVideoService;
+import com.hf.videoplayer.service.ex.CourseVideoHasNotRegisteredException;
 import com.hf.videoplayer.service.ex.VideoNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,26 @@ public class VideoServiceImpl implements IVideoService {
         }
         video.setId(null);//把不必要的信息置空，还有点赞人数和收藏人数 要不要传出去？
         return video;
+    }
+
+    /**
+     * 查找所有视频的id信息和videoName信息
+     * @return
+     */
+    @Override
+    public Video[] findAllVideos() {
+        Video[] videos = videoMapper.findAllVideos();
+        if(videos.length==0){
+            throw new CourseVideoHasNotRegisteredException();
+        }else{
+            for(int i=0;i<videos.length;i++){//把不必要的信息置空
+                videos[i].setSrc(null);
+                videos[i].setCid(null);
+                videos[i].setCollectNumbers(null);
+                videos[i].setLikeNumbers(null);
+            }
+            return videos;
+        }
     }
 
     @Override

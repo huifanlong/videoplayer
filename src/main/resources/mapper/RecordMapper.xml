@@ -17,6 +17,10 @@
         SELECT * FROM time_record_etm_2021 WHERE uid = #{uid} AND vid=#{vid}
     </select>
 
+    <select id="findTimeRecordsByVid" resultMap="RecordEntityMap">
+        SELECT uid,time FROM time_record_etm_2021 WHERE vid=#{vid}
+    </select>
+
     <update id="update">
         UPDATE time_record_etm_2021 SET time=#{time},rate=#{rate},create_time=#{createTime},watch_times=#{watchTimes} WHERE uid = #{uid} AND vid=#{vid}
     </update>

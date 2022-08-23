@@ -2,9 +2,261 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>观看轨迹可视化</title>
+    <!--    引入bootStrap的css文件-->
+    <link href="../bootstrap-3.4.1-dist/css/bootstrap.min.css" rel="stylesheet">
+    <!--    引入jQuery-->
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <!--    引入bootStrap的js文件-->
+    <script src="../bootstrap-3.4.1-dist/js/bootstrap.js"></script>
+    <!--    引入echarts的js文件-->
+    <script src="../js/echarts.min.js"></script>
 </head>
 <body>
+    <span>请选择视频：</span>
+    <select id="select">
+<!--        <option value="vid">videoName</option>-->
+    </select>
 
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <!-- <div id="main" style="width: 1200px;height: 800px;margin-top: 10px;"></div> -->
+    <div id="main" style="width: 1000px;height: 600px;margin-top: 10px;"></div>
+<script>
+    var defaltVid = 1;  //默认显示id=1的视频的观看数据
+    var xData = [];
+    var userData = [];
+    var timeData = [];
+    var seriesData = [];
+    var selected = {};
+
+    getAndShowDataByVid(defaltVid);
+    loadVideoSelector();  //初始化选择按钮
+    var opt = document.getElementById('select');
+    opt.onchange = function(e){
+        var vid = e.target.value;
+        getAndShowDataByVid(vid);
+    };
+
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+
+    // 指定图表的配置项和数据
+    var option = {
+        title: {
+            text: '视频观看轨迹',
+            left: 'center'
+        },
+        legend: {
+            x: 'left',
+            data: userData,    //显示注释的uid数组
+            // selected: ,
+            selectMode: 'single',
+            type: 'scroll',
+            orient: 'vertical',
+            width: '100',
+            top: '10%',
+            left: '1%'
+        },
+        grid: {
+            left: '180',
+            right: '10%',
+            top: '12%',
+            bottom: '6%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                axis: 'x'
+            },
+            formatter: function (params) {
+                // alert(JSON.stringify(params));
+                // console.log(params);
+
+                // var res= params[0].name+'<br/>';    //显示提示框中x轴的刻度
+                var res = '';
+
+                for(var t=0; t<params.length; t++) {
+                    var theTime = params[t].value;  //秒
+                    var theTime1 = 0; // 分
+                    var theTime2 = 0; // 小时
+                    if(theTime > 60) {
+                        theTime1 = parseInt(theTime/60);
+                        theTime = parseInt(theTime%60);
+                        if(theTime1 > 60) {
+                            theTime2 = parseInt(theTime1/60);
+                            theTime1 = parseInt(theTime1%60);
+                        }
+                    }
+
+                    var result = ""+parseInt(theTime);
+
+                    if(theTime1 > 0) {
+                        result = ""+parseInt(theTime1)+":"+result;
+                    }
+
+                    if(theTime2 > 0) {
+                        result = ""+parseInt(theTime2)+":"+result;
+                    }
+
+                    res += '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' + params[t].color + '"></span>' + params[t].seriesName + '-current time of video ' + result + '<br />'; //显示提示框中series的信息
+                }
+                return res;
+            }
+        },
+        xAxis: {
+            type: 'category',
+            // type: 'time',
+            name: '观看视频总时长',
+            boundaryGap: false,
+            data: xData,   //x轴的数组
+            axisLabel: {
+                // show: false,
+                formatter: function(value,index){
+                    var theTime = value;  //秒
+                    var theTime1 = 0; // 分
+                    var theTime2 = 0; // 小时
+                    if(theTime > 60) {
+                        theTime1 = parseInt(theTime/60);
+                        theTime = parseInt(theTime%60);
+                        if(theTime1 > 60) {
+                            theTime2 = parseInt(theTime1/60);
+                            theTime1 = parseInt(theTime1%60);
+                        }
+                    }
+
+                    var result = ""+parseInt(theTime);
+
+                    if(theTime1 > 0) {
+                        result = ""+parseInt(theTime1)+":"+result;
+                    }
+
+                    if(theTime2 > 0) {
+                        result = ""+parseInt(theTime2)+":"+result;
+                    }
+
+                    return result;
+                }
+            }
+        },
+        yAxis: {
+            type: 'value',
+            name: '视频播放总时长',
+            axisLabel: {
+                formatter: function(value,index){
+                    var theTime = value;  //秒
+                    var theTime1 = 0; // 分
+                    var theTime2 = 0; // 小时
+                    if(theTime > 60) {
+                        theTime1 = parseInt(theTime/60);
+                        theTime = parseInt(theTime%60);
+                        if(theTime1 > 60) {
+                            theTime2 = parseInt(theTime1/60);
+                            theTime1 = parseInt(theTime1%60);
+                        }
+                    }
+
+                    var result = ""+parseInt(theTime);
+
+                    if(theTime1 > 0) {
+                        result = ""+parseInt(theTime1)+":"+result;
+                    }
+
+                    if(theTime2 > 0) {
+                        result = ""+parseInt(theTime2)+":"+result;
+                    }
+
+                    return result;
+                }
+            }
+        },
+        dataZoom: [
+            {
+                type: 'slider',
+                show: true,
+                xAxisIndex: [0],
+                start: 0,
+                end: 100
+            },
+            {
+                type: 'slider',
+                show: true,
+                yAxisIndex: [0],
+                width: 15,
+                height: '75%',
+                left: '93%',
+                start: 0,
+                end: 100
+            },
+            {
+                type: 'inside',
+                xAxisIndex: [0],
+                start: 1,
+                end: 35
+            },
+            {
+                type: 'inside',
+                yAxisIndex: [0],
+                start: 29,
+                end: 36
+            }
+        ],
+        series: seriesData //折线上的数据（包括userData和timeData）
+    };
+
+    // myChart.clear();
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option,true);
+
+    function getAndShowDataByVid(vid){
+        $.post("/time_records/list_video_records",{"vid":vid},function (json){
+            if(json.state == 200){
+                genData(json.data);
+                myChart.setOption(option,true);
+            }
+        })
+    }
+    function loadVideoSelector(){
+        $.post("/videos/find_all",function (json){
+            if(json.state == 200){
+                $.each(json.data,function (index,ele){
+                    $("#select").append($("<option value='"+ele.id+"'>"+ele.videoName+"</option>"))
+                })
+            }
+        })
+    }
+    function genData(data){
+        xData.length = 0;  //x轴数据，Played Time
+        userData.length = 0; //用户信息
+        timeData.length = 0;
+        seriesData.length = 0;
+        var max = 0;
+        for(var i=0;i<data.length;i++){
+            var tempObj = {};
+            timeData[i] = data[i]['time'].split(' ');  //以time数据中的空格为分割，将分割之后的数据存至该数组中
+            userData[i] = "user"+data[i]['uid'];//"用户"+data[i]['user_name']+"_"+data[i]['id'];
+            // selected[i] =
+            if(timeData[i].length>max){
+                max=timeData[i].length;
+            }
+            tempObj.name = userData[i];
+            tempObj.type = 'line';
+            tempObj.data = timeData[i];
+            seriesData[i] = tempObj;   //折线上的数据（包括userData和timeData）
+        }
+
+        for(var j=0;j<max;j++){
+            xData[j]=j;
+        }
+
+        // console.log(timeData);
+
+    }
+</script>
 </body>
 </html>

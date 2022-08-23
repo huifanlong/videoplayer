@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>teachers</title>
+    <title>管理员首页</title>
 <!--    引入bootStrap的css文件-->
     <link href="../bootstrap-3.4.1-dist/css/bootstrap.min.css" rel="stylesheet">
 <!--    引入jQuery-->
@@ -12,6 +12,35 @@
 
 </head>
 <body>
+<div class="main" style="position: relative; padding-left: 50px; padding-right: 80px;">
+    <div class="userinfo" style="width: 300px; height: 50px;float: right; color: red;">
+<!--        <h3>-->
+<!--            &lt;!&ndash; <span>您好，</span>-->
+<!--            <a href="{:U('Index/index')}"><span id="username"></span></a> &ndash;&gt;-->
+<!--            <present name="_SESSION['username']">你好！{$_SESSION['username']}&nbsp;&nbsp;<a href="{:U('Index/index')}">退出登录</a><else />未登录 <a href="javascript:start()">请先登录</a></present>-->
+<!--        </h3>-->
+        <div class="userinfo" style="width: 300px; height: 50px;float: right; color: red">
+            <h3>
+                <span class="login-yes login-span-yes">你好！</span>
+                <a href="../index.html" id="login-out" class="login-yes">退出登录</a>
+                <span class="login-no" > 未登录 </span><a href="../index.html" class="login-no">请先登录</a>
+            </h3>
+        </div>
+    </div>
 
+    <h2 style="padding-top: 50px ">选择查看内容：</h2>
+    <!-- <p><a href="__PUBLIC__/Home/video/1.mp4">Overview_1</a></p> -->
+    <div style="padding-left: 30px ">
+        <p><a href="score.html" style="font-size: 18px">全班成绩</a></p>
+        <p><a href="echarts.html" style="font-size: 18px">学生视频观看情况</a></p>
+    </div>
+
+</div>
+<script src="../js/base_trace.js"></script>
+<script>
+    $(function(){
+        loadUserInfo(); //登录信息展示
+    })
+</script>
 </body>
 </html>

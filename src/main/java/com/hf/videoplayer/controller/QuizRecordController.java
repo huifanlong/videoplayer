@@ -23,10 +23,27 @@ public class QuizRecordController extends BaseController{
      * @return 插入一条测试记录
      */
     @RequestMapping("create")
-    public JsonResult<Void> getQuestions(QuizRecord quizRecord, HttpSession session){
+    public JsonResult<Void> createQuizRecord(QuizRecord quizRecord, HttpSession session){
         String uid = getUserNameFromSession(session);
-        quizRecord.setUid(uid);
-        quizRecordService.creatQuizRecord(quizRecord);
-        return new JsonResult<>(OK);
+        QuizRecord[] quizRecords = quizRecordService.findQuizRecordByUidAndQuizID(uid, quizRecord.getQuizId());
+        if(quizRecords.length == 0){
+            //尚未答过题
+            quizRecord.setUid(uid);
+            quizRecordService.creatQuizRecord(quizRecord);
+            return new JsonResult<>(OK);
+        }else{
+            //答过题
+            return new JsonResult<>(20);
+        }
+    }
+    @RequestMapping("is_done")
+    public JsonResult<Void> isDone(Integer quizId,HttpSession session){
+        String uid = getUserNameFromSession(session);
+        QuizRecord[] quizRecords = quizRecordService.findQuizRecordByUidAndQuizID(uid,quizId);
+        if(quizRecords.length == 0){
+            return new JsonResult<>(OK);//尚未答过题
+        }else{
+            return new JsonResult<>(20);//答过题
+        }
     }
 }

@@ -20,6 +20,12 @@ public interface RecordMapper {
      * @return 该用户该视频下的记录
      */
     Record findRecordByUidAndVid(String uid,Integer vid);
+    /**
+     *
+     * @param vid 视频id
+     * @return 该用户该视频下的所有用户记录
+     */
+    Record[] findTimeRecordsByVid(Integer vid);
 
     /**
      *
@@ -27,5 +33,7 @@ public interface RecordMapper {
      * @return 受影响的行数
      */
     Integer update(Record record);
+
+
 
 }
