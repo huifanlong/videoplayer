@@ -13,14 +13,14 @@
     </resultMap>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO learning_trace_edutec_2022 (uname,total_trace,video_ids,login_time,logout_time) VALUES (#{userName},#{totalTrace},#{videoIds},#{loginTime},#{logoutTime})
+        INSERT INTO learning_trace_database_2022 (uname,total_trace,video_ids,login_time,logout_time) VALUES (#{userName},#{totalTrace},#{videoIds},#{loginTime},#{logoutTime})
     </insert>
 
     <select id="findByUserName" resultMap="TraceEntityMap">
-        SELECT * FROM learning_trace_edutec_2022 WHERE uname = #{userName}
+        SELECT * FROM learning_trace_database_2022 WHERE uname = #{userName}
     </select>
 
     <select id="findById" resultMap="TraceEntityMap">
-        SELECT * FROM learning_trace_edutec_2022 WHERE id = #{id}
+        SELECT * FROM learning_trace_database_2022 WHERE id = #{id}
     </select>
 </mapper>

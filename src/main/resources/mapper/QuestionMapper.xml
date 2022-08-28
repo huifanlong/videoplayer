@@ -11,11 +11,11 @@
     </resultMap>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO quiz_question_edutec_2022 (quiz_id,question_id,title,optionA,optionB,optionC,optionD,correct_answer) VALUES (#{quizId},#{questionId},#{title},#{optionA},#{optionB},#{optionC},#{optionD},#{correctAnswer})
+        INSERT INTO quiz_question_database_2022 (quiz_id,question_id,title,optionA,optionB,optionC,optionD,correct_answer) VALUES (#{quizId},#{questionId},#{title},#{optionA},#{optionB},#{optionC},#{optionD},#{correctAnswer})
     </insert>
 
     <select id="findByQuizID" resultMap="QuestionEntityMap">
-        SELECT * FROM quiz_question_edutec_2022 WHERE quiz_id = #{quizId}
+        SELECT * FROM quiz_question_database_2022 WHERE quiz_id = #{quizId}
     </select>
 
 </mapper>
