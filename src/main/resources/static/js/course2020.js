@@ -1,9 +1,12 @@
 $(function(){
     var from = new Date();//登陆时间
     var to;//退出时间
+    var time;
 
     /* 初始化右上角登录显示 */
     loadUserInfo();
+    //从数据库获取信息
+    getReflectionsFromDbs();
     /*每次到达这个页面都要判单是否需要初始化计时器，直接给后台一个GET请求就行*/
     window.onpageshow = function(){//onpageshow比最外层的document.ready可以放置back-force-cache：即实现点击浏览器左上角返回按钮时也触发该事件。但是IE好像不支持这个事件
         updateBegin("index_trace");//开始记录此页面登录时间
@@ -34,9 +37,24 @@ $(function(){
         if(index == 1){//点击了反思页面
             updateLeaving();
             updateBegin("reflection_trace");//进入笔记的轨迹
+            getReflectionsFromDbs();
         }else{//点击了课程页面
             updateLeaving();
             updateBegin("index_trace");//进入课程页面的轨迹
+            /**2.反思存储：把笔记数据全部从浏览器内存中拿给后端，后端处理好了哪些笔记是增加 哪些笔记是删除,那些笔记是修改
+             * 2.1暂时前端没有做笔记修改的操作*/
+            var local = getReflections();//从本地中获取数据
+            $.each(local,function (index,ele){
+                $.post("/reflection/create",
+                    {"time":ele.time,"title":ele.title,"reflection":ele.content,"state":ele.state,"fromDbsTime":ele.fromDbsTime},
+                    function(json){
+                        if(json.state==200) {
+                            // alert("退出成功");
+                            console.log("笔记存储成功");
+                        }
+                    });
+            })
+            localStorage.removeItem("reflections");
         }
     })
 
@@ -48,7 +66,8 @@ $(function(){
             //获取地中的所有笔记
             var local = getReflections();
             //增加这条新的笔记
-            local.push({content:$(".write-reflections-content").val(),title:$(".write-reflections-title").val(),state:"new"});
+            time = new Date();
+            local.push({fromDbsTime:"",time:time.toLocaleString(),content:$(".write-reflections-content").val(),title:$(".write-reflections-title").val(),state:"new"});
             //保存到内存中
             savaReflections(local);
             //重新加载
@@ -70,6 +89,7 @@ $(function(){
     })
     /**给所有的修改button绑定点击事件*/
     $(".reflections").on("click",".btn-update",function(){
+        console.log("点击了删除按钮");
         var local = getReflections();
         var id = $(this).attr("data-id");//获取其id 根据这样的id在localStorage中查找
 
@@ -81,6 +101,8 @@ $(function(){
         /**事件里面可以有事件吗？要写一个模态框的点击事件*/
         $(".save-update").on("click",function(){
             $('#myModal').modal('hide');//关闭模态框
+            time = new Date();
+            local[id].time = time.toLocaleString();
             local[id].title = $(".update-reflections-title").val();//将修改的内容保存
             local[id].content = $(".update-reflections-content").val();
             local[id].state += "-update";
@@ -89,7 +111,24 @@ $(function(){
         })
         //比较奇怪的 存储和重新显示放到这里的话 就不会执行 是因为事件的嵌套？
     })
-
+    /**页面加载好时方法1： 从数据库中调取笔记的内容；*/
+    function getReflectionsFromDbs(){
+        $.post("/reflection/find_all",
+            function(json){
+                if(json.state==200) {
+                    var local = [];
+                    $.each(json.data, function (index, ele) {
+                        // alert(ele.notes);
+                        local.push({fromDbsTime: ele.time, content: ele.reflection, title: ele.title, state: "fromdbs",time:""});
+                    })
+                    savaReflections(local);
+                    loadReflections();
+                }else if(json.state == 7002){
+                    //米有笔记就什么都不做吧
+                    // alert(json.message);
+                }
+            });
+    }
 
     /*读取本地存储的数据reflections*/
     function getReflections(){
@@ -116,7 +155,7 @@ $(function(){
                 console.log(ele);
                 //判断这个元素的state属性，如果是new或者fromdbs就给他展示出来，否则就不展示；这样操作是方便最后将所有的这些数据传入数据库时 做不同的增删改查处理
                 //值得注意的是，删除元素只是修改其属性 让他在这里不显示，但是他依然在locaLStorage里面，在显示元素的时候，显示元素的index值是会被不显示的元素所占位的，所以在删除的方法里 通过他的index值还是可以定位到所显示的元素的？
-                if(ele.state === "new" || ele.state === "fromdbs"){
+                if(ele.state === "new" || ele.state === "fromdbs" ||ele.state.endsWith("update")){
                     /* 下面这行是创建1个完整的<div>笔记*/
                     $(".reflections").prepend("<div class='panel panel-default col-md-8'><div class='panel-heading'>"+ele.title+"<div class='btn-group' role='group' ><button type='button' class='btn btn-default btn-delete' id='"+index+"'>删除</button><button type='button' class='btn btn-default btn-update' data-toggle='modal' data-target='#myModal' data-id='"+index+"'>修改</button></div></div><div class='panel-body'><p>"+ele.content+"</p></div></div>");
                 }else{
@@ -129,9 +168,23 @@ $(function(){
 
     window.onbeforeunload = function (){
         updateLeaving();
+        /**2.反思存储：把笔记数据全部从浏览器内存中拿给后端，后端处理好了哪些笔记是增加 哪些笔记是删除,那些笔记是修改
+         * 2.1暂时前端没有做笔记修改的操作*/
+        var local = getReflections();//从本地中获取数据
+        $.each(local,function (index,ele){
+            $.post("/reflection/create",
+                {"time":ele.time,"title":ele.title,"reflection":ele.content,"state":ele.state,"fromDbsTime":ele.fromDbsTime},
+                function(json){
+                    if(json.state==200) {
+                        // alert("退出成功");
+                        console.log("笔记存储成功");
+                    }
+                });
+        })
+        localStorage.removeItem("reflections");
     }
     window.onpagehide = function (){
-        console.log("onpagehide执行")
+        console.log("onpagehide执行");
     }
 
 })

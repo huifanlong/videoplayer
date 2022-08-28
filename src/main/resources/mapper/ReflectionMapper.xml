@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hf.videoplayer.mapper.ReflectionMapper">
+
+    <resultMap id="ReflectionEntityMap" type="com.hf.videoplayer.entity.Reflection">
+        <id column="id" property="id"></id>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO reflection_database_2022 (uid,vid,reflection,title,time) VALUES (#{uid},#{vid},#{reflection},#{title},#{time})
+    </insert>
+
+    <select id="findReflectionsByUid" resultMap="ReflectionEntityMap">
+        SELECT * FROM reflection_database_2022 WHERE uid = #{uid}
+    </select>
+
+    <select id="findReflectionsByUidAndVid" resultMap="ReflectionEntityMap">
+        SELECT * FROM reflection_database_2022 WHERE uid = #{uid} AND vid=#{vid}
+    </select>
+
+    <select id="findReflectionByUidAndTime" resultMap="ReflectionEntityMap">
+        SELECT * FROM reflection_database_2022 WHERE uid = #{uid} AND time=#{time}
+    </select>
+
+    <delete id="delete">
+        DELETE FROM reflection_database_2022 WHERE uid = #{uid} AND time=#{time}
+    </delete>
+
+    <update id="updateReflection">
+        UPDATE reflection_database_2022 SET reflection=#{reflection}, title=#{title}, time=#{time} WHERE uid = #{uid} AND time=#{fromDbsTime}
+    </update>
+
+
+</mapper>

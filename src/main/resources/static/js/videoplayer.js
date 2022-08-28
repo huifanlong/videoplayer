@@ -349,14 +349,14 @@
                 console.log("成功进入islike=0");
                 $(this).css("color","red");
                 likesNumbers++;
-                $(".like-btn").html("<img src=\"../icon/hand-thumbs-up.svg\" alt=\"赞\" width=\"20\" height=\"20\">"+likesNumbers);//这个前面的span是固定的样式。主要是为了修改显示的点赞人数。
+                $(".like-btn").html("<img src=\"../icon/hand-thumbs-up.svg\" alt=\"\" width=\"20\" height=\"20\">"+likesNumbers);//这个前面的span是固定的样式。主要是为了修改显示的点赞人数。
                 is_like=1;
             }else{//点赞时，（再点击），那就修该样式为黑色
                 userDeleteLike();//向数据库减少视频点赞数，存储用户点赞状态
                 console.log("成功进入islike=1");
                 $(this).css("color","black");
                 likesNumbers--;
-                $(".like-btn").html("<img src=\"../icon/hand-thumbs-up.svg\" alt=\"赞\" width=\"20\" height=\"20\">"+likesNumbers);//同上
+                $(".like-btn").html("<img src=\"../icon/hand-thumbs-up.svg\" alt=\"\" width=\"20\" height=\"20\">"+likesNumbers);//同上
                 is_like=0;
             }
         })
@@ -366,13 +366,13 @@
                 userAddCollection();
                 $(this).css("color","red");
                 collectNumbers++;
-                $(".collect-btn").html("<img src=\"../icon/heart.svg\" alt=\"收藏\" width=\"20\" height=\"20\">"+collectNumbers);
+                $(".collect-btn").html("<img src=\"../icon/heart.svg\" alt=\"\" width=\"20\" height=\"20\">"+collectNumbers);
                 is_collect=1;
             }else{
                 userDeleteCollection();
                 $(this).css("color","black");
                 collectNumbers--;
-                $(".collect-btn").html("<img src=\"../icon/heart.svg\" alt=\"收藏\" width=\"20\" height=\"20\">"+collectNumbers);
+                $(".collect-btn").html("<img src=\"../icon/heart.svg\" alt=\"\" width=\"20\" height=\"20\">"+collectNumbers);
                 is_collect=0;
             }
         })
