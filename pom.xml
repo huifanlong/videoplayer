@@ -48,6 +48,12 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
+<!--新加的 解决commons里面的两个东西与tomcat冲突-->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>1.18</version>
+        </dependency>
     </dependencies>
 
     <build>
