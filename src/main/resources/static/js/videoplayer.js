@@ -51,8 +51,9 @@
         })
         //下一个（视频）按钮
         $("#playNext").on("click",function (){
+            console.log("vid:"+vid);
             $.post("/videos/find_by_id",
-                {"id":vid+1},
+                {"id":(parseInt(vid) + 1)},
                 function (json){
                     if (json.state == 200){ //如果有下一个视频
                         window.location.href = "../web/videoplayer_etm2021.html?id="+(parseInt(vid) + 1);
@@ -214,12 +215,12 @@
                 console.log(timeString);
                 console.log(rateString);
                 flag=false;
+                qid = vid;
                 //没有答过题的记录才存储
                 $.get("/quiz_record/is_done",{"quizId":qid},function(json){
                     if(json.state==200){
                         savaRecord(vid,timeString,rateString);
                         //做题
-                        qid = vid;
                         // lianjie="<a href='http://etm2020.cn/index.php/Index/quiz_etm_2021?id="+qid+"'>测试链接</a>";
                         // console.log(lianjie);
                         // document.getElementById("showdiv1").innerHTML="<p>若未跳转成功点击此链接:</p>";
