@@ -1,6 +1,5 @@
 package com.hf.videoplayer.controller;
 
-import com.hf.videoplayer.entity.Note;
 import com.hf.videoplayer.entity.Reflection;
 import com.hf.videoplayer.service.IReflectionService;
 import com.hf.videoplayer.util.JsonResult;
@@ -21,7 +20,7 @@ public class ReflectionController extends BaseController{
     public JsonResult<Void> createReflections(Reflection reflection, String state, String fromDbsTime,HttpSession session) throws ParseException {
         String uid = getUserNameFromSession(session);
         reflection.setUid(uid);
-        System.out.println(state);
+//        System.out.println(state);
         if(state.startsWith("new")){
             if(!state.endsWith("delete")){
                 reflectionService.createReflection(reflection);//如果new的，且最后没有删除，则直接创建
@@ -33,7 +32,7 @@ public class ReflectionController extends BaseController{
                 reflectionService.updateReflection(reflection,fromDbsTime);
             }
         }
-        System.out.println("已访问ReflectionController");
+//        System.out.println("已访问ReflectionController");
         return new JsonResult<>(OK);
     }
     @RequestMapping("find_all")

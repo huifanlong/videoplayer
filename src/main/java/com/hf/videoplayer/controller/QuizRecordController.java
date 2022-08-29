@@ -25,25 +25,22 @@ public class QuizRecordController extends BaseController{
     @RequestMapping("create")
     public JsonResult<Void> createQuizRecord(QuizRecord quizRecord, HttpSession session){
         String uid = getUserNameFromSession(session);
-        QuizRecord[] quizRecords = quizRecordService.findQuizRecordByUidAndQuizID(uid, quizRecord.getQuizId());
-        if(quizRecords.length == 0){
-            //尚未答过题
-            quizRecord.setUid(uid);
-            quizRecordService.creatQuizRecord(quizRecord);
-            return new JsonResult<>(OK);
-        }else{
-            //答过题
-            return new JsonResult<>(20);
-        }
+        quizRecord.setUid(uid);
+        quizRecordService.creatQuizRecord(quizRecord);
+        return new JsonResult<>(OK);
+
     }
+
+    /**
+     * 收到200状态码，说明已经做过
+     * @param quizId
+     * @param session
+     * @return
+     */
     @RequestMapping("is_done")
     public JsonResult<Void> isDone(Integer quizId,HttpSession session){
         String uid = getUserNameFromSession(session);
-        QuizRecord[] quizRecords = quizRecordService.findQuizRecordByUidAndQuizID(uid,quizId);
-        if(quizRecords.length == 0){
-            return new JsonResult<>(OK);//尚未答过题
-        }else{
-            return new JsonResult<>(20);//答过题
-        }
+        quizRecordService.findQuizRecordByUidAndQuizID(uid,quizId);//如果没有做过，则在service层会查询不到，并会抛出其他异常
+        return new JsonResult<>(OK);//如果上面没有抛出异常，则说明已经存在一条记录。抛出正确代码。
     }
 }

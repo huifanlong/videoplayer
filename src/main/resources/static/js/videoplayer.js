@@ -86,7 +86,7 @@
                         // console.log(json.data.likeNumbers);
                         // alert("likenumbers:"+originLikesNumbers+"collectnumbers"+originCollectNumbers);
                     }else {
-                        alert(json.message);
+                        console.log(json.message);
                     }
                 })
             /*页面加载好时方法2： 从数据库中调取用户对视频的点赞状态 调整变量is_like的值*/
@@ -97,6 +97,8 @@
                         is_like = 1;
                         // origin_is_like = 1;
                         $(".like-btn").css("color","red");
+                        $(".like-btn svg").css("color","red");
+                        $(".like-btn svg").css("src","../icon/hand-thumbs-up-red.svg");
                     }//如果是8001表示没有点赞 那就时默认样式
             });
             /*页面加载好时方法3： 从数据库中调取用户对视频的收藏状态 调整变量is_collect的值*/
@@ -107,6 +109,8 @@
                         is_collect = 1;
                         // origin_is_collect = 1;
                         $(".collect-btn").css("color","red");
+                        $(".collect-btn svg").css("color","red");
+                        $(".collect-btn svg").css("src","../icon/heart-red.svg");
                     }//如果是6001表示没有点赞 那就时默认样式
             });
         }
@@ -218,7 +222,7 @@
                 qid = vid;
                 //没有答过题的记录才存储
                 $.get("/quiz_record/is_done",{"quizId":qid},function(json){
-                    if(json.state==200){
+                    if(json.state != 200){ //查询不到内容(200状态码说明已经做过)
                         savaRecord(vid,timeString,rateString);
                         //做题
                         // lianjie="<a href='http://etm2020.cn/index.php/Index/quiz_etm_2021?id="+qid+"'>测试链接</a>";
@@ -293,6 +297,8 @@
                 video_flag=1;
                 myVideo.pause();
                 clearTimeout(timeId);//取消timeString的这个定时器，在笔记的暂停时间段内不进行记录
+                $(".write-notes-time").text("笔记对应视频时间："+parseInt(myVideo.currentTime)+"秒");
+                console.log("执行禁用");
                 myVideo.removeAttribute("controls");//取消视频上的控制按钮 播放视频只能再次点击 记笔记的按钮
                 updateLeaving();
                 updateBegin("notes_trace");//进入笔记的轨迹
@@ -350,7 +356,7 @@
                 console.log("成功进入islike=0");
                 $(this).css("color","red");
                 likesNumbers++;
-                $(".like-btn").html("<img src=\"../icon/hand-thumbs-up.svg\" alt=\"\" width=\"20\" height=\"20\">"+likesNumbers);//这个前面的span是固定的样式。主要是为了修改显示的点赞人数。
+                $(".like-btn").html("<img src=\"../icon/hand-thumbs-up-red.svg\" alt=\"\" width=\"20\" height=\"20\" style='color: red;fill:currentColor'>"+likesNumbers);//这个前面的span是固定的样式。主要是为了修改显示的点赞人数。
                 is_like=1;
             }else{//点赞时，（再点击），那就修该样式为黑色
                 userDeleteLike();//向数据库减少视频点赞数，存储用户点赞状态
@@ -367,7 +373,7 @@
                 userAddCollection();
                 $(this).css("color","red");
                 collectNumbers++;
-                $(".collect-btn").html("<img src=\"../icon/heart.svg\" alt=\"\" width=\"20\" height=\"20\">"+collectNumbers);
+                $(".collect-btn").html("<img src=\"../icon/heart-red.svg\" alt=\"\" width=\"20\" height=\"20\" style='color: red;fill:currentColor'>"+collectNumbers);
                 is_collect=1;
             }else{
                 userDeleteCollection();
@@ -413,7 +419,6 @@
              });
          }
      }
-
      function LastAndNextButtonControl(vid,video_num){
 
      }

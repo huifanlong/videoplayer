@@ -16,9 +16,14 @@ public class QuizRecordServiceImpl implements IQuizRecordService {
 
     @Override
     public void creatQuizRecord(QuizRecord quizRecord) {
-        Integer result = quizRecordMapper.insert(quizRecord);
-        if(result != 1){
-            throw new QuizRecordCreatException("答题记录录入错误");
+        QuizRecord[] resultRecords = quizRecordMapper.findQuizRecordByUidAndQuizId(quizRecord.getQuizId(),quizRecord.getUid());
+        if(resultRecords.length == 0){ //没有答过题
+            Integer result = quizRecordMapper.insert(quizRecord);
+            if(result != 1){
+                throw new QuizRecordCreatException("答题记录录入错误");
+            }
+        }else{
+            throw new QuizRecordCreatException("已经答过题");
         }
     }
 

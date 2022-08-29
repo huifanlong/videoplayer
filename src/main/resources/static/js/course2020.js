@@ -145,6 +145,7 @@ $(function(){
     }
     /*渲染加载数据*/
     function loadReflections(){
+        // console.log("加载展示笔记内容");
         //读取本地存储的数据
         var reflections = getReflections();
         //先把所有笔记内容清空
@@ -155,11 +156,11 @@ $(function(){
                 console.log(ele);
                 //判断这个元素的state属性，如果是new或者fromdbs就给他展示出来，否则就不展示；这样操作是方便最后将所有的这些数据传入数据库时 做不同的增删改查处理
                 //值得注意的是，删除元素只是修改其属性 让他在这里不显示，但是他依然在locaLStorage里面，在显示元素的时候，显示元素的index值是会被不显示的元素所占位的，所以在删除的方法里 通过他的index值还是可以定位到所显示的元素的？
-                if(ele.state === "new" || ele.state === "fromdbs" ||ele.state.endsWith("update")){
+                // ele.state === "new" || ele.state === "fromdbs" ||ele.state.endsWith("update")
+                if(!ele.state.endsWith("delete")){
                     /* 下面这行是创建1个完整的<div>笔记*/
                     $(".reflections").prepend("<div class='panel panel-default col-md-8'><div class='panel-heading'>"+ele.title+"<div class='btn-group' role='group' ><button type='button' class='btn btn-default btn-delete' id='"+index+"'>删除</button><button type='button' class='btn btn-default btn-update' data-toggle='modal' data-target='#myModal' data-id='"+index+"'>修改</button></div></div><div class='panel-body'><p>"+ele.content+"</p></div></div>");
                 }else{
-
                 }
 
             })
