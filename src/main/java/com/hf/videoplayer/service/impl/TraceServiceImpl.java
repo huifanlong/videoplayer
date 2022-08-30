@@ -39,10 +39,10 @@ public class TraceServiceImpl implements ITraceService {
         if(leavingTrace != null){//如果leavingTrace不为空-----不能判断其size是否大于0，为空时这个方法就执行不了
             finalLeavingTimeRecorded = ft1.parse(leavingTrace.get(leavingTrace.size()-1)); //leavingTrace所记录的最后的离开时间
         }
-        System.out.println("保存用户轨迹："+totalTrace); //用户轨迹
-        for(int i = 0;i<tracespics.length;i++){
-            System.out.println(tracespics[i]);
-        }
+//        System.out.println("保存用户轨迹："+totalTrace); //用户轨迹
+//        for(int i = 0;i<tracespics.length;i++){
+//            System.out.println(tracespics[i]);
+//        }
         if(tracespics.length % 3 != 0){//如果用户最后完整的退出，就用前端最后页面的退出时间--现在其实就使用不到用户的退出时间了
             System.out.println(tracespics.length);
             throw new InsertException("用户轨迹格式不正确");
