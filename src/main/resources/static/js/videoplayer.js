@@ -31,7 +31,7 @@
         // var originLikesNumbers;//该视频从数据中取出的点赞人数 通过比较这个和likeNumber的大小来决定 离开页面时视频的点赞数是增加还是减少
         var collectNumbers;
         // var originCollectNumbers;//同上
-
+        var idNext;
         /**页面加载好时方法:*/
         /* 找到用户名 页面右上角 欢迎的初始化*/
         loadUserInfo();
@@ -51,9 +51,26 @@
         })
         //下一个（视频）按钮
         $("#playNext").on("click",function (){
-            console.log("vid:"+vid);
+            if(parseInt(vid) === 4){
+                idNext = 23;
+            }else if(parseInt(vid) === 26){
+                idNext = 5;
+            }else if(parseInt(vid) === 6){
+                idNext = 22;
+            }else if(parseInt(vid) === 22){
+                idNext = 8;
+            }else if(parseInt(vid) === 6){
+                idNext = 22;
+            }else if(parseInt(vid) === 12){
+                idNext = 14;
+            }else if(parseInt(vid) === 19){
+                idNext = 100;
+            }else{
+                idNext = parseInt(vid)+1;
+            }
+            // console.log("vid:"+vid);
             $.post("/videos/find_by_id",
-                {"id":(parseInt(vid) + 1)},
+                {"id":idNext},
                 function (json){
                     if (json.state == 200){ //如果有下一个视频
                         window.location.href = "../web/videoplayer_etm2021.html?id="+(parseInt(vid) + 1);
@@ -193,23 +210,25 @@
                 console.log(timeString);
                 console.log(rateString);
                 flag=false;
-                qid = vid;
+                qid = vid-1;
                 //没有答过题的记录才存储
-                $.get("/quiz_record/is_done",{"quizId":qid},function(json){
-                    if(json.state != 200){ //查询不到内容(200状态码说明已经做过)
-                        savaRecord(vid,timeString,rateString);
-                        //做题
-                        // lianjie="<a href='http://etm2020.cn/index.php/Index/quiz_etm_2021?id="+qid+"'>测试链接</a>";
-                        // console.log(lianjie);
-                        // document.getElementById("showdiv1").innerHTML="<p>若未跳转成功点击此链接:</p>";
-                        // document.getElementById("showdiv2").innerHTML=lianjie;
-                        alert('视频播放结束!请同学们完成相关测验题，本次测验题的成绩也会作为学生总成绩的一部分，点击确定按钮跳转至测验部分');
+                if(qid > 0){
+                    $.get("/quiz_record/is_done",{"quizId":qid},function(json){
+                        if(json.state != 200){ //查询不到内容(200状态码说明已经做过)
+                            savaRecord(vid,timeString,rateString);
+                            //做题
+                            // lianjie="<a href='http://etm2020.cn/index.php/Index/quiz_etm_2021?id="+qid+"'>测试链接</a>";
+                            // console.log(lianjie);
+                            // document.getElementById("showdiv1").innerHTML="<p>若未跳转成功点击此链接:</p>";
+                            // document.getElementById("showdiv2").innerHTML=lianjie;
+                            alert('视频播放结束!请同学们完成相关测验题，本次测验题的成绩也会作为学生总成绩的一部分，点击确定按钮跳转至测验部分');
 
-                        console.log(vid);
-                        console.log(qid);
-                        window.location.href = "../web/quiz.html?id="+qid;
-                    }
-                })
+                            console.log(vid);
+                            console.log(qid);
+                            window.location.href = "../web/quiz.html?id="+qid;
+                        }
+                    })
+                }
             }
             else
                 timeId = setTimeout(getCurTime,1000);
