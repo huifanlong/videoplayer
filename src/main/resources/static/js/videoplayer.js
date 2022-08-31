@@ -67,120 +67,94 @@
                     }
                 })
         })
+         /** 改变播放速率*/
+         rateSelect.addEventListener('change', function () {
+             //调整视频播放速率
+             myVideo.playbackRate = this.value;
+             //获取改变之后的视频播放速率
+             rate = $("#selRate").val();
+             //获取改变速率的当前时间
+             time = parseInt(myVideo.currentTime);  //秒
+             rateString += (rate + " " + time + ";");
 
-        /** 加载视频信息：视频文件、名称、点赞数、收藏数，以及用户是否点赞或收藏*/
-        function loadVideoInfo(){
-            /*页面加载好时操作2： 到视频对象 并且根据src初始化视频 ；根据videoName初始化视频名字；根据点赞人数初始化originLikesNumbers和likesNumbers两个变量 ；根据点赞人数初始化originCollectNumbers和collectNumbers两个变量*/
-            $.post("/videos/find_by_id",
-                {"id":vid},
-                function(json){
-                    if(json.state==200) {
-                        $("#media").prop("src",json.data.src);
-                        $("#demo").text("视频名："+json.data.videoName);
-                        likesNumbers = json.data.likeNumbers;
-                        // originLikesNumbers = json.data.likeNumbers;//初始化originLikeNumbers和likesNumbers
-                        $(".like-btn ").html("<img src=\"../icon/hand-thumbs-up.svg\" alt=\"赞\" width=\"20\" height=\"20\">"+likesNumbers);
-                        collectNumbers = json.data.collectNumbers;
-                        // originCollectNumbers = json.data.collectNumbers;//同上
-                        $(".collect-btn ").html("<img src=\"../icon/heart.svg\" alt=\"收藏\" width=\"20\" height=\"20\">"+collectNumbers);
-                        // console.log(json.data.likeNumbers);
-                        // alert("likenumbers:"+originLikesNumbers+"collectnumbers"+originCollectNumbers);
-                    }else {
-                        console.log(json.message);
-                    }
-                })
-            /*页面加载好时方法2： 从数据库中调取用户对视频的点赞状态 调整变量is_like的值*/
-            $.post("/likes/find_like_status",
-                {"vid":vid},
-                function(json){
-                    if(json.state==200) {//返回200表示已经点赞,初始化is_like为1，并调整点赞按钮样式为红色
-                        is_like = 1;
-                        // origin_is_like = 1;
-                        $(".like-btn").css("color","red");
-                        $(".like-btn svg").css("color","red");
-                        $(".like-btn svg").css("src","../icon/hand-thumbs-up-red.svg");
-                    }//如果是8001表示没有点赞 那就时默认样式
-            });
-            /*页面加载好时方法3： 从数据库中调取用户对视频的收藏状态 调整变量is_collect的值*/
-            $.post("/collects/find_collection_status",
-                {"vid":vid},
-                function(json){
-                    if(json.state==200) {
-                        is_collect = 1;
-                        // origin_is_collect = 1;
-                        $(".collect-btn").css("color","red");
-                        $(".collect-btn svg").css("color","red");
-                        $(".collect-btn svg").css("src","../icon/heart-red.svg");
-                    }//如果是6001表示没有点赞 那就时默认样式
-            });
-        }
-        /**页面加载好时方法1： 从数据库中调取笔记的内容；*/
-        function getNotesFromDbs(){
-            $.post("/notes/find_video_notes",
-                {"vid":vid},
-                function(json){
-                    if(json.state==200) {
-                        var local = [];
-                        $.each(json.data, function (index, ele) {
-                            // alert(ele.notes);
-                            local.push({time: ele.secondTime, content: ele.notes, title: ele.title, state: "fromdbs"});
-                        })
-                        savaNotes(local);
-                        loadNotes();
-                    }else if(json.state == 7002){
-                            //米有笔记就什么都不做吧
-                            // alert(json.message);
-                    }
-                });
-        }
-        function likeAndCollectManage(url){
-            $.post(url,
-                {"vid":vid},
-                function(json){
-                    if(json.state==200) {
-                        console.log(json.message);
-                    }
-                });
-        }
-        function userAddLike(){
-            /*视频点赞数+1*/
-            likeAndCollectManage("/videos/add_like_numbers");
-            /*更改点赞状态，在另一张表*/
-            likeAndCollectManage("/likes/creat_like");
-        }
-        function userDeleteLike(){
-            /*视频点赞数-1*/
-            likeAndCollectManage("/videos/minus_like_numbers");
-            /*更改点赞状态，在另一张表*/
-            likeAndCollectManage("/likes/delete_like");
-        }
+             /**rateString的格式如下：
+              * rateString: 1.25 6;1.5 19;0.5 35;1.0 37;*/
+         });
 
-        function userAddCollection(){
-            likeAndCollectManage("/videos/add_collect_numbers");
-            likeAndCollectManage("/collects/creat_collection");
-        }
-        function userDeleteCollection(){
-            likeAndCollectManage("/videos/minus_collect_numbers");
-            likeAndCollectManage("/collects/delete_collection");
-        }
-        /** 改变播放速率*/
-        rateSelect.addEventListener('change', function () {
-            //调整视频播放速率
-            myVideo.playbackRate = this.value;
-            //获取改变之后的视频播放速率
-            rate = $("#selRate").val();
-            //获取改变速率的当前时间
-            time = parseInt(myVideo.currentTime);  //秒
-            rateString += (rate + " " + time + ";");
-
-            /**rateString的格式如下：
-             * rateString: 1.25 6;1.5 19;0.5 35;1.0 37;*/
-        });
-
-        myVideo.addEventListener('play',getCurTime);
-        myVideo.addEventListener('pause',function(){//取消监听器是用来干嘛的？ ：是让它不会二次再执行getCurTime（）方法吧 所以暂停的时候 依然也是会记录进timeString里面的；但是其实不是有一个方法可以让play的监听器只执行一次吗
-            myVideo.removeEventListener('play',getCurTime);
-        });
+         myVideo.addEventListener('play',getCurTime);
+         myVideo.addEventListener('pause',function(){//取消监听器是用来干嘛的？ ：是让它不会二次再执行getCurTime（）方法吧 所以暂停的时候 依然也是会记录进timeString里面的；但是其实不是有一个方法可以让play的监听器只执行一次吗
+             myVideo.removeEventListener('play',getCurTime);
+         });
+         /** 事件编码 play、pause、skip、ratechange*/
+         let event_time;//记录事件发生的事件
+         let is_paused = true; //用该变量替代myVideo.paused，能够帮助skip事件获得发生时正真的视频状态（应该播放时发生skip事件也会在该事件前伴随一个pause事件）
+         let is_skipped = false; //该变量帮助skip事件判断其之前是不是有一个skip事件，有的化该次的play事件不记录。（因为是skip事件引起的）
+         /** play事件*/
+         $(myVideo).on("play",function (){
+             event_time = new Date();
+             is_paused = false;
+             // console.log("进入play事件,is_skipped"+is_skipped);
+             if(!is_skipped){
+                 // console.log("play事件激活");
+                 $.post("/click_event/create",
+                     {"vid":vid,"event":"play","position":parseInt(myVideo.currentTime),"time":event_time.toLocaleString(),"state":"playing","rate":myVideo.playbackRate},
+                     function(json){
+                         if(json.state==200) {
+                             console.log("play事件存储成功");
+                         }
+                     } )
+             }
+             is_skipped = false;
+         })
+         /** pause事件*/
+         $(myVideo).on("pause",function (){
+             event_time = new Date();
+             // console.log("pause事件激活,seeking:"+myVideo.seeking);
+             if(!myVideo.seeking){
+                 is_paused = true
+                 // console.log("pause事件激活");
+                 $.post("/click_event/create",
+                     {"vid":vid,"event":"pause","position":parseInt(myVideo.currentTime),"time":event_time.toLocaleString(),"state":"paused","rate":myVideo.playbackRate},
+                     function(json){
+                         if(json.state==200) {
+                             console.log("pause事件存储成功");
+                         }
+                     } )
+             }
+         })
+         /** ratechange事件*/
+         let event_state;
+         $(rateSelect).on("change",function(){
+             event_time = new Date();
+             event_state = myVideo.paused ? "paused":"playing";
+             // console.log("ratechange事件激活，state:"+event_state);
+             $.post("/click_event/create",
+                 {"vid":vid,"event":"ratechange","position":parseInt(myVideo.currentTime),"time":event_time.toLocaleString(),"state":event_state,"rate":myVideo.playbackRate},
+                 function(json){
+                     if(json.state==200) {
+                         console.log("ratechange事件存储成功");
+                     }
+                 } )
+         })
+         /** skip事件
+          * play的时候快进会触发三个事件：pause事件激活,seeking:true；skip事件激活，state:paused currentTime:26.322523；play事件激活,seeking:false
+          * pause的时候快进会触发一个事件：skip事件激活，state:paused currentTime:68.843523
+          * pause的时候快退会触发一个事件：skip事件激活，state:paused currentTime:22.779107
+          * play的时候快退会触发三个事件：pause事件激活,seeking:true；skip事件激活，state:paused currentTime:8.60544；play事件激活,seeking:false
+          * 所以对于快进快退，需要在pause和play事件中进行额外噪音判断*/
+         $(myVideo).on("seeking",function (){
+             is_skipped = is_paused ? false:true; //playing的时候的is_skip需要设置为true，paused的时候的is_skip不需要设置为true
+             event_time = new Date();
+             event_state = is_paused ? "paused":"playing";
+             // console.log("skip事件激活，state:"+event_state);
+             $.post("/click_event/create",
+                 {"vid":vid,"event":"skip","position":parseInt(myVideo.currentTime),"time":event_time.toLocaleString(),"state":event_state,"rate":myVideo.playbackRate},
+                 function(json){
+                     if(json.state==200) {
+                         console.log("skip事件存储成功");
+                     }
+                 } )
+         })
 
         /**
          * 写这样一个方法 向后端存储观看记录， 因为三种清空下都会存储数据 避免重复代码 直接写个函数
@@ -419,8 +393,100 @@
              });
          }
      }
-     function LastAndNextButtonControl(vid,video_num){
+     /** 加载视频信息：视频文件、名称、点赞数、收藏数，以及用户是否点赞或收藏*/
+     function loadVideoInfo(){
+         /*页面加载好时操作2： 到视频对象 并且根据src初始化视频 ；根据videoName初始化视频名字；根据点赞人数初始化originLikesNumbers和likesNumbers两个变量 ；根据点赞人数初始化originCollectNumbers和collectNumbers两个变量*/
+         $.post("/videos/find_by_id",
+             {"id":vid},
+             function(json){
+                 if(json.state==200) {
+                     $("#media").prop("src",json.data.src);
+                     $("#demo").text("视频名："+json.data.videoName);
+                     likesNumbers = json.data.likeNumbers;
+                     // originLikesNumbers = json.data.likeNumbers;//初始化originLikeNumbers和likesNumbers
+                     $(".like-btn ").html("<img src=\"../icon/hand-thumbs-up.svg\" alt=\"赞\" width=\"20\" height=\"20\">"+likesNumbers);
+                     collectNumbers = json.data.collectNumbers;
+                     // originCollectNumbers = json.data.collectNumbers;//同上
+                     $(".collect-btn ").html("<img src=\"../icon/heart.svg\" alt=\"收藏\" width=\"20\" height=\"20\">"+collectNumbers);
+                     // console.log(json.data.likeNumbers);
+                     // alert("likenumbers:"+originLikesNumbers+"collectnumbers"+originCollectNumbers);
+                 }else {
+                     console.log(json.message);
+                 }
+             })
+         /*页面加载好时方法2： 从数据库中调取用户对视频的点赞状态 调整变量is_like的值*/
+         $.post("/likes/find_like_status",
+             {"vid":vid},
+             function(json){
+                 if(json.state==200) {//返回200表示已经点赞,初始化is_like为1，并调整点赞按钮样式为红色
+                     is_like = 1;
+                     // origin_is_like = 1;
+                     $(".like-btn").css("color","red");
+                     $(".like-btn svg").css("color","red");
+                     $(".like-btn svg").css("src","../icon/hand-thumbs-up-red.svg");
+                 }//如果是8001表示没有点赞 那就时默认样式
+             });
+         /*页面加载好时方法3： 从数据库中调取用户对视频的收藏状态 调整变量is_collect的值*/
+         $.post("/collects/find_collection_status",
+             {"vid":vid},
+             function(json){
+                 if(json.state==200) {
+                     is_collect = 1;
+                     // origin_is_collect = 1;
+                     $(".collect-btn").css("color","red");
+                     $(".collect-btn svg").css("color","red");
+                     $(".collect-btn svg").css("src","../icon/heart-red.svg");
+                 }//如果是6001表示没有点赞 那就时默认样式
+             });
+     }
+     /**页面加载好时方法1： 从数据库中调取笔记的内容；*/
+     function getNotesFromDbs(){
+         $.post("/notes/find_video_notes",
+             {"vid":vid},
+             function(json){
+                 if(json.state==200) {
+                     var local = [];
+                     $.each(json.data, function (index, ele) {
+                         // alert(ele.notes);
+                         local.push({time: ele.secondTime, content: ele.notes, title: ele.title, state: "fromdbs"});
+                     })
+                     savaNotes(local);
+                     loadNotes();
+                 }else if(json.state == 7002){
+                     //米有笔记就什么都不做吧
+                     // alert(json.message);
+                 }
+             });
+     }
+     function likeAndCollectManage(url){
+         $.post(url,
+             {"vid":vid},
+             function(json){
+                 if(json.state==200) {
+                     console.log(json.message);
+                 }
+             });
+     }
+     function userAddLike(){
+         /*视频点赞数+1*/
+         likeAndCollectManage("/videos/add_like_numbers");
+         /*更改点赞状态，在另一张表*/
+         likeAndCollectManage("/likes/creat_like");
+     }
+     function userDeleteLike(){
+         /*视频点赞数-1*/
+         likeAndCollectManage("/videos/minus_like_numbers");
+         /*更改点赞状态，在另一张表*/
+         likeAndCollectManage("/likes/delete_like");
+     }
 
+     function userAddCollection(){
+         likeAndCollectManage("/videos/add_collect_numbers");
+         likeAndCollectManage("/collects/creat_collection");
+     }
+     function userDeleteCollection(){
+         likeAndCollectManage("/videos/minus_collect_numbers");
+         likeAndCollectManage("/collects/delete_collection");
      }
 
     })
