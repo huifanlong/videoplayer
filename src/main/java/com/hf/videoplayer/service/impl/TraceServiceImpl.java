@@ -24,34 +24,48 @@ public class TraceServiceImpl implements ITraceService {
     @Override
     public void createTrace(String userName,String logoutTime) throws ParseException {
         Set<String> keys = userTraces.keySet();
-        keys.forEach(System.out::println);
+        System.out.println("当前尚在线用户数："+keys.size());
+//        keys.forEach(System.out::println);
         if(!userTraces.containsKey(userName)){
             throw new InsertException("用户轨迹没有存储成功,轨迹记录创建失败");
         }
         String totalTrace = userTraces.get(userName);//从HashMap中取出用户的轨迹
         String[] tracespics = totalTrace.split(" ");//["index_trace","**/**/**","**:**:**",""]，两个元素才组成一个日期时间。某处的登陆退出时间有三个元素组成。切割出loginTime和logoutTime
-        SimpleDateFormat ft1 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        SimpleDateFormat ft2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String loginTime = ft2.format(ft1.parse(tracespics[1]+" "+tracespics[2]));//第二个是登陆时间，还要将其从前端传来的格式1转换成格式2，格式2才能插入到数据库中的date类型数据中。如果在数据库中设置成varchar类型，其实就不需要转换
+        SimpleDateFormat ft_helper1 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        SimpleDateFormat ft_target = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat ft_helper2 = new SimpleDateFormat("yyyy-MM-dd ahh:mm:ss");//不同的浏览器或者电脑前端tolocae
+        //第二个是登陆时间，还要将其从前端传来的格式1转换成格式2，格式2才能插入到数据库中的date类型数据中。如果在数据库中设置成varchar类型，其实就不需要转换
+        String loginTime;
         List<String> leavingTrace = userLeavingTraces.get(userName);
-        Date finalVisitingTimeRecorded = ft1.parse(tracespics[tracespics.length-2]+" "+tracespics[tracespics.length-1]);//userTrace的最后访问某页面事件点，必定是有的
-        Date finalLeavingTimeRecorded = finalVisitingTimeRecorded;//放置leavingTrace没有记录，先令其等于最后访问记录，使其至少不能通过下面的第一个else if语句。
+        String finalVisitingTimeRecorded = tracespics[tracespics.length-2]+" "+tracespics[tracespics.length-1];//userTrace的最后访问某页面事件点，必定是有的
+        String finalLeavingTimeRecorded = finalVisitingTimeRecorded;//放置leavingTrace没有记录，先令其等于最后访问记录，使其至少不能通过下面的第一个else if语句。
         if(leavingTrace != null){//如果leavingTrace不为空-----不能判断其size是否大于0，为空时这个方法就执行不了
-            finalLeavingTimeRecorded = ft1.parse(leavingTrace.get(leavingTrace.size()-1)); //leavingTrace所记录的最后的离开时间
+            finalLeavingTimeRecorded = leavingTrace.get(leavingTrace.size()-1); //leavingTrace所记录的最后的离开时间
         }
 //        System.out.println("保存用户轨迹："+totalTrace); //用户轨迹
 //        for(int i = 0;i<tracespics.length;i++){
 //            System.out.println(tracespics[i]);
 //        }
+        Date finalLeavingTimeRecordedDate;
+        Date finalVisitingTimeRecordedDate;
+        try {
+            finalLeavingTimeRecordedDate = ft_helper1.parse(finalLeavingTimeRecorded);
+            finalVisitingTimeRecordedDate = ft_helper1.parse(finalVisitingTimeRecorded);
+            loginTime = ft_target.format(ft_helper1.parse(tracespics[1]+" "+tracespics[2]));
+        } catch (ParseException e) {
+            finalLeavingTimeRecordedDate = ft_helper2.parse(finalLeavingTimeRecorded);
+            finalVisitingTimeRecordedDate = ft_helper2.parse(finalVisitingTimeRecorded);
+            loginTime = ft_target.format(ft_helper2.parse(tracespics[1]+" "+tracespics[2]));
+        }
         if(tracespics.length % 3 != 0){//如果用户最后完整的退出，就用前端最后页面的退出时间--现在其实就使用不到用户的退出时间了
             System.out.println(tracespics.length);
             throw new InsertException("用户轨迹格式不正确");
-        }else if(finalLeavingTimeRecorded.after(finalVisitingTimeRecorded)){//正确退出 则用历来数组的最后一个时间作为退出时间，判断正确退出的条件：leavingTrace最后时间小于userTrace最后的时间
+        }else if(finalLeavingTimeRecordedDate.after(finalVisitingTimeRecordedDate)){//正确退出 则用历来数组的最后一个时间作为退出时间，判断正确退出的条件：leavingTrace最后时间小于userTrace最后的时间
 //            totalTrace +=""+ft1.format(finalLeavingTimeRecorded);//补充退出时间;其实也没有必要补充了 因为修改trace的形式之后，trace怎么样都不会有退出时间的。退出时间直接记录在‘退出时间’字段中
-            logoutTime = ft2.format(finalLeavingTimeRecorded);//修改退出时间
+            logoutTime = finalLeavingTimeRecorded;//修改退出时间
         }else{//否则就是用这个方法传来的参数，即session的最后获取时间作为退出时间------更新：其实最好把上次session上次访问时间加上计时器循环统计一次的时间作为退出时间，这样就是认为用户打开一个页面，长时间没操作的话，就当他在这个页面停留了一次检查的时间，如15分钟？
 //            totalTrace +=" "+ft1.format(ft2.parse(logoutTime).getTime()+1000*60*1);//同时把退出时间追加完整,以前端统一的这种形式"yyyy/MM/dd HH:mm:ss"
-            logoutTime = ft2.format(ft2.parse(logoutTime).getTime()+1000*60*1);//修改退出时间
+            logoutTime = ft_target.format(ft_target.parse(logoutTime).getTime()+1000*60*1);//修改退出时间
         }
 //        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //         Date date = dateformat .parse(time);
@@ -80,6 +94,9 @@ public class TraceServiceImpl implements ITraceService {
 
     @Override
     public void updateInSameLearning(String userName, String totalTraces) {
+        if(!totalTraces.contains(" ")){
+            totalTraces = totalTraces.substring(0,10)+""+totalTraces.substring(10);
+        }
         if(userTraces.containsKey(userName)){//已有用户轨迹数据，则追加
             totalTraces = userTraces.get(userName) + totalTraces;
             userTraces.put(userName,totalTraces);
@@ -90,6 +107,9 @@ public class TraceServiceImpl implements ITraceService {
 
     @Override
     public void leavingTimeSet(String userName,String time) {
+        if(!time.contains(" ")){
+            time = time.substring(0,10)+""+time.substring(10);
+        }
         if(userLeavingTraces.containsKey(userName)){//已经为这个用户添加进了HashMap<String userName,List<String>>中
              userLeavingTraces.get(userName).add(time);//则获取这个用户的List<String>,并把传入的退出时间加进去
         }else{//第一次记录该用户的退出轨迹

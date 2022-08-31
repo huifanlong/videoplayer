@@ -84,7 +84,7 @@ public class UserController extends BaseController{
     public JsonResult<Void> logout(HttpSession session){
        session.setAttribute("id",null);
        session.setAttribute("userName",null);
-       System.out.println("ddd");
+       System.out.println("退出");
        return new JsonResult<>(OK);
    }
 

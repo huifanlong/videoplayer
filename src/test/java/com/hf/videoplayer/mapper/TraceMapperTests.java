@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.sql.SQLOutput;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,7 +24,12 @@ public class TraceMapperTests {
 //        Trace trace = new Trace();
         SimpleDateFormat ft1 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         SimpleDateFormat ft2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        System.out.println(ft2.format(ft1.parse("2022/4/12 17:32:05")));
+        String s = "yyyy-MM-ddaHH:mm:ss";
+//        System.out.println("yyyy-MM-dd aHH:mm:ss".contains(" "));
+        s = s.substring(0,10)+" "+s.substring(10);
+        System.out.println(s);
+//        System.out.println("yyyy-MM-dd".length());
+//        System.out.println(ft2.format(ft1.parse("2022/4/12 17:32:05")));
 //        trace.setUserName("kakaki");
 //        trace.setTotalTrace("Trace");
 //        trace.setVideoIds("VideoIds");

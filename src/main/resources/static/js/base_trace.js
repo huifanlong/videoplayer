@@ -29,7 +29,7 @@ function loadUserInfo(){
             if(json.state==200) {
                 // alert(json.data.userName);
                 $(".login-no").prop("style","display:none");
-                $(".login-span-yes").html("你好！"+json.data.userName+"&nbsp;&nbsp");
+                $(".login-span-yes").html("你好！"+json.data.name+"&nbsp;&nbsp");
                 // alert("首页初始化成功");
                 console.log("已登录");
             }else {

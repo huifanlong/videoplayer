@@ -86,6 +86,12 @@ public class BaseController {
         }else if(e instanceof CourseVideoHasNotRegisteredException){
             result.setState(5005);
             result.setMessage("该视频表尚未录入视频信息");
+        }else if(e instanceof ClickEventCreateFialedException){
+            result.setState(5006);
+            result.setMessage("点击流诗句创建失败");
+        }else if(e instanceof UVPairIsNullException){
+            result.setState(5007);
+            result.setMessage("该用户在该视频下尚未产生点击流记录");
         }
         return result;
     }
