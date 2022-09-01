@@ -52,22 +52,25 @@
         //下一个（视频）按钮
         $("#playNext").on("click",function (){
             if(parseInt(vid) === 4){
-                idNext = 23;
-            }else if(parseInt(vid) === 26){
-                idNext = 5;
-            }else if(parseInt(vid) === 6){
-                idNext = 22;
-            }else if(parseInt(vid) === 22){
-                idNext = 8;
-            }else if(parseInt(vid) === 6){
-                idNext = 22;
-            }else if(parseInt(vid) === 12){
-                idNext = 14;
-            }else if(parseInt(vid) === 19){
                 idNext = 100;
-            }else{
-                idNext = parseInt(vid)+1;
             }
+            // if(parseInt(vid) === 4){
+            //     idNext = 23;
+            // }else if(parseInt(vid) === 26){
+            //     idNext = 5;
+            // }else if(parseInt(vid) === 6){
+            //     idNext = 22;
+            // }else if(parseInt(vid) === 22){
+            //     idNext = 8;
+            // }else if(parseInt(vid) === 6){
+            //     idNext = 22;
+            // }else if(parseInt(vid) === 12){
+            //     idNext = 14;
+            // }else if(parseInt(vid) === 19){
+            //     idNext = 100;
+            // }else{
+            //     idNext = parseInt(vid)+1;
+            // }
             // console.log("vid:"+vid);
             $.post("/videos/find_by_id",
                 {"id":idNext},
