@@ -184,7 +184,7 @@
          */
         function savaRecord(v,t,r){
             $.post("/users/create_record",
-                {"vid":v,"time":t,"rate":t},
+                {"vid":v,"time":t,"rate":r},
                 function(json){
                     if(json.state==200) {
                         console.log("播放数据存储成功");
@@ -240,7 +240,7 @@
 
         /**onbeforeunload 事件在即将离开当前页面（刷新或关闭）时触发
          * 方法4+2操作*/
-        window.onpagehide = function(){
+        window.onbeforeunload = function(){
             // console.log("退出视频页面事件激活0");
             // alert("退出视频页面事件激活0");
             updateLeaving();
@@ -248,7 +248,13 @@
             /**1.存储视频观看数据*/
             if(timeString!=""&&flag==true){
                 flag=false;
-                savaRecord(vid,timeString,rateString);
+                if((parseInt(vid)-1)>0){
+                    $.get("/quiz_record/is_done",{"quizId":(parseInt(vid)-1)},function(json){
+                        if(json.state != 200){ //查询不到内容(200状态码说明已经做过)
+                            savaRecord(vid,timeString,rateString);
+                        }
+                    })
+                }
             }
             /**2.笔记存储：把笔记数据全部从浏览器内存中拿给后端，后端处理好了哪些笔记是增加 哪些笔记是删除
              * 2.1暂时前端没有做笔记修改的操作*/

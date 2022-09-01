@@ -61,7 +61,7 @@ public class TraceController extends BaseController {
                     SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     if (time > 1000 * 60 * 20) {//三十分钟,就可以判断用户已经退出，可以生成一条轨迹记录
                         traceService.createTrace(userName, dateformat.format(session.getLastAccessedTime()));
-                        System.out.println(userName+"：判定退出，创建trace记录");
+//                        System.out.println(userName+"：判定退出，创建trace记录");
                         timer.cancel();
                         timers.remove(userName);
                     } else {
@@ -70,7 +70,7 @@ public class TraceController extends BaseController {
                     }
                 }
             }, 1000, 1000 * 60 * 5);//每15分钟判断一次，其实三十分钟以内判断一次效果都是一样的。
-            System.out.println(getUserNameFromSession(session)+"：初次访问，已激活计时器");
+            System.out.println(getUserNameFromSession(session)+"：初次访问，已激活trace计时器。当前在线用户数："+timers.size());
         }
 //        else{
 //            System.out.println("不是初次访问，未激活计时器");

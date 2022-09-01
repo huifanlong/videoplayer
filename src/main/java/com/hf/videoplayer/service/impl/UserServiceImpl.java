@@ -88,7 +88,7 @@ public class UserServiceImpl implements IUserService {
         /**如果已经有一条记录 那么就把记录的观看次数增加 并且调用update修改一条记录*/
         if(result != null){
             record.setWatchTimes(result.getWatchTimes()+1);
-            Integer rows = recordMapper.update(record);
+            Integer rows = recordMapper.insert(record);
             if(rows != 1){
                 throw new RecordUpdateException("观看数据更新异常");
             }
