@@ -9,8 +9,11 @@ $(function(){
     getReflectionsFromDbs();
     /*每次到达这个页面都要判单是否需要初始化计时器，直接给后台一个GET请求就行*/
     window.onpageshow = function(){//onpageshow比最外层的document.ready可以放置back-force-cache：即实现点击浏览器左上角返回按钮时也触发该事件。但是IE好像不支持这个事件
-        updateBegin("index_trace");//开始记录此页面登录时间
-        $.get("/trace/duration");
+        $.get("/trace/duration",function (json){
+            if(json.state == 200){
+                updateBegin("index");//开始记录此页面登录时间
+            }
+        });
         console.log("/trace/duration已访问？");
     }
 
@@ -35,12 +38,12 @@ $(function(){
         $(navContents[index]).slideDown();//显示所点击的部分
         $(this).addClass("active");//激活所点击的导航栏
         if(index == 1){//点击了反思页面
-            updateLeaving();
-            updateBegin("reflection_trace");//进入笔记的轨迹
+            // updateLeaving();
+            updateBegin("reflection");//进入笔记的轨迹
             getReflectionsFromDbs();
         }else{//点击了课程页面
-            updateLeaving();
-            updateBegin("index_trace");//进入课程页面的轨迹
+            // updateLeaving();
+            updateBegin("index");//进入课程页面的轨迹
             /**2.反思存储：把笔记数据全部从浏览器内存中拿给后端，后端处理好了哪些笔记是增加 哪些笔记是删除,那些笔记是修改
              * 2.1暂时前端没有做笔记修改的操作*/
             var local = getReflections();//从本地中获取数据
@@ -168,7 +171,7 @@ $(function(){
     }
 
     window.onbeforeunload = function (){
-        updateLeaving();
+        // updateLeaving();
         /**2.反思存储：把笔记数据全部从浏览器内存中拿给后端，后端处理好了哪些笔记是增加 哪些笔记是删除,那些笔记是修改
          * 2.1暂时前端没有做笔记修改的操作*/
         var local = getReflections();//从本地中获取数据

@@ -241,9 +241,8 @@
         /**onbeforeunload 事件在即将离开当前页面（刷新或关闭）时触发
          * 方法4+2操作*/
         window.onbeforeunload = function(){
-            // console.log("退出视频页面事件激活0");
             // alert("退出视频页面事件激活0");
-            updateLeaving();
+            // updateLeaving();
             // alert("退出视频页面事件激活");
             /**1.存储视频观看数据*/
             if(timeString!=""&&flag==true){
@@ -256,22 +255,6 @@
                     })
                 }
             }
-            // /**2.笔记存储：把笔记数据全部从浏览器内存中拿给后端，后端处理好了哪些笔记是增加 哪些笔记是删除
-            //  * 2.1暂时前端没有做笔记修改的操作*/
-            // var local = getNotes();//从本地中获取数据
-            // $.each(local,function (index,ele){
-            //     $.post("/notes/create_notes",
-            //         {"vid":vid,"secondTime":ele.time,"title":ele.title,"notes":ele.content,"state":ele.state},
-            //         function(json){
-            //             if(json.state==200) {
-            //                 // alert("退出成功");
-            //                 console.log("笔记存储成功");
-            //             }
-            //     });
-            // })
-            // localStorage.removeItem("notes");
-            // alert("清除数据");
-            // localStorage.clear();
         }
 
         /**点击返回 也要存储相关的观看数据*/
@@ -302,10 +285,10 @@
                 $(".write-notes-time").text("笔记对应视频时间："+parseInt(myVideo.currentTime)+"秒");
                 console.log("执行禁用");
                 myVideo.removeAttribute("controls");//取消视频上的控制按钮 播放视频只能再次点击 记笔记的按钮
-                updateLeaving();
+                // updateLeaving();
                 updateBegin("notes_trace");//进入笔记的轨迹
             }else{
-                updateLeaving();
+                // updateLeaving();
                 updateBegin("video_trace");//进入视频播放的轨迹
                 if(video_flag === 1){
                     video_flag=0;
@@ -392,42 +375,6 @@
                 is_collect=0;
             }
         })
-
-     // /**读取本地存储的数据*/
-     // function getNotes(){
-     //     var notes = localStorage.getItem("notes");
-     //     if(notes !== null){
-     //         return JSON.parse(notes); //本地存储的数据是字符串 需要转化成对象的格式
-     //     }else{
-     //         return [];
-     //     }
-     // }
-     // /**保存笔记到本地*/
-     // function savaNotes(notes){
-     //     localStorage.setItem("notes",JSON.stringify(notes));
-     // }
-     // /**渲染加载数据*/
-     // function loadNotes(){
-     //     //读取本地存储的数据
-     //     var notes = getNotes();
-     //     //先把所有笔记内容清空
-     //     $(".notes").empty();
-     //     if(notes !== null){
-     //         //再显示所有笔记
-     //         $.each(notes,function(index,ele){
-     //             console.log(ele);
-     //             //判断这个元素的state属性，如果是new或者fromdbs就给他展示出来，否则就不展示；这样操作是方便最后将所有的这些数据传入数据库时 做不同的增删改查处理
-     //             //值得注意的是，删除元素只是修改其属性 让他在这里不显示，但是他依然在locaLStorage里面，在显示元素的时候，显示元素的index值是会被不显示的元素所占位的，所以在删除的方法里 通过他的index值还是可以定位到所显示的元素的？
-     //             if(ele.state === "new" || ele.state === "fromdbs"){
-     //                 /* 下面这行是创建1个完整的<div>笔记*/
-     //                 $(".notes").prepend("<div class='panel panel-default col-md-8'><div class='panel-heading'>"+ele.title+"<div class='btn-group' role='group' ><button type='button' class='btn btn-default btn-play' data-time='"+ele.time+"'>查看</button><button type='button' class='btn btn-default btn-delete' id='"+index+"'>删除</button></div></div><div class='panel-body'><p>"+ele.content+"</p></div></div>");
-     //             }else{
-     //
-     //             }
-     //
-     //         });
-     //     }
-     // }
      /** 加载视频信息：视频文件、名称、点赞数、收藏数，以及用户是否点赞或收藏*/
      function loadVideoInfo(){
          /*页面加载好时操作2： 到视频对象 并且根据src初始化视频 ；根据videoName初始化视频名字；根据点赞人数初始化originLikesNumbers和likesNumbers两个变量 ；根据点赞人数初始化originCollectNumbers和collectNumbers两个变量*/

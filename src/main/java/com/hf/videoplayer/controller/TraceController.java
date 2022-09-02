@@ -28,12 +28,12 @@ public class TraceController extends BaseController {
      * @param trace 前端传入的轨迹字符串
      * @return
      */
-    @RequestMapping("update")
-    public JsonResult<Void> update(HttpSession session,String trace){
-//        System.out.println("用户："+getUserNameFromSession(session)+"轨迹："+trace);
-        traceService.updateInSameLearning(getUserNameFromSession(session),trace);
-        return new JsonResult<>(OK);
-    }
+//    @RequestMapping("update")
+//    public JsonResult<Void> update(HttpSession session,String trace){
+////        System.out.println("用户："+getUserNameFromSession(session)+"轨迹："+trace);
+//        traceService.updateInSameLearning(getUserNameFromSession(session),trace);
+//        return new JsonResult<>(OK);
+//    }
 
     /**
      * 登录之后需要立即调用此方法，开始计时
@@ -52,16 +52,18 @@ public class TraceController extends BaseController {
         if(!timers.containsKey(userName)) {//是初次访问
             Timer timer = new Timer();
             timers.put(userName, timer);
+            traceService.beginTrace(userName);
             timer.schedule(new TimerTask() {
                 @SneakyThrows
                 @Override
                 public void run() {
                     // 使用session的getLastAccessedTime()判断最后一次访问该session的时间,其返回的是距离1970-1-1 0:0:0的毫秒数
                     long time = System.currentTimeMillis() - session.getLastAccessedTime();
-                    SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    if (time > 1000 * 60 * 20) {//三十分钟,就可以判断用户已经退出，可以生成一条轨迹记录
-                        traceService.createTrace(userName, dateformat.format(session.getLastAccessedTime()));
-//                        System.out.println(userName+"：判定退出，创建trace记录");
+//                    SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    if (time > 1000 * 60 * 2) {//三十分钟,就可以判断用户已经退出，可以生成一条轨迹记录
+//                        traceService.createTrace(userName, dateformat.format(session.getLastAccessedTime()));
+                        System.out.println(userName+"：判定退出");
+                        traceService.endTrace(userName,session.getLastAccessedTime());
                         timer.cancel();
                         timers.remove(userName);
                     } else {
@@ -69,7 +71,7 @@ public class TraceController extends BaseController {
 //                        System.out.println("session的使用时间" + time);
                     }
                 }
-            }, 1000, 1000 * 60 * 5);//每15分钟判断一次，其实三十分钟以内判断一次效果都是一样的。
+            }, 1000, 1000 * 60 * 1);//每15分钟判断一次，其实三十分钟以内判断一次效果都是一样的。
             System.out.println(getUserNameFromSession(session)+"：初次访问，已激活trace计时器。当前在线用户数："+timers.size());
         }
 //        else{
@@ -80,12 +82,12 @@ public class TraceController extends BaseController {
     /**
      * 离开每个页面时将数据保存在这里
      * @param session
-     * @param time
+     * @param where
      * @return
      */
-    @RequestMapping("leaving")
-    public JsonResult<Void> leaving(HttpSession session,String time){
-        traceService.leavingTimeSet(getUserNameFromSession(session),time);
+    @RequestMapping("create")
+    public JsonResult<Void> leaving(String where,HttpSession session){
+        traceService.createTrace(getUserNameFromSession(session),where);
         return new JsonResult<>(OK);
     }
 

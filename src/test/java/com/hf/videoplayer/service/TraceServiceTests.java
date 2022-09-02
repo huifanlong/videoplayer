@@ -21,18 +21,22 @@ public class TraceServiceTests {
         Date date;
 //        date = ft2.parse("2019/12/25 下午2:58:18");
 //        System.out.println(ft3.format(date));
-        try {
-            date = ft2.parse("2022/9/2 下午12:42:52");
-            System.out.println("yyyy/MM/dd HH:mm:s");
-        } catch (ParseException e){
-            try {
-                date = ft1.parse("2022/9/2 下午12:42:52");
-                System.out.println("yyyy/MM/dd ahh:mm:ss");
-            } catch (ParseException ex) {
-                date = ft4.parse("2022/9/2 下午12:42:52");
-                System.out.println("yyyy/MM/dd aHH:mm:ss");
-            }
-        }
-        System.out.println(ft3.format(date));
+//        try {
+//            date = ft2.parse("index 2022/9/2 下午12:42:52 ");
+//            System.out.println("yyyy/MM/dd HH:mm:s");
+//        } catch (ParseException e){
+//            try {
+//                date = ft1.parse("2022/9/2 下午12:42:52");
+//                System.out.println("yyyy/MM/dd ahh:mm:ss");
+//            } catch (ParseException ex) {
+//                date = ft4.parse("2022/9/2 下午12:42:52");
+//                System.out.println("yyyy/MM/dd aHH:mm:ss");
+//            }
+//        }
+//        String[] t = "index 2022/9/2 下午12:42:52 ".split(" ")[];
+//        for(int i=0; i<t.length <i++){
+//            System.out.println(t[i]);
+//        }
+        System.out.println("index 2022/9/2 下午12:42:52 ".split(" ")[2]);
     }
 }

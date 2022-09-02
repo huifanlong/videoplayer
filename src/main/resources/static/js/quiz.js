@@ -25,7 +25,7 @@ $(function(){
     })
     updateBegin("quiz_trace");//开始记录此页面登录时间
     window.onbeforeunload = function (){
-        updateLeaving();
+        // updateLeaving();
     }
     window.onpagehide = function (){
         console.log("onpagehide执行")

@@ -1,8 +1,8 @@
 /* 发送进入页面的时间  参数是index_trace、reflection_trace...*/
 function updateBegin(fromWhere){
-    var begin = new Date();
-    $.post("/trace/update",
-        {"trace":fromWhere+" "+begin.toLocaleString()+" "},
+    // var begin = new Date();
+    $.post("/trace/create",
+        {"where":fromWhere},
         function(json){
             if(json.state==200) {
                 console.log("进入页面记录成功");
@@ -12,16 +12,16 @@ function updateBegin(fromWhere){
         })
 }
 /* 发送进入页面的时间  */
-function updateLeaving(){
-    var end = new Date();
-    $.post("/trace/leaving",
-        {"time":end.toLocaleString()+" "},
-        function(json){
-            if(json.state==200) {
-                console.log("退出页面记录成功");
-            }
-        })
-}
+// function updateLeaving(){
+//     var end = new Date();
+//     $.post("/trace/leaving",
+//         {"time":end.toLocaleString()+" "},
+//         function(json){
+//             if(json.state==200) {
+//                 console.log("退出页面记录成功");
+//             }
+//         })
+// }
 /* 初始化右上角登录显示 */
 function loadUserInfo(){
     $.get("/users/find_by_id",

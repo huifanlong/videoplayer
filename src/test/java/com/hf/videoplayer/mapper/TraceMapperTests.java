@@ -20,17 +20,20 @@ public class TraceMapperTests {
 
     @Test
     public void insert() throws ParseException {
-//        Trace trace = new Trace();
-        SimpleDateFormat ft1 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        SimpleDateFormat ft2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        System.out.println(ft2.format(ft1.parse("2022/4/12 17:32:05")));
-//        trace.setUserName("kakaki");
+        Trace trace = new Trace();
+//        SimpleDateFormat ft1 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+//        SimpleDateFormat ft2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        System.out.println(ft2.format(ft1.parse("2022/4/12 17:32:05")));
+        trace.setUserName("kakaki");
+        trace.setTime("xxx");
+        trace.setTrace("xxx");
+        trace.setNum(1);
 //        trace.setTotalTrace("Trace");
 //        trace.setVideoIds("VideoIds");
 //        trace.setLoginTime(new Date());
 //        trace.setLogoutTime(ft.format(new Date()));
 
-//        traceMapper.insert(trace);
+        traceMapper.insert(trace);
     }
 
     @Test
