@@ -29,7 +29,7 @@
     </delete>
 
     <update id="updateNotes">
-        UPDATE notebook_edutec_2022 SET notes=#{notes} AND titile=#{title} WHERE uid = #{uid} AND vid=#{vid} AND second_time=#{secondTime}
+        UPDATE notebook_edutec_2022 SET notes=#{notes},title=#{title} WHERE uid = #{uid} AND vid=#{vid} AND second_time=#{secondTime}
     </update>
 
 
