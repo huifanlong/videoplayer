@@ -66,15 +66,12 @@ $(function(){
         if($(".write-reflections-content").val() === "" || $(".write-reflections-title").val() === ""){
             alert("没有内容");
         }else{
-            //获取地中的所有笔记
-            var local = getReflections();
-            //增加这条新的笔记
-            time = new Date();
-            local.push({fromDbsTime:"",time:time.toLocaleString(),content:$(".write-reflections-content").val(),title:$(".write-reflections-title").val(),state:"new"});
-            //保存到内存中
-            savaReflections(local);
-            //重新加载
-            loadReflections();
+            $.post("/reflection/create",{"title":$(".write-reflections-title").val(),"reflection":$(".write-reflections-content").val()},function (json){
+                if(json.state == 200){
+                    console.log("创建反思成功");
+                    getAndLoadReflectionsFromDbs();
+                }
+            })
             $(".write-reflections-content").val("");//内容文本框清空
             $(".write-reflections-title").val("");//主题文本框清空
         }
@@ -91,41 +88,52 @@ $(function(){
         loadReflections();
     })
     /**给所有的修改button绑定点击事件*/
+    let index_update;
+    let database_id
     $(".reflections").on("click",".btn-update",function(){
-        console.log("点击了删除按钮");
-        var local = getReflections();
-        var id = $(this).attr("data-id");//获取其id 根据这样的id在localStorage中查找
+        // console.log("点击了删除按钮");
+        // var local = getReflections();
+        index_update = $(this).attr("data-id");
+        // var id = $(this).attr("data-id");//获取其id 根据这样的id在localStorage中查找
 
-        var title = local[id].title;
-        var content = local[id].content;
-        $(".update-reflections-content").val(content);//给模态框里面的内容文本框之前的内容
-        $(".update-reflections-title").val(title);//给主题文本框之前的内容
-
+        // var title = local[id].title;
+        // var content = local[id].content;
+        $(".update-reflections-content").val($(".reflection-title").eq(index_update).text());//给模态框里面的内容文本框之前的内容
+        $(".update-reflections-title").val($(".reflection-content").eq(index_update).text());//给主题文本框之前的内容
+        database_id = $(this).attr("data-database-id");
         /**事件里面可以有事件吗？要写一个模态框的点击事件*/
         $(".save-update").on("click",function(){
             $('#myModal').modal('hide');//关闭模态框
             time = new Date();
-            local[id].time = time.toLocaleString();
-            local[id].title = $(".update-reflections-title").val();//将修改的内容保存
-            local[id].content = $(".update-reflections-content").val();
-            local[id].state += "-update";
-            savaReflections(local);//存储
-            loadReflections();//重新显示
+            $.post("/reflection/update",{"id":database_id,"title":$(".update-reflections-title").val(),"reflection":$(".update-reflections-content").val()},function (json){
+                if(json.state == 200){
+                    console.log("修改成功");
+                    getAndLoadReflectionsFromDbs()
+                }
+            })
+            // local[id].time = time.toLocaleString();
+            // local[id].title = $(".update-reflections-title").val();//将修改的内容保存
+            // local[id].content = $(".update-reflections-content").val();
+            // local[id].state += "-update";
+            // savaReflections(local);//存储
+            // loadReflections();//重新显示
         })
         //比较奇怪的 存储和重新显示放到这里的话 就不会执行 是因为事件的嵌套？
     })
     /**页面加载好时方法1： 从数据库中调取笔记的内容；*/
-    function getReflectionsFromDbs(){
+    function getAndLoadReflectionsFromDbs(){
         $.post("/reflection/find_all",
             function(json){
                 if(json.state==200) {
-                    var local = [];
+                    // var local = [];
                     $.each(json.data, function (index, ele) {
                         // alert(ele.notes);
-                        local.push({fromDbsTime: ele.time, content: ele.reflection, title: ele.title, state: "fromdbs",time:""});
+                        // local.push({fromDbsTime: ele.time, content: ele.reflection, title: ele.title, state: "fromdbs",time:""});
+                        index = json.data.length-index-1;//数组翻转
+                        $(".reflections").prepend("<div class='panel panel-default col-md-8'><div class='panel-heading'><p class='reflection-title'>"+ele.title+"</p><div class='btn-group' role='group' ><button type='button' class='btn btn-default btn-delete' id='"+index+"'>删除</button><button type='button' class='btn btn-default btn-update' data-toggle='modal' data-target='#myModal' data-id='"+index+"' data-database-id='"+ele.id+"'>修改</button></div></div><div class='panel-body'><p class='reflection-content'>"+ele.reflection+"</p></div></div>");
                     })
-                    savaReflections(local);
-                    loadReflections();
+                    // savaReflections(local);
+                    // loadReflections();
                 }else if(json.state == 7002){
                     //米有笔记就什么都不做吧
                     // alert(json.message);
@@ -133,42 +141,42 @@ $(function(){
             });
     }
 
-    /*读取本地存储的数据reflections*/
-    function getReflections(){
-        var reflections = localStorage.getItem("reflections");
-        if(reflections !== null){
-            return JSON.parse(reflections); //本地存储的数据是字符串 需要转化成对象的格式
-        }else{
-            return [];
-        }
-    }
-    /*保存笔记到本地*/
-    function savaReflections(reflections){
-        localStorage.setItem("reflections",JSON.stringify(reflections));
-    }
-    /*渲染加载数据*/
-    function loadReflections(){
-        // console.log("加载展示笔记内容");
-        //读取本地存储的数据
-        var reflections = getReflections();
-        //先把所有笔记内容清空
-        $(".reflections").empty();
-        if(reflections !== null){
-            //再显示所有笔记
-            $.each(reflections,function(index,ele){
-                console.log(ele);
-                //判断这个元素的state属性，如果是new或者fromdbs就给他展示出来，否则就不展示；这样操作是方便最后将所有的这些数据传入数据库时 做不同的增删改查处理
-                //值得注意的是，删除元素只是修改其属性 让他在这里不显示，但是他依然在locaLStorage里面，在显示元素的时候，显示元素的index值是会被不显示的元素所占位的，所以在删除的方法里 通过他的index值还是可以定位到所显示的元素的？
-                // ele.state === "new" || ele.state === "fromdbs" ||ele.state.endsWith("update")
-                if(!ele.state.endsWith("delete")){
-                    /* 下面这行是创建1个完整的<div>笔记*/
-                    $(".reflections").prepend("<div class='panel panel-default col-md-8'><div class='panel-heading'>"+ele.title+"<div class='btn-group' role='group' ><button type='button' class='btn btn-default btn-delete' id='"+index+"'>删除</button><button type='button' class='btn btn-default btn-update' data-toggle='modal' data-target='#myModal' data-id='"+index+"'>修改</button></div></div><div class='panel-body'><p>"+ele.content+"</p></div></div>");
-                }else{
-                }
-
-            })
-        }
-    }
+    // /*读取本地存储的数据reflections*/
+    // function getReflections(){
+    //     var reflections = localStorage.getItem("reflections");
+    //     if(reflections !== null){
+    //         return JSON.parse(reflections); //本地存储的数据是字符串 需要转化成对象的格式
+    //     }else{
+    //         return [];
+    //     }
+    // }
+    // /*保存笔记到本地*/
+    // function savaReflections(reflections){
+    //     localStorage.setItem("reflections",JSON.stringify(reflections));
+    // }
+    // /*渲染加载数据*/
+    // function loadReflections(){
+    //     // console.log("加载展示笔记内容");
+    //     //读取本地存储的数据
+    //     var reflections = getReflections();
+    //     //先把所有笔记内容清空
+    //     $(".reflections").empty();
+    //     if(reflections !== null){
+    //         //再显示所有笔记
+    //         $.each(reflections,function(index,ele){
+    //             console.log(ele);
+    //             //判断这个元素的state属性，如果是new或者fromdbs就给他展示出来，否则就不展示；这样操作是方便最后将所有的这些数据传入数据库时 做不同的增删改查处理
+    //             //值得注意的是，删除元素只是修改其属性 让他在这里不显示，但是他依然在locaLStorage里面，在显示元素的时候，显示元素的index值是会被不显示的元素所占位的，所以在删除的方法里 通过他的index值还是可以定位到所显示的元素的？
+    //             // ele.state === "new" || ele.state === "fromdbs" ||ele.state.endsWith("update")
+    //             if(!ele.state.endsWith("delete")){
+    //                 /* 下面这行是创建1个完整的<div>笔记*/
+    //                 $(".reflections").prepend("<div class='panel panel-default col-md-8'><div class='panel-heading'>"+ele.title+"<div class='btn-group' role='group' ><button type='button' class='btn btn-default btn-delete' id='"+index+"'>删除</button><button type='button' class='btn btn-default btn-update' data-toggle='modal' data-target='#myModal' data-id='"+index+"'>修改</button></div></div><div class='panel-body'><p>"+ele.content+"</p></div></div>");
+    //             }else{
+    //             }
+    //
+    //         })
+    //     }
+    // }
 
     window.onbeforeunload = function (){
         // updateLeaving();

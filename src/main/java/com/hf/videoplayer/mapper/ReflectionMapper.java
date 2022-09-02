@@ -50,5 +50,5 @@ public interface ReflectionMapper {
      * @param reflection
      * @return
      */
-    Integer updateReflection(String reflection,String title,String time,String uid,String fromDbsTime);
+    Integer updateReflection(String reflection,String title,String time,Integer id);
 }

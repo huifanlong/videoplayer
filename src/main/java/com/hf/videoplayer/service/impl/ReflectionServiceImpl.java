@@ -47,7 +47,7 @@ public class ReflectionServiceImpl implements IReflectionService {
         }
         for(int i = 0 ;i < reflections.length;i++){
             reflections[i].setUid(null);
-           reflections[i].setId(null);
+//           reflections[i].setId(null);
             reflections[i].setVid(null);
         }
         return reflections;
@@ -68,12 +68,13 @@ public class ReflectionServiceImpl implements IReflectionService {
     }
 
     @Override
-    public Integer updateReflection(Reflection reflection,String fromDbsTime) throws ParseException {
+    public Integer updateReflection(Reflection reflection){
         SimpleDateFormat ft2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        reflection.setTime(ft2.format(new Date()));//格式转换
+//        reflection.setTime(ft2.format(new Date()));//格式转换
 //        System.out.println(reflection.toString());
 //        System.out.println(fromDbsTime);
-        Integer result = reflectionMapper.updateReflection(reflection.getReflection(),reflection.getTitle(),reflection.getTime(),reflection.getUid(), fromDbsTime);
+        reflection.setTime(ft2.format(new Date()));
+        Integer result = reflectionMapper.updateReflection(reflection.getReflection(),reflection.getTitle(),reflection.getTime(),reflection.getId());
         if(result != 1){
             throw new NoteNotExistException("更新失败");
         }

@@ -28,7 +28,7 @@
     </delete>
 
     <update id="updateReflection">
-        UPDATE reflection_edutec_2022 SET reflection=#{reflection}, title=#{title}, time=#{time} WHERE uid = #{uid} AND time=#{fromDbsTime}
+        UPDATE reflection_edutec_2022 SET reflection=#{reflection}, title=#{title}, time=#{time} WHERE id = #{id}
     </update>
 
 

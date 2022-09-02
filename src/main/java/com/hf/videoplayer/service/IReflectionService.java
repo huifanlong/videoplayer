@@ -38,5 +38,5 @@ public interface IReflectionService {
 //     * 未抛异常就是有笔记，
 //     */
 //    void findNoteByUidVidAndSecondTime(Note notes);
-    Integer updateReflection(Reflection reflection,String fromDbsTime) throws ParseException;
+    Integer updateReflection(Reflection reflection);
 }
