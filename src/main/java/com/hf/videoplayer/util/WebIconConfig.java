@@ -5,8 +5,8 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@Configuration
-public class WebIconConfig implements WebMvcConfigurer {
+//@Configuration
+//public class WebIconConfig implements WebMvcConfigurer {
     /**
      * 重写addCorsMappings()解决跨域问题
      * 配置：允许http请求进行跨域访问
@@ -32,8 +32,8 @@ public class WebIconConfig implements WebMvcConfigurer {
      *
      * @param registry
      */
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new IconInterceptor()).addPathPatterns("/**/static/icon/**");
-    }
-}
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(new IconInterceptor()).addPathPatterns("/**/video/**");
+//    }
+//}

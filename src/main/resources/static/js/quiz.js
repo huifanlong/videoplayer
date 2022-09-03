@@ -23,9 +23,9 @@ $(function(){
     $("#button2").on("click",function (){  //返回课程页面按钮
         window.location.href = "../web/course2020.html";
     })
-    updateBegin("quiz_trace");//开始记录此页面登录时间
+    updateBegin("quiz"+qid);//开始记录此页面登录时间
     window.onbeforeunload = function (){
-        updateLeaving();
+        // updateLeaving();
     }
     window.onpagehide = function (){
         console.log("onpagehide执行")

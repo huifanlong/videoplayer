@@ -26,12 +26,16 @@ public class NoteServiceImpl implements INoteService {
             Note result = noteMapper.findNoteByUidVidAndSecondTime(note.getUid(), note.getVid(), note.getSecondTime());
             if(result != null){
 //            throw new NoteThisSecondAlreadyExistException("该时刻已经有笔记，请前去修改而不是创建");其实不是可以直接在这里修改吗？
-                noteMapper.updateNotes(note);
-            }
-            Integer rows = noteMapper.insert(note);
-            if(rows != 1){//没有插入成功
-                throw new NoteCreateFailedException("笔记添加失败");
+                Integer rows2 = noteMapper.updateNotes(note);
+                if(rows2 != 1){//没有插入成功
+                    throw new NoteCreateFailedException("笔记已存在，且更新失败");
 
+                }
+            }else{
+                Integer rows = noteMapper.insert(note);
+                if(rows != 1){//没有插入成功
+                    throw new NoteCreateFailedException("笔记添加失败");
+                }
             }
     }
 
@@ -48,7 +52,7 @@ public class NoteServiceImpl implements INoteService {
             throw new NoteNotExistException("笔记不存在，删除失败");
         }
         Integer rows = noteMapper.delete(uid,vid,secondTime);
-        if(note == null){
+        if(rows == null){
             throw new NoteDeleteFailedException("删除失败");
         }
 

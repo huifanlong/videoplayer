@@ -68,4 +68,11 @@ public class NoteController extends BaseController{
         Note[] notes = noteService.findNotesByUid(uid);
         return new JsonResult<Note[]>(OK,notes);
     }
+
+    @RequestMapping("delete")
+    public JsonResult<Void> deleteNote(Integer vid,Integer secondTime,HttpSession session){
+        String uid = getUserNameFromSession(session);
+        noteService.deleteNote(uid,vid,secondTime);
+        return new JsonResult<>(OK);
+    }
 }

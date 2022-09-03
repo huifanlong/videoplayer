@@ -19,7 +19,7 @@ public interface RecordMapper {
      * @param vid 视频id
      * @return 该用户该视频下的记录
      */
-    Record findRecordByUidAndVid(String uid,Integer vid);
+    Record[] findRecordByUidAndVid(String uid,Integer vid);
     /**
      *
      * @param vid 视频id

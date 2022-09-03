@@ -10,14 +10,14 @@
     </resultMap>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO user (user_name,user_pass,name,authority) VALUES (#{userName},#{userPass},#{name},#{authority})
+        INSERT INTO user_edutec (user_name,user_pass,name,authority) VALUES (#{userName},#{userPass},#{name},#{authority})
     </insert>
 
     <select id="findByUserName" resultMap="UserEntityMap">
-        SELECT * FROM user WHERE user_name = #{userName}
+        SELECT * FROM user_edutec WHERE user_name = #{userName}
     </select>
 
     <select id="findById" resultMap="UserEntityMap">
-        SELECT * FROM user WHERE id = #{id}
+        SELECT * FROM user_edutec WHERE id = #{id}
     </select>
 </mapper>

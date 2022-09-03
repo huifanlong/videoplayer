@@ -11,14 +11,13 @@ import java.util.Date;
 public class Trace implements Serializable {
     private Integer id;//主键
 
+    private Integer num;
+
     private String userName;//用户名
 
-    private String totalTrace;//包括index、reflection、video、notes的停留轨迹（时间对）
+    private String trace;//包括index、reflection、video、notes的停留轨迹（时间对）
 
-    private String videoIds;//视频id
+    private String time;//登陆时间
 
-    private String loginTime;//登陆时间
-
-    private String logoutTime;//退出时间
 
 }

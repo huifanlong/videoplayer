@@ -39,16 +39,16 @@ public interface ReflectionMapper {
 
     /**
      * 删除某用户 某条视频的 某个时间点的 笔记
-     * @param uid
+     * @param id
      * @param
      * @return
      */
-    Integer delete(String uid,String time);
+    Integer delete(Integer id);
 
     /**
      * 修改一条反思的内容
      * @param reflection
      * @return
      */
-    Integer updateReflection(String reflection,String title,String time,String uid,String fromDbsTime);
+    Integer updateReflection(String reflection,String title,String time,Integer id);
 }
