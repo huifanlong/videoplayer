@@ -39,11 +39,11 @@ public interface ReflectionMapper {
 
     /**
      * 删除某用户 某条视频的 某个时间点的 笔记
-     * @param uid
+     * @param id
      * @param
      * @return
      */
-    Integer delete(String uid,String time);
+    Integer delete(Integer id);
 
     /**
      * 修改一条反思的内容

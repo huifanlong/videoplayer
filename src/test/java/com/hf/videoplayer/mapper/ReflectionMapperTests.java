@@ -34,7 +34,7 @@ public class ReflectionMapperTests {
 
     @Test
     public void delete(){
-        reflectionMapper.delete("uid","2022-08-28 14:58:07");
+//        reflectionMapper.delete("uid","2022-08-28 14:58:07");
     }
 
     @Test

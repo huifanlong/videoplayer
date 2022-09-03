@@ -60,7 +60,7 @@ public class TraceController extends BaseController {
                     // 使用session的getLastAccessedTime()判断最后一次访问该session的时间,其返回的是距离1970-1-1 0:0:0的毫秒数
                     long time = System.currentTimeMillis() - session.getLastAccessedTime();
 //                    SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    if (time > 1000 * 60 * 2) {//三十分钟,就可以判断用户已经退出，可以生成一条轨迹记录
+                    if (time > 1000 * 60 * 2) {//三十分钟,就可以判断用户已经退出，可以生成一条轨迹记录1
 //                        traceService.createTrace(userName, dateformat.format(session.getLastAccessedTime()));
                         System.out.println(userName+"：判定退出");
                         traceService.endTrace(userName,session.getLastAccessedTime());

@@ -28,12 +28,12 @@ public class ReflectionServiceImpl implements IReflectionService {
     }
 
     @Override
-    public void deleteReflections(String uid, String time) {
-        Reflection reflection = reflectionMapper.findReflectionByUidAndTime(uid,time);
-        if(reflection == null){
-            throw new NoteNotExistException("反思不存在，删除失败");
-        }
-        Integer rows = reflectionMapper.delete(uid,time);
+    public void deleteReflections(Integer id) {
+//        Reflection reflection = reflectionMapper.findReflectionByUidAndTime(uid,time);
+//        if(reflection == null){
+//            throw new NoteNotExistException("反思不存在，删除失败");
+//        }
+        Integer rows = reflectionMapper.delete(id);
         if(rows == null){
             throw new NoteDeleteFailedException("删除失败");
         }

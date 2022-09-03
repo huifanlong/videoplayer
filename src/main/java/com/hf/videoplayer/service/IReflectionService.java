@@ -17,7 +17,7 @@ public interface IReflectionService {
      * @param uid 用户id
      * @param time 时间日期
      */
-    void deleteReflections(String uid,String time);
+    void deleteReflections(Integer id);
 
     /**
      * 查询某用户所有笔记
@@ -33,10 +33,6 @@ public interface IReflectionService {
      */
     Reflection[] findReflectionsByUidAndVid(String uid,Integer vid);
 
-//    /**
-//     * 查看某用户某视频某时间点（秒数）有没有笔记
-//     * 未抛异常就是有笔记，
-//     */
-//    void findNoteByUidVidAndSecondTime(Note notes);
+
     Integer updateReflection(Reflection reflection);
 }

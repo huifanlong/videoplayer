@@ -36,10 +36,13 @@ public class ReflectionController extends BaseController{
         return new JsonResult<>(OK,reflections);
     }
     @RequestMapping("update")
-    public JsonResult<Void> updateReflection(Reflection reflection,HttpSession session){
-        String uid = getUserNameFromSession(session);
-        reflection.setUid(uid);
+    public JsonResult<Void> updateReflection(Reflection reflection){
         reflectionService.updateReflection(reflection);
+        return new JsonResult<>(OK);
+    }
+    @RequestMapping("delete")
+    public JsonResult<Void> deleteReflection(Integer id){
+        reflectionService.deleteReflections(id);
         return new JsonResult<>(OK);
     }
 }

@@ -24,7 +24,7 @@
     </select>
 
     <delete id="delete">
-        DELETE FROM reflection_edutec_2022 WHERE uid = #{uid} AND time=#{time}
+        DELETE FROM reflection_edutec_2022 WHERE id = #{id}
     </delete>
 
     <update id="updateReflection">

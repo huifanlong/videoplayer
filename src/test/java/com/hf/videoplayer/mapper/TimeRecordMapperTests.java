@@ -22,4 +22,9 @@ public class TimeRecordMapperTests {
 //            System.out.println(records[i].getTime());
 //        }
     }
+    @Test
+    public void findRecordByVidAndUid(){
+        Record[] records = recordMapper.findRecordByUidAndVid("kakaki",2);
+        System.out.println(records[records.length-1].getWatchTimes());
+    }
 }

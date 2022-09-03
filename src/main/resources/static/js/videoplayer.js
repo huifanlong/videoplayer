@@ -43,7 +43,7 @@
         /* 从数据库中获取笔记数据 并加载*/
         getAndLoadNotesFromDbs();
         // loadNotes();上面的方法一起load 否则可能因为执行顺序 localstorage里面的内容没有load。
-        updateBegin("video_trace");//开始记录此页面登录时间
+        updateBegin("video"+vid);//开始记录此页面登录时间
         var vidNew
         //上一个（视频）按钮
         $("#playLast").on("click",function (){
@@ -51,26 +51,26 @@
         })
         //下一个（视频）按钮
         $("#playNext").on("click",function (){
-            if(parseInt(vid) === 4){
-                idNext = 100;
-            }
             // if(parseInt(vid) === 4){
-            //     idNext = 23;
-            // }else if(parseInt(vid) === 26){
-            //     idNext = 5;
-            // }else if(parseInt(vid) === 6){
-            //     idNext = 22;
-            // }else if(parseInt(vid) === 22){
-            //     idNext = 8;
-            // }else if(parseInt(vid) === 6){
-            //     idNext = 22;
-            // }else if(parseInt(vid) === 12){
-            //     idNext = 14;
-            // }else if(parseInt(vid) === 19){
             //     idNext = 100;
-            // }else{
-            //     idNext = parseInt(vid)+1;
             // }
+            if(parseInt(vid) === 4){
+                idNext = 23;
+            }else if(parseInt(vid) === 26){
+                idNext = 5;
+            }else if(parseInt(vid) === 6){
+                idNext = 22;
+            }else if(parseInt(vid) === 22){
+                idNext = 8;
+            }else if(parseInt(vid) === 6){
+                idNext = 22;
+            }else if(parseInt(vid) === 12){
+                idNext = 14;
+            }else if(parseInt(vid) === 19){
+                idNext = 100;
+            }else{
+                idNext = parseInt(vid)+1;
+            }
             // console.log("vid:"+vid);
             $.post("/videos/find_by_id",
                 {"id":idNext},
@@ -276,25 +276,27 @@
 
         /**当点击记笔记的按钮时 才滑出一个输出框*/
         var video_flag;//控制的这个按钮播放/暂停视频的变量，效果还可以，如果没看视频就点击记笔记不会自己播放了；
+        var is_write_notes_show = false;
         $(".write-notes-btn").on("click",function(){
             $(".write-notes").slideToggle();
-            if(!myVideo.paused){//如果视频在播放
-                video_flag=1;
-                myVideo.pause();
+            is_write_notes_show = !is_write_notes_show;
+            if(is_write_notes_show){//如果视频在播放,且记笔记页面即将展示
+                if(!myVideo.paused){////如果视频在播放
+                    video_flag=1;
+                    myVideo.pause();
+                }
                 clearTimeout(timeId);//取消timeString的这个定时器，在笔记的暂停时间段内不进行记录
                 $(".write-notes-time").text("笔记对应视频时间："+parseInt(myVideo.currentTime)+"秒");
-                console.log("执行禁用");
+                // console.log("执行禁用");
                 myVideo.removeAttribute("controls");//取消视频上的控制按钮 播放视频只能再次点击 记笔记的按钮
-                // updateLeaving();
-                updateBegin("notes_trace");//进入笔记的轨迹
-            }else{
-                // updateLeaving();
-                updateBegin("video_trace");//进入视频播放的轨迹
+                updateBegin("notes");//进入笔记的轨迹
+            }else{//如果记笔记页面即将收回
+                updateBegin("video"+vid);//进入视频播放的轨迹
+                timeId = setTimeout(getCurTime,1000);//重新添加定时器
+                myVideo.setAttribute("controls","controls");
                 if(video_flag === 1){
                     video_flag=0;
                     myVideo.play();
-                    timeId = setTimeout(getCurTime,1000);//重新添加定时器
-                    myVideo.setAttribute("controls","controls");
                 }
             }
         });
