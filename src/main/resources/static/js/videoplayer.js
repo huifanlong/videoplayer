@@ -31,7 +31,7 @@
         // var originLikesNumbers;//该视频从数据中取出的点赞人数 通过比较这个和likeNumber的大小来决定 离开页面时视频的点赞数是增加还是减少
         var collectNumbers;
         // var originCollectNumbers;//同上
-
+        var idNext;
         /**页面加载好时方法:*/
         /* 找到用户名 页面右上角 欢迎的初始化*/
         loadUserInfo();
@@ -41,25 +41,39 @@
             loadVideoInfo();
         }
         /* 从数据库中获取笔记数据 并加载*/
-        getNotesFromDbs();
+        getAndLoadNotesFromDbs();
         // loadNotes();上面的方法一起load 否则可能因为执行顺序 localstorage里面的内容没有load。
-        updateBegin("video_trace");//开始记录此页面登录时间
+        updateBegin("video"+vid);//开始记录此页面登录时间
         var vidNew
         //上一个（视频）按钮
         $("#playLast").on("click",function (){
             window.location.href = "../web/videoplayer_etm2021.html?id="+(parseInt(vid) - 1);
         })
         //下一个（视频）按钮
-     var idNext;
         $("#playNext").on("click",function (){
-            console.log("vid:"+vid);
-            if(parseInt(vid) < 5){
-                idNext = parseInt(vid) + 1
-            }else{
+            // if(parseInt(vid) === 4){
+            //     idNext = 100;
+            // }
+            if(parseInt(vid) === 4){
+                idNext = 23;
+            }else if(parseInt(vid) === 26){
+                idNext = 5;
+            }else if(parseInt(vid) === 6){
+                idNext = 22;
+            }else if(parseInt(vid) === 22){
+                idNext = 8;
+            }else if(parseInt(vid) === 6){
+                idNext = 22;
+            }else if(parseInt(vid) === 12){
+                idNext = 14;
+            }else if(parseInt(vid) === 19){
                 idNext = 100;
+            }else{
+                idNext = parseInt(vid)+1;
             }
+            // console.log("vid:"+vid);
             $.post("/videos/find_by_id",
-                {"id":(parseInt(vid) + 1)},
+                {"id":idNext},
                 function (json){
                     if (json.state == 200){ //如果有下一个视频
                         window.location.href = "../web/videoplayer_etm2021.html?id="+(parseInt(vid) + 1);
@@ -199,23 +213,25 @@
                 console.log(timeString);
                 console.log(rateString);
                 flag=false;
-                qid = vid;
+                qid = vid-1;
                 //没有答过题的记录才存储
-                $.get("/quiz_record/is_done",{"quizId":qid},function(json){
-                    if(json.state != 200){ //查询不到内容(200状态码说明已经做过)
-                        savaRecord(vid,timeString,rateString);
-                        //做题
-                        // lianjie="<a href='http://etm2020.cn/index.php/Index/quiz_etm_2021?id="+qid+"'>测试链接</a>";
-                        // console.log(lianjie);
-                        // document.getElementById("showdiv1").innerHTML="<p>若未跳转成功点击此链接:</p>";
-                        // document.getElementById("showdiv2").innerHTML=lianjie;
-                        alert('视频播放结束!请同学们完成相关测验题，本次测验题的成绩也会作为学生总成绩的一部分，点击确定按钮跳转至测验部分');
+                if(qid > 0){
+                    $.get("/quiz_record/is_done",{"quizId":qid},function(json){
+                        if(json.state != 200){ //查询不到内容(200状态码说明已经做过)
+                            savaRecord(vid,timeString,rateString);
+                            //做题
+                            // lianjie="<a href='http://etm2020.cn/index.php/Index/quiz_etm_2021?id="+qid+"'>测试链接</a>";
+                            // console.log(lianjie);
+                            // document.getElementById("showdiv1").innerHTML="<p>若未跳转成功点击此链接:</p>";
+                            // document.getElementById("showdiv2").innerHTML=lianjie;
+                            alert('视频播放结束!请同学们完成相关测验题，本次测验题的成绩也会作为学生总成绩的一部分，点击确定按钮跳转至测验部分');
 
-                        console.log(vid);
-                        console.log(qid);
-                        window.location.href = "../web/quiz.html?id="+qid;
-                    }
-                })
+                            console.log(vid);
+                            console.log(qid);
+                            window.location.href = "../web/quiz.html?id="+qid;
+                        }
+                    })
+                }
             }
             else
                 timeId = setTimeout(getCurTime,1000);
@@ -224,32 +240,21 @@
 
         /**onbeforeunload 事件在即将离开当前页面（刷新或关闭）时触发
          * 方法4+2操作*/
-        window.onpagehide = function(){
-            // console.log("退出视频页面事件激活0");
+        window.onbeforeunload = function(){
             // alert("退出视频页面事件激活0");
-            updateLeaving();
+            // updateLeaving();
             // alert("退出视频页面事件激活");
             /**1.存储视频观看数据*/
             if(timeString!=""&&flag==true){
                 flag=false;
-                savaRecord(vid,timeString,rateString);
-            }
-            /**2.笔记存储：把笔记数据全部从浏览器内存中拿给后端，后端处理好了哪些笔记是增加 哪些笔记是删除
-             * 2.1暂时前端没有做笔记修改的操作*/
-            var local = getNotes();//从本地中获取数据
-            $.each(local,function (index,ele){
-                $.post("/notes/create_notes",
-                    {"vid":vid,"secondTime":ele.time,"title":ele.title,"notes":ele.content,"state":ele.state},
-                    function(json){
-                        if(json.state==200) {
-                            // alert("退出成功");
-                            console.log("笔记存储成功");
+                if((parseInt(vid)-1)>0){
+                    $.get("/quiz_record/is_done",{"quizId":(parseInt(vid)-1)},function(json){
+                        if(json.state != 200){ //查询不到内容(200状态码说明已经做过)
+                            savaRecord(vid,timeString,rateString);
                         }
-                });
-            })
-            localStorage.removeItem("notes");
-            // alert("清除数据");
-            // localStorage.clear();
+                    })
+                }
+            }
         }
 
         /**点击返回 也要存储相关的观看数据*/
@@ -271,25 +276,27 @@
 
         /**当点击记笔记的按钮时 才滑出一个输出框*/
         var video_flag;//控制的这个按钮播放/暂停视频的变量，效果还可以，如果没看视频就点击记笔记不会自己播放了；
+        var is_write_notes_show = false;
         $(".write-notes-btn").on("click",function(){
             $(".write-notes").slideToggle();
-            if(!myVideo.paused){//如果视频在播放
-                video_flag=1;
-                myVideo.pause();
+            is_write_notes_show = !is_write_notes_show;
+            if(is_write_notes_show){//如果视频在播放,且记笔记页面即将展示
+                if(!myVideo.paused){////如果视频在播放
+                    video_flag=1;
+                    myVideo.pause();
+                }
                 clearTimeout(timeId);//取消timeString的这个定时器，在笔记的暂停时间段内不进行记录
                 $(".write-notes-time").text("笔记对应视频时间："+parseInt(myVideo.currentTime)+"秒");
-                console.log("执行禁用");
+                // console.log("执行禁用");
                 myVideo.removeAttribute("controls");//取消视频上的控制按钮 播放视频只能再次点击 记笔记的按钮
-                updateLeaving();
-                updateBegin("notes_trace");//进入笔记的轨迹
-            }else{
-                updateLeaving();
-                updateBegin("video_trace");//进入视频播放的轨迹
+                updateBegin("notes");//进入笔记的轨迹
+            }else{//如果记笔记页面即将收回
+                updateBegin("video"+vid);//进入视频播放的轨迹
+                timeId = setTimeout(getCurTime,1000);//重新添加定时器
+                myVideo.setAttribute("controls","controls");
                 if(video_flag === 1){
                     video_flag=0;
                     myVideo.play();
-                    timeId = setTimeout(getCurTime,1000);//重新添加定时器
-                    myVideo.setAttribute("controls","controls");
                 }
             }
         });
@@ -299,10 +306,14 @@
             if($(".write-notes-content").val() === "" || $(".write-notes-title").val() === ""){
                 alert("请将内容填写完整哦！");
             }else{
-                var local = getNotes();//获取地中的所有笔记
-                local.push({time:parseInt(myVideo.currentTime),content:$(".write-notes-content").val(),title:$(".write-notes-title").val(),state:"new"});//增加这条新的笔记
-                savaNotes(local);//保存到内存中
-                loadNotes();//重新加载
+                $.post("/notes/create_notes",
+                    {"vid":vid,"secondTime":parseInt(myVideo.currentTime),"title":$(".write-notes-title").val(),"notes":$(".write-notes-content").val(),"state":"new"},
+                    function(json){
+                        if(json.state==200) {
+                            console.log("笔记存储成功");
+                            getAndLoadNotesFromDbs();
+                        }
+                    });
                 $(".write-notes-content").val("");//内容文本框清空
                 $(".write-notes-title").val("");//主题文本框清空
             }
@@ -317,15 +328,18 @@
             // alert($(this).attr("data-time"));
         });
         /**给所有的删除button注册点击事件*/
+        let index_delete;
         $(".notes").on("click",".btn-delete",function(){
-            var local = getNotes();
-            // 数组的splice(从哪个索引号开始删,删几个)方法可以帮助去除localStorage里面的某条笔记信息
-            // local.splice($(this).attr("id"),1);
-            // alert(local[$(this).attr("id")].title);
-            // alert(local[0].content);
-            local[$(this).attr("id")].state+="-delete";
-            savaNotes(local);
-            loadNotes();
+            index_delete = $(this).attr("id");
+            $.get("/notes/delete",{"vid":vid,"secondTime":$(".btn-play").eq(index_delete).attr("data-time")},function(json){
+                if(json.state == 200){
+                    // console.log("删除笔记成功");
+                    getAndLoadNotesFromDbs();
+                }
+            })
+            // console.log($(".note-title").eq(index_delete).text());
+            // console.log($(".note-content").eq(index_delete).text());
+            // console.log($(".btn-play").eq(index_delete).attr("data-time"));
         });
 
         /** 给点赞按钮创建点击事件*/
@@ -363,42 +377,6 @@
                 is_collect=0;
             }
         })
-
-     /**读取本地存储的数据*/
-     function getNotes(){
-         var notes = localStorage.getItem("notes");
-         if(notes !== null){
-             return JSON.parse(notes); //本地存储的数据是字符串 需要转化成对象的格式
-         }else{
-             return [];
-         }
-     }
-     /**保存笔记到本地*/
-     function savaNotes(notes){
-         localStorage.setItem("notes",JSON.stringify(notes));
-     }
-     /**渲染加载数据*/
-     function loadNotes(){
-         //读取本地存储的数据
-         var notes = getNotes();
-         //先把所有笔记内容清空
-         $(".notes").empty();
-         if(notes !== null){
-             //再显示所有笔记
-             $.each(notes,function(index,ele){
-                 console.log(ele);
-                 //判断这个元素的state属性，如果是new或者fromdbs就给他展示出来，否则就不展示；这样操作是方便最后将所有的这些数据传入数据库时 做不同的增删改查处理
-                 //值得注意的是，删除元素只是修改其属性 让他在这里不显示，但是他依然在locaLStorage里面，在显示元素的时候，显示元素的index值是会被不显示的元素所占位的，所以在删除的方法里 通过他的index值还是可以定位到所显示的元素的？
-                 if(ele.state === "new" || ele.state === "fromdbs"){
-                     /* 下面这行是创建1个完整的<div>笔记*/
-                     $(".notes").prepend("<div class='panel panel-default col-md-8'><div class='panel-heading'>"+ele.title+"<div class='btn-group' role='group' ><button type='button' class='btn btn-default btn-play' data-time='"+ele.time+"'>查看</button><button type='button' class='btn btn-default btn-delete' id='"+index+"'>删除</button></div></div><div class='panel-body'><p>"+ele.content+"</p></div></div>");
-                 }else{
-
-                 }
-
-             });
-         }
-     }
      /** 加载视频信息：视频文件、名称、点赞数、收藏数，以及用户是否点赞或收藏*/
      function loadVideoInfo(){
          /*页面加载好时操作2： 到视频对象 并且根据src初始化视频 ；根据videoName初始化视频名字；根据点赞人数初始化originLikesNumbers和likesNumbers两个变量 ；根据点赞人数初始化originCollectNumbers和collectNumbers两个变量*/
@@ -446,18 +424,16 @@
              });
      }
      /**页面加载好时方法1： 从数据库中调取笔记的内容；*/
-     function getNotesFromDbs(){
+     function getAndLoadNotesFromDbs(){
          $.post("/notes/find_video_notes",
              {"vid":vid},
              function(json){
                  if(json.state==200) {
-                     var local = [];
+                     $(".notes").empty();//先置空，再显示所有笔记
                      $.each(json.data, function (index, ele) {
-                         // alert(ele.notes);
-                         local.push({time: ele.secondTime, content: ele.notes, title: ele.title, state: "fromdbs"});
+                         index = json.data.length-index-1;//数组翻转
+                         $(".notes").prepend("<div class='panel panel-default col-md-8'><div class='panel-heading'><p class='note-title'>"+ele.title+"</p></p><div class='btn-group' role='group' ><button type='button' class='btn btn-default btn-play' data-time='"+ele.secondTime+"'>播放</button><button type='button' class='btn btn-default btn-delete' id='"+index+"'>删除</button></div></div><div class='panel-body'><p class='note-content'>"+ele.notes+"</p></div><p style='float: right;padding-right: 10px;font-size: 8px;color: #6f6f6f'>对应视频位置："+ele.secondTime+"s</p></div>");
                      })
-                     savaNotes(local);
-                     loadNotes();
                  }else if(json.state == 7002){
                      //米有笔记就什么都不做吧
                      // alert(json.message);

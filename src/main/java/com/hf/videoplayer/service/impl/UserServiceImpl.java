@@ -81,14 +81,14 @@ public class UserServiceImpl implements IUserService {
         String uid = record.getUid();
         Integer vid = record.getVid();
         /**根据用户id和视频id去Record表里面查找是否有记录*/
-        Record result = recordMapper.findRecordByUidAndVid(uid,vid);
+        Record[] result = recordMapper.findRecordByUidAndVid(uid,vid);
 
         record.setCreateTime(new Date());//获取当前时间
 
         /**如果已经有一条记录 那么就把记录的观看次数增加 并且调用update修改一条记录*/
-        if(result != null){
-            record.setWatchTimes(result.getWatchTimes()+1);
-            Integer rows = recordMapper.update(record);
+        if(result.length != 0){
+            record.setWatchTimes(result[result.length-1].getWatchTimes()+1);
+            Integer rows = recordMapper.insert(record);
             if(rows != 1){
                 throw new RecordUpdateException("观看数据更新异常");
             }

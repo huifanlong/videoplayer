@@ -9,23 +9,23 @@
     </resultMap>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO collection_list_database_2022 (uid,vid,is_collect) VALUES (#{uid},#{vid},#{isCollect})
+        INSERT INTO collection_list_edutec_2022 (uid,vid,is_collect) VALUES (#{uid},#{vid},#{isCollect})
     </insert>
 
     <select id="findStatusByUidAndVid" resultMap="CollectionEntityMap">
-        SELECT * FROM collection_list_database_2022 WHERE uid = #{uid} AND vid=#{vid}
+        SELECT * FROM collection_list_edutec_2022 WHERE uid = #{uid} AND vid=#{vid}
     </select>
 
     <delete id="delete">
-        DELETE FROM collection_list_database_2022 WHERE uid = #{uid} AND vid=#{vid}
+        DELETE FROM collection_list_edutec_2022 WHERE uid = #{uid} AND vid=#{vid}
     </delete>
 
     <select id="findStatusByUid" resultMap="CollectionEntityMap">
-        SELECT * FROM collection_list_database_2022 WHERE uid = #{uid}
+        SELECT * FROM collection_list_edutec_2022 WHERE uid = #{uid}
     </select>
 
     <update id="update">
-        UPDATE collection_list_database_2022 SET is_collect=#{isCollect} WHERE uid = #{uid} AND vid=#{vid}
+        UPDATE collection_list_edutec_2022 SET is_collect=#{isCollect} WHERE uid = #{uid} AND vid=#{vid}
     </update>
 
 
