@@ -12,7 +12,11 @@ public interface ITraceService {
      * 插入一条轨迹
      * @param
      */
-    void createTrace(String userName,String logoutTime) throws ParseException;
+    void createTrace(String userName,String where);
+
+    void beginTrace(String userName);
+
+    void endTrace(String userName,Long sessionLastAccessTime);
 
     /**
      * 返回ture表示是这条记录的第一次；返回false表示不是第一次
@@ -20,14 +24,14 @@ public interface ITraceService {
      * @param userName
      * @param totalTraces
      */
-    void updateInSameLearning(String userName,String totalTraces);
+//    void updateInSameLearning(String userName,String totalTraces);
 
     /**
      * 因为js执行顺序的问题，更改了trace的数据格式从五元一组该为三元一组；
      * in this case 如果还需要准确地记录正确退出用户的退出时间的话，那么就需要这样建一个leavingTimeSet
      * @param time
      */
-    void leavingTimeSet(String userName,String time);
+//    void leavingTimeSet(String userName,String time);
 
     /**
      *

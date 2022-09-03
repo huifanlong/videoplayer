@@ -73,7 +73,10 @@ public class BaseController {
             result.setMessage("查询不到用户的轨迹");
         }else if(e instanceof QuizRecordCreatException){
             result.setState(4004);
-            result.setMessage("答题记录录入错误");
+            result.setMessage("答题记录录入错误，可能是已经退出？请重新尝试");
+        }else if(e instanceof QuizRecordExitsException){
+            result.setState(4005);
+            result.setMessage("你已经答过题，此次答题不进行记录");
         }else if(e instanceof QuizRecordNotFoundException){
             result.setState(5003);
             result.setMessage("查询不到答题记录");
