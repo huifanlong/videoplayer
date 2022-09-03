@@ -6,21 +6,17 @@
     <resultMap id="TraceEntityMap" type="com.hf.videoplayer.entity.Trace">
         <id column="id" property="id"></id>
         <result column="uname" property="userName"></result>
-        <result column="total_trace" property="totalTrace"></result>
-        <result column="login_time" property="loginTime"></result>
-        <result column="logout_time" property="logoutTime"></result>
-
     </resultMap>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO learning_trace_database_2022 (uname,total_trace,video_ids,login_time,logout_time) VALUES (#{userName},#{totalTrace},#{videoIds},#{loginTime},#{logoutTime})
+        INSERT INTO learning_trace_edutec_2022new (num,uname,trace,time) VALUES (#{num},#{userName},#{trace},#{time})
     </insert>
 
     <select id="findByUserName" resultMap="TraceEntityMap">
-        SELECT * FROM learning_trace_database_2022 WHERE uname = #{userName}
+        SELECT * FROM learning_trace_edutec_2022new WHERE uname = #{userName}
     </select>
 
     <select id="findById" resultMap="TraceEntityMap">
-        SELECT * FROM learning_trace_database_2022 WHERE id = #{id}
+        SELECT * FROM learning_trace_edutec_2022new WHERE id = #{id}
     </select>
 </mapper>

@@ -9,27 +9,27 @@
     </resultMap>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO notebook_database_2022 (uid,vid,second_time,notes,title) VALUES (#{uid},#{vid},#{secondTime},#{notes},#{title})
+        INSERT INTO notebook_edutec_2022 (uid,vid,second_time,notes,title) VALUES (#{uid},#{vid},#{secondTime},#{notes},#{title})
     </insert>
 
     <select id="findNotesByUid" resultMap="NoteEntityMap">
-        SELECT * FROM notebook_database_2022 WHERE uid = #{uid}
+        SELECT * FROM notebook_edutec_2022 WHERE uid = #{uid}
     </select>
 
     <select id="findNotesByUidAndVid" resultMap="NoteEntityMap">
-        SELECT * FROM notebook_database_2022 WHERE uid = #{uid} AND vid=#{vid}
+        SELECT * FROM notebook_edutec_2022 WHERE uid = #{uid} AND vid=#{vid}
     </select>
 
     <select id="findNoteByUidVidAndSecondTime" resultMap="NoteEntityMap">
-        SELECT * FROM notebook_database_2022 WHERE uid = #{uid} AND vid=#{vid} AND second_time=#{secondTime}
+        SELECT * FROM notebook_edutec_2022 WHERE uid = #{uid} AND vid=#{vid} AND second_time=#{secondTime}
     </select>
 
     <delete id="delete">
-        DELETE FROM notebook_database_2022 WHERE uid = #{uid} AND vid=#{vid} AND second_time=#{secondTime}
+        DELETE FROM notebook_edutec_2022 WHERE uid = #{uid} AND vid=#{vid} AND second_time=#{secondTime}
     </delete>
 
     <update id="updateNotes">
-        UPDATE notebook_database_2022 SET notes=#{notes} AND titile=#{title} WHERE uid = #{uid} AND vid=#{vid} AND second_time=#{secondTime}
+        UPDATE notebook_edutec_2022 SET notes=#{notes},title=#{title} WHERE uid = #{uid} AND vid=#{vid} AND second_time=#{secondTime}
     </update>
 
 
