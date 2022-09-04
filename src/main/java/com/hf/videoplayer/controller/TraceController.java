@@ -93,7 +93,7 @@ public class TraceController extends BaseController {
     @RequestMapping("logout")
     public JsonResult<Void> afterLogoutButton(HttpSession session){
         String userName = getUserNameFromSession(session);
-        traceService.endTrace(userName,session.getLastAccessedTime());
+        traceService.endTrace(userName,(session.getLastAccessedTime()- 1000*60*1));
         timers.get(userName).cancel();
         timers.remove(userName);
         return new JsonResult<>(OK);

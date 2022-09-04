@@ -59,7 +59,7 @@ public class TraceServiceImpl implements ITraceService {
         trace.setUserName(userName);
         trace.setNum(userTraceNum.get(userName).get(userTraceNum.get(userName).size()-1));
         trace.setTrace("endTrace");
-        trace.setTime(ft.format(sessionLastAccessTime + 1000*60*5));
+        trace.setTime(ft.format(sessionLastAccessTime + 1000*60*1));
         Integer result = traceMapper.insert(trace);
         if(result != 1){
             throw new InsertException("endTrace创建失败");
