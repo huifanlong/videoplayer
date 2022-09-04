@@ -49,10 +49,10 @@ $(function(){
                 if(json.state == 200){
                     console.log("创建反思成功");
                     getAndLoadReflectionsFromDbs();
+                    $(".write-reflections-content").val("");//内容文本框清空
+                    $(".write-reflections-title").val("");//主题文本框清空
                 }
             })
-            $(".write-reflections-content").val("");//内容文本框清空
-            $(".write-reflections-title").val("");//主题文本框清空
         }
     })
     let database_id
@@ -69,8 +69,8 @@ $(function(){
     let index_update;
     $(".reflections").on("click",".btn-update",function(){
         index_update = $(this).attr("data-id");
-        $(".update-reflections-content").val($(".reflection-title").eq(index_update).text());//给模态框里面的内容文本框之前的内容
-        $(".update-reflections-title").val($(".reflection-content").eq(index_update).text());//给主题文本框之前的内容
+        $(".update-reflections-content").val($(".reflection-content").eq(index_update).text());//给模态框里面的内容文本框之前的内容
+        $(".update-reflections-title").val($(".reflection-title").eq(index_update).text());//给主题文本框之前的内容
         database_id = $(this).attr("data-database-id");
         /**事件里面可以有事件吗？要写一个模态框的点击事件*/
         $(".save-update").on("click",function(){
@@ -103,8 +103,5 @@ $(function(){
                 }
             });
     }
-    // window.onpagehide = function (){
-    //     console.log("onpagehide执行");
-    // }
 
 })

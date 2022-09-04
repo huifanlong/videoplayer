@@ -172,7 +172,7 @@ $(function(){
             {"quizId": qid, "answer": answer, "rightQuestionID": right_questionID, "errorQuestionID": error_questionID, "startTime": starttime, "endTime": endtime, "usedTime": time,"score":Math.round(num_of_right/count*100),"numOfRight": num_of_right},
             function (json) {
                 if(json.state!=200){
-                    alert("你已经答过题，此次答题不进行记录");
+                    alert(json.message);
                 }
             });
     }

@@ -51,29 +51,8 @@
         })
         //下一个（视频）按钮
         $("#playNext").on("click",function (){
-            // if(parseInt(vid) === 4){
-            //     idNext = 100;
-            // }
-            if(parseInt(vid) === 4){
-                idNext = 23;
-            }else if(parseInt(vid) === 26){
-                idNext = 5;
-            }else if(parseInt(vid) === 6){
-                idNext = 22;
-            }else if(parseInt(vid) === 22){
-                idNext = 8;
-            }else if(parseInt(vid) === 6){
-                idNext = 22;
-            }else if(parseInt(vid) === 12){
-                idNext = 14;
-            }else if(parseInt(vid) === 19){
-                idNext = 100;
-            }else{
-                idNext = parseInt(vid)+1;
-            }
-            // console.log("vid:"+vid);
             $.post("/videos/find_by_id",
-                {"id":idNext},
+                {"id":(parseInt(vid) + 1)},
                 function (json){
                     if (json.state == 200){ //如果有下一个视频
                         window.location.href = "../web/videoplayer_etm2021.html?id="+(parseInt(vid) + 1);
@@ -213,7 +192,7 @@
                 console.log(timeString);
                 console.log(rateString);
                 flag=false;
-                qid = vid-1;
+                qid = vid;
                 //没有答过题的记录才存储
                 if(qid > 0){
                     $.get("/quiz_record/is_done",{"quizId":qid},function(json){

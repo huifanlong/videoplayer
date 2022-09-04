@@ -11,3 +11,5 @@ spring:
     hikari:
       max-lifetime: 1800000
       idle-timeout: 600000
+server:
+  port: 8081

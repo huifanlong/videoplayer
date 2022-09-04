@@ -4,6 +4,7 @@ import com.hf.videoplayer.entity.QuizRecord;
 import com.hf.videoplayer.mapper.QuizRecordMapper;
 import com.hf.videoplayer.service.IQuizRecordService;
 import com.hf.videoplayer.service.ex.QuizRecordCreatException;
+import com.hf.videoplayer.service.ex.QuizRecordExitsException;
 import com.hf.videoplayer.service.ex.QuizRecordNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class QuizRecordServiceImpl implements IQuizRecordService {
                 throw new QuizRecordCreatException("答题记录录入错误");
             }
         }else{
-            throw new QuizRecordCreatException("已经答过题");
+            throw new QuizRecordExitsException("已经答过题");
         }
     }
 
