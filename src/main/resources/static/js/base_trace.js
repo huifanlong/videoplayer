@@ -27,3 +27,17 @@ function loadUserInfo(){
             }
     })
 }
+
+function logout(){
+    $.get("/trace/logout",function(json){
+        if(json.state == 200){
+            console.log("退出成功（trace）");
+        }
+    })
+    $.get("/users/login_out",
+        function(json){
+            if(json.state==200) {
+                console.log("退出成功(userSession)");
+            }
+        });
+}

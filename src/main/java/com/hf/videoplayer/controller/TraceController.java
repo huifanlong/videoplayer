@@ -71,7 +71,7 @@ public class TraceController extends BaseController {
 //                        System.out.println("session的使用时间" + time);
                     }
                 }
-            }, 1000, 1000 * 60 * 5);//每15分钟判断一次，其实三十分钟以内判断一次效果都是一样的。
+            }, 1000, 1000 * 60 * 1);//每15分钟判断一次，其实三十分钟以内判断一次效果都是一样的。
             System.out.println(getUserNameFromSession(session)+"：初次访问，已激活trace计时器。当前在线用户数："+timers.size());
         }
 //        else{
@@ -88,6 +88,14 @@ public class TraceController extends BaseController {
     @RequestMapping("create")
     public JsonResult<Void> leaving(String where,HttpSession session){
         traceService.createTrace(getUserNameFromSession(session),where);
+        return new JsonResult<>(OK);
+    }
+    @RequestMapping("logout")
+    public JsonResult<Void> afterLogoutButton(HttpSession session){
+        String userName = getUserNameFromSession(session);
+        traceService.endTrace(userName,session.getLastAccessedTime());
+        timers.get(userName).cancel();
+        timers.remove(userName);
         return new JsonResult<>(OK);
     }
 

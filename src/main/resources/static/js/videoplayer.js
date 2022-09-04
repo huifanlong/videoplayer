@@ -266,12 +266,7 @@
         });
         /**点击退出，则执行一次ajax请求，到后端清除session数据*/
         $('#login-out').click(function () {
-            $.get("/users/login_out",
-                function(json){
-                    if(json.state==200) {
-                        console.log("退出成功");
-                    }
-            });
+            logout();
          });
 
         /**当点击记笔记的按钮时 才滑出一个输出框*/
@@ -435,6 +430,7 @@
                          $(".notes").prepend("<div class='panel panel-default col-md-8'><div class='panel-heading'><p class='note-title'>"+ele.title+"</p></p><div class='btn-group' role='group' ><button type='button' class='btn btn-default btn-play' data-time='"+ele.secondTime+"'>播放</button><button type='button' class='btn btn-default btn-delete' id='"+index+"'>删除</button></div></div><div class='panel-body'><p class='note-content'>"+ele.notes+"</p></div><p style='float: right;padding-right: 10px;font-size: 8px;color: #6f6f6f'>对应视频位置："+ele.secondTime+"s</p></div>");
                      })
                  }else if(json.state == 7002){
+                     $(".notes").empty();
                      //米有笔记就什么都不做吧
                      // alert(json.message);
                  }
