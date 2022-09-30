@@ -35,8 +35,10 @@ $(function(){
         if(index == 1){//点击了反思页面
             updateBegin("reflection");//进入笔记的轨迹
             getAndLoadReflectionsFromDbs();
-        }else{//点击了课程页面
+        }else if(index == 0){//点击了课程页面
             updateBegin("index");//进入课程页面的轨迹
+        }else{ //进入多元智能测验
+            updateBegin("multiple")
         }
     })
 

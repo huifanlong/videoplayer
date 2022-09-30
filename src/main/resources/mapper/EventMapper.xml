@@ -5,6 +5,17 @@
 
     <resultMap id="ClickEventEntityMap" type="com.hf.videoplayer.entity.ClickEvent">
     </resultMap>
+    <resultMap id="MultipleIntelligenceEntityMap" type="com.hf.videoplayer.entity.MultipleIntelligence">
+        <id column="id" property="id"></id>
+        <result column="linguist_intelli" property="linguistIntelli"></result>
+        <result column="logic_math_intelli" property="logicMathIntelli"></result>
+        <result column="spatial_intelli" property="spatialIntelli"></result>
+        <result column="bodily_kines_intelli" property="bodilyKinesIntelli"></result>
+        <result column="music_intelli" property="musicIntelli"></result>
+        <result column="interpersonal_intelli" property="interpersonalIntelli"></result>
+        <result column="self_intelli" property="selfIntelli"></result>
+        <result column="natural_intelli" property="naturalIntelli"></result>
+    </resultMap>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO clickevent_database_2022 (uid,vid,event,position,time,state,rate) VALUES (#{uid},#{vid},#{event},#{position},#{time},#{state},#{rate})
@@ -12,6 +23,15 @@
 
     <select id="findEventsByUidAndVid" resultMap="ClickEventEntityMap">
         SELECT * FROM clickevent_database_2022 WHERE uid = #{uid} AND vid = #{vid}
+    </select>
+
+    <insert id="insertMultiple" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO multi_intelli (id,uid,linguist_intelli,logic_math_intelli,spatial_intelli,bodily_kines_intelli,music_intelli,interpersonal_intelli,self_intelli,natural_intelli)
+        VALUES (#{id},#{uid},#{linguistIntelli},#{logicMathIntelli},#{spatialIntelli},#{bodilyKinesIntelli},#{musicIntelli},#{interpersonalIntelli},#{selfIntelli},#{naturalIntelli})
+    </insert>
+
+    <select id="findMultiple" resultMap="MultipleIntelligenceEntityMap">
+        SELECT * FROM multi_intelli WHERE uid = #{uid}
     </select>
 
 </mapper>
