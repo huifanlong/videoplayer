@@ -1,6 +1,7 @@
 package com.hf.videoplayer.mapper;
 
 import com.hf.videoplayer.entity.ClickEvent;
+import com.hf.videoplayer.entity.MultipleIntelligence;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,27 @@ import java.util.Date;
 public class ClickEventMapperTests {
     @Autowired
     private ClickEventMapper clickEventMapper;
+
+    @Test
+    public void insertMultiple(){
+        MultipleIntelligence multipleIntelligence=new MultipleIntelligence();
+        multipleIntelligence.setUid("uid");
+        multipleIntelligence.setInterpersonalIntelli(1);
+        multipleIntelligence.setMusicIntelli(1);
+        multipleIntelligence.setSelfIntelli(1);
+        multipleIntelligence.setBodilyKinesIntelli(1);
+        multipleIntelligence.setLinguistIntelli(1);
+        multipleIntelligence.setLogicMathIntelli(1);
+        multipleIntelligence.setNaturalIntelli(1);
+        multipleIntelligence.setSpatialIntelli(1);
+        Integer result = clickEventMapper.insertMultiple(multipleIntelligence);
+        System.out.println(result);
+    }
+    @Test
+    public void findMultiple(){
+        MultipleIntelligence[] result = clickEventMapper.findMultiple("uid");
+        System.out.println(result.length);
+    }
 
     @Test
     public void insert(){
