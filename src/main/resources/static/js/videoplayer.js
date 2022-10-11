@@ -50,12 +50,18 @@
             window.location.href = "../web/videoplayer_etm2021.html?id="+(parseInt(vid) - 1);
         })
         //下一个（视频）按钮
+        var idNext;
         $("#playNext").on("click",function (){
+            if(parseInt(vid) === 14){
+                idNext = 100;
+            }else{
+                idNext = parseInt(vid) + 1;
+            }
             $.post("/videos/find_by_id",
-                {"id":(parseInt(vid) + 1)},
+                {"id":(idNext)},
                 function (json){
                     if (json.state == 200){ //如果有下一个视频
-                        window.location.href = "../web/videoplayer_etm2021.html?id="+(parseInt(vid) + 1);
+                        window.location.href = "../web/videoplayer_etm2021.html?id="+(idNext);
                     }
                     else{ //如果没有下一个视频，则返回到第一个视频
                         if(window.confirm('该视频是最后一个视频，点击确实将播放第一个视频')){
