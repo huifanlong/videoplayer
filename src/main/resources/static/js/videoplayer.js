@@ -193,11 +193,11 @@
                 console.log(rateString);
                 flag=false;
                 qid = vid;
-                //没有答过题的记录才存储
+                //没有答过题的记录才存储（修改为答没答过题的都存储）
+                savaRecord(vid,timeString,rateString);
                 if(qid > 0){
                     $.get("/quiz_record/is_done",{"quizId":qid},function(json){
                         if(json.state != 200){ //查询不到内容(200状态码说明已经做过)
-                            savaRecord(vid,timeString,rateString);
                             //做题
                             // lianjie="<a href='http://etm2020.cn/index.php/Index/quiz_etm_2021?id="+qid+"'>测试链接</a>";
                             // console.log(lianjie);
