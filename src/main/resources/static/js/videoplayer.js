@@ -59,11 +59,11 @@
             }else if(parseInt(vid) === 26){
                 idNext = 5;
             }else if(parseInt(vid) === 6){
+                idNext = 8;
+            }else if(parseInt(vid) === 9){
                 idNext = 22;
             }else if(parseInt(vid) === 22){
-                idNext = 8;
-            }else if(parseInt(vid) === 6){
-                idNext = 22;
+                idNext = 10;
             }else if(parseInt(vid) === 12){
                 idNext = 14;
             }else if(parseInt(vid) === 19){
@@ -214,11 +214,11 @@
                 console.log(rateString);
                 flag=false;
                 qid = vid-1;
-                //没有答过题的记录才存储
+                //没有答过题的记录才存储（修改为答题之后的也存储）
+                savaRecord(vid,timeString,rateString);
                 if(qid > 0){
                     $.get("/quiz_record/is_done",{"quizId":qid},function(json){
                         if(json.state != 200){ //查询不到内容(200状态码说明已经做过)
-                            savaRecord(vid,timeString,rateString);
                             //做题
                             // lianjie="<a href='http://etm2020.cn/index.php/Index/quiz_etm_2021?id="+qid+"'>测试链接</a>";
                             // console.log(lianjie);
