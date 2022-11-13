@@ -52,8 +52,10 @@
         //下一个（视频）按钮
         var idNext;
         $("#playNext").on("click",function (){
-            if(parseInt(vid) === 14){
-                idNext = 100;
+            if(parseInt(vid) === 13){
+                idNext = 15;
+            }else if(parseInt(vid) === 17){
+                idNext = 100
             }else{
                 idNext = parseInt(vid) + 1;
             }
