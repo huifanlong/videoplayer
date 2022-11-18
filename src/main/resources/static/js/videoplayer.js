@@ -44,17 +44,22 @@
         getAndLoadNotesFromDbs();
         // loadNotes();上面的方法一起load 否则可能因为执行顺序 localstorage里面的内容没有load。
         updateBegin("video"+vid);//开始记录此页面登录时间
-        var vidNew
+        var idLast;
         //上一个（视频）按钮
         $("#playLast").on("click",function (){
-            window.location.href = "../web/videoplayer_etm2021.html?id="+(parseInt(vid) - 1);
+            if(parseInt(vid) === 15){
+                idLast = 13;
+            }else{
+                idLast = parseInt(vid) - 1;
+            }
+            window.location.href = "../web/videoplayer_etm2021.html?id="+(idLast);
         })
         //下一个（视频）按钮
         var idNext;
         $("#playNext").on("click",function (){
             if(parseInt(vid) === 13){
                 idNext = 15;
-            }else if(parseInt(vid) === 17){
+            }else if(parseInt(vid) === 20){
                 idNext = 100
             }else{
                 idNext = parseInt(vid) + 1;
