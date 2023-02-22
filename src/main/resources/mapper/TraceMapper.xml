@@ -9,14 +9,14 @@
     </resultMap>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO learning_trace_database_2022new (num,uname,trace,time) VALUES (#{num},#{userName},#{trace},#{time})
+        INSERT INTO learning_trace_android_2022new (num,uname,trace,time) VALUES (#{num},#{userName},#{trace},#{time})
     </insert>
 
     <select id="findByUserName" resultMap="TraceEntityMap">
-        SELECT * FROM learning_trace_database_2022new WHERE uname = #{userName}
+        SELECT * FROM learning_trace_android_2022new WHERE uname = #{userName}
     </select>
 
     <select id="findById" resultMap="TraceEntityMap">
-        SELECT * FROM learning_trace_database_2022new WHERE id = #{id}
+        SELECT * FROM learning_trace_android_2022new WHERE id = #{id}
     </select>
 </mapper>

@@ -15,19 +15,19 @@
     </resultMap>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO quiz_record_database_2022 (quiz_id,uid,answer,right_questionID,error_questionID,start_time,end_time,used_time,score,num_of_right) VALUES (#{quizId},#{uid},#{answer},#{rightQuestionID},#{errorQuestionID},#{startTime},#{endTime},#{usedTime},#{score},#{numOfRight})
+        INSERT INTO quiz_record_android_2022 (quiz_id,uid,answer,right_questionID,error_questionID,start_time,end_time,used_time,score,num_of_right) VALUES (#{quizId},#{uid},#{answer},#{rightQuestionID},#{errorQuestionID},#{startTime},#{endTime},#{usedTime},#{score},#{numOfRight})
     </insert>
 
     <select id="findQuizRecordByUidAndQuizId" resultMap="QuizRecordEntityMap">
-        SELECT * FROM quiz_record_database_2022 WHERE quiz_id = #{quizId} AND uid = #{uid}
+        SELECT * FROM quiz_record_android_2022 WHERE quiz_id = #{quizId} AND uid = #{uid}
     </select>
 
     <select id="findUserQuizRecords" resultMap="QuizRecordEntityMap">
-        SELECT * FROM quiz_record_database_2022 WHERE uid = #{uid}
+        SELECT * FROM quiz_record_android_2022 WHERE uid = #{uid}
     </select>
 
     <select id="findVideoQuizRecords" resultMap="QuizRecordEntityMap">
-        SELECT * FROM quiz_record_database_2022 WHERE quiz_id = #{quizId}
+        SELECT * FROM quiz_record_android_2022 WHERE quiz_id = #{quizId}
     </select>
 
 </mapper>

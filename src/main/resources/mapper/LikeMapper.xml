@@ -9,19 +9,19 @@
     </resultMap>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO like_list_database_2022 (uid,vid,is_like) VALUES (#{uid},#{vid},#{isLike})
+        INSERT INTO like_list_android_2022 (uid,vid,is_like) VALUES (#{uid},#{vid},#{isLike})
     </insert>
 
     <select id="findStatusByUidAndVid" resultMap="LikeEntityMap">
-        SELECT * FROM like_list_database_2022 WHERE uid = #{uid} AND vid=#{vid}
+        SELECT * FROM like_list_android_2022 WHERE uid = #{uid} AND vid=#{vid}
     </select>
 
     <delete id="delete">
-        DELETE FROM like_list_database_2022 WHERE uid = #{uid} AND vid=#{vid}
+        DELETE FROM like_list_android_2022 WHERE uid = #{uid} AND vid=#{vid}
     </delete>
 
     <select id="findStatusByUid" resultMap="LikeEntityMap">
-        SELECT * FROM like_list_database_2022 WHERE uid = #{uid}
+        SELECT * FROM like_list_android_2022 WHERE uid = #{uid}
     </select>
 
     <update id="update">

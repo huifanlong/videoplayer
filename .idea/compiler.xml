@@ -11,7 +11,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="videoplayer" target="14" />
+      <module name="videoplayer" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

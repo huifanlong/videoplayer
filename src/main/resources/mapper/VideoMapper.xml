@@ -11,27 +11,27 @@
     </resultMap>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO video_database_2022 (cid,videoname,src) VALUES (#{cid},#{videoName},#{src})
+        INSERT INTO video_android_2022 (cid,videoname,src) VALUES (#{cid},#{videoName},#{src})
     </insert>
 
     <select id="findByVideoName" resultMap="VideoEntityMap">
-        SELECT * FROM video_database_2022 WHERE videoname = #{videoName}
+        SELECT * FROM video_android_2022 WHERE videoname = #{videoName}
     </select>
 
     <select id="findByVideoId" resultMap="VideoEntityMap">
-        SELECT * FROM video_database_2022 WHERE id = #{id}
+        SELECT * FROM video_android_2022 WHERE id = #{id}
     </select>
 
     <select id="findAllVideos" resultMap="VideoEntityMap">
-        SELECT * FROM video_database_2022
+        SELECT * FROM video_android_2022
     </select>
 
     <update id="updateLikeNumbersByVideoId">
-        UPDATE video_database_2022 SET like_numbers = #{likeNumbers} WHERE id = #{id}
+        UPDATE video_android_2022 SET like_numbers = #{likeNumbers} WHERE id = #{id}
     </update>
 
     <update id="updateCollectNumbersByVideoId">
-        UPDATE video_database_2022 SET collect_numbers = #{collectNumbers} WHERE id = #{id}
+        UPDATE video_android_2022 SET collect_numbers = #{collectNumbers} WHERE id = #{id}
     </update>
 
 </mapper>

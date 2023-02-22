@@ -59,7 +59,7 @@
         $("#playNext").on("click",function (){
             if(parseInt(vid) === 13){
                 idNext = 15;
-            }else if(parseInt(vid) === 20){
+            }else if(parseInt(vid) === 23){
                 idNext = 100
             }else{
                 idNext = parseInt(vid) + 1;

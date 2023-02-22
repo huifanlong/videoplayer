@@ -8,27 +8,27 @@
     </resultMap>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO reflection_database_2022 (uid,vid,reflection,title,time) VALUES (#{uid},#{vid},#{reflection},#{title},#{time})
+        INSERT INTO reflection_android_2022 (uid,vid,reflection,title,time) VALUES (#{uid},#{vid},#{reflection},#{title},#{time})
     </insert>
 
     <select id="findReflectionsByUid" resultMap="ReflectionEntityMap">
-        SELECT * FROM reflection_database_2022 WHERE uid = #{uid}
+        SELECT * FROM reflection_android_2022 WHERE uid = #{uid}
     </select>
 
     <select id="findReflectionsByUidAndVid" resultMap="ReflectionEntityMap">
-        SELECT * FROM reflection_database_2022 WHERE uid = #{uid} AND vid=#{vid}
+        SELECT * FROM reflection_android_2022 WHERE uid = #{uid} AND vid=#{vid}
     </select>
 
     <select id="findReflectionByUidAndTime" resultMap="ReflectionEntityMap">
-        SELECT * FROM reflection_database_2022 WHERE uid = #{uid} AND time=#{time}
+        SELECT * FROM reflection_android_2022 WHERE uid = #{uid} AND time=#{time}
     </select>
 
     <delete id="delete">
-        DELETE FROM reflection_database_2022 WHERE id = #{id}
+        DELETE FROM reflection_android_2022 WHERE id = #{id}
     </delete>
 
     <update id="updateReflection">
-        UPDATE reflection_database_2022 SET reflection=#{reflection}, title=#{title}, time=#{time} WHERE id = #{id}
+        UPDATE reflection_android_2022 SET reflection=#{reflection}, title=#{title}, time=#{time} WHERE id = #{id}
     </update>
 
 
