@@ -27,6 +27,7 @@ public class QuizRecordController extends BaseController{
         String uid = getUserNameFromSession(session);
         quizRecord.setUid(uid);
         quizRecordService.creatQuizRecord(quizRecord);
+        System.out.println(quizRecord);
         return new JsonResult<>(OK);
 
     }

@@ -17,7 +17,7 @@ public class QuizRecordMapperTests {
     @Test
     public void insert(){
         QuizRecord quizRecord = new QuizRecord();
-        quizRecord.setQuizId(1);
+        quizRecord.setVid(1);
         quizRecord.setAnswer("A");
         quizRecord.setUid("kakaki");
         quizRecord.setStartTime("st");
@@ -38,7 +38,7 @@ public class QuizRecordMapperTests {
 
     @Test
     public void findVideoQuizRecords(){
-        QuizRecord[] quizRecords = quizRecordMapper.findVideoQuizRecords(2);
+        QuizRecord[] quizRecords = quizRecordMapper.findVideoQuizRecords(1);
         System.out.println(quizRecords.length);
     }
 

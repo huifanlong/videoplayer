@@ -14,8 +14,8 @@ public interface QuestionMapper {
 
     /**
      *
-     * @param quizId
+     * @param vid
      * @return 返回练习下的所有题目，没有查到就返回null
      */
-    Question[] findByQuizID(Integer quizId);
+    Question[] findByQuizID(Integer vid);
 }

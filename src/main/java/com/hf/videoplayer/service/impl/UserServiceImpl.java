@@ -58,6 +58,7 @@ public class UserServiceImpl implements IUserService {
         user.setName(result.getName());
         user.setId(result.getId());
         user.setAuthority(result.getAuthority());
+        user.setCourseName(result.getCourseName());
 
         return user;
     }

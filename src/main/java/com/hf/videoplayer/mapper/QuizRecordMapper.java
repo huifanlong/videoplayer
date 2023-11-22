@@ -15,11 +15,11 @@ public interface QuizRecordMapper {
 
     /**
      *
-     * @param quizId
+     * @param vid
      * @param uid
      * @return 返回某学生关于某条视频的答题记录，没有查到就返回null（假定一个学生一个视频可以有多条答题记录）
      */
-    QuizRecord[] findQuizRecordByUidAndQuizId(Integer quizId,String uid);
+    QuizRecord[] findQuizRecordByUidAndQuizId(Integer vid,String uid);
 
     /**
      *

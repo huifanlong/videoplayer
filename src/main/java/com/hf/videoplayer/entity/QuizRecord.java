@@ -9,7 +9,7 @@ public class QuizRecord {
 
     private Integer id;
 
-    private Integer quizId;//练习id-对应于视频id；一个视频对应一个练习
+    private Integer vid;//练习id-对应于视频id；一个视频对应一个练习
 
     private String uid;//用户名
 

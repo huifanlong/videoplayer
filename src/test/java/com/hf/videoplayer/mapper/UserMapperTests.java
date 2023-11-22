@@ -27,7 +27,7 @@ public class UserMapperTests {
 
     @Test
     public void findByUserName(){
-        User user = userMapper.findByUserName("tim");
+        User user = userMapper.findByUserName("test");
         System.out.println(user);
     }
 
@@ -40,7 +40,7 @@ public class UserMapperTests {
 //    }
     @Test
     public void finById(){
-        User user = userMapper.findById(28);
+        User user = userMapper.findById(75);
         System.out.println(user);
     }
 }

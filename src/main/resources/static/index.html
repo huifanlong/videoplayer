@@ -63,11 +63,19 @@
                 if(json.state==200) {
                     // alert(data.message);   //打印登陆成功
                     // alert("登陆成功");
-                    if(json.data.authority == 0){//学生用户
-                        window.location.href = "web/course2020.html";
+
+                    if(json.data.authority == 0 && json.data.courseName=="教学技术与媒体"){//学生用户
+                        window.location.href = "web/course_edutec.html";
+                        console.log(json.data);
+                    }else if(json.data.authority == 0 && json.data.courseName=="数据库"){
+                        window.location.href = "web/course_database.html";
+                        console.log(json.data);
                     }else{//管理员
                         window.location.href = "web/teachers.html";
+                        console.log(json.data);
                     }
+                }else{
+                    alert("登录失败，请检查账号或密码是否有误");
                 }
             }
         });

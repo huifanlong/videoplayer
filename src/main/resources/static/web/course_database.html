@@ -1,0 +1,204 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>课程页面</title>
+  <!--    引入jquery-->
+  <script src="../js/jquery.min.js"></script>
+  <!--bootstrap.js-->
+  <script src="../bootstrap-3.4.1-dist/js/bootstrap.js"></script>
+  <link href="../bootstrap-3.4.1-dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body{
+      height: 1000px;
+    }
+    .reflections .panel{
+      padding-left: 0px;
+      padding-right: 0px;
+    }
+    .write-reflections .form-horizontal{
+      /* width: 800px; */
+      border: lightgrey 1px solid;
+      border-radius: 5px;
+      padding-top: 10px;
+      padding-bottom: 5px;
+      margin-bottom: 5px;
+      /* background-color: lightseagreen; */
+    }
+    .reflections .panel-heading{
+      position: relative;
+    }
+    .reflections .btn-group{
+      position: absolute;
+      right: 10px;
+      top: 3px;
+    }
+  </style>
+</head>
+
+<body>
+<div class="main container" style="position: relative; padding-left: 50px; padding-right: 80px;">
+
+  <!--    导航栏-->
+  <ul class="nav nav-tabs">
+    <li role="presentation" class="active nav-items" index=0><a href="#">课程</a></li>
+    <li role="presentation" class="nav-items" index=1><a href="#">反思</a></li>
+    <li role="presentation" class="nav-items" index=2><a href="#">多元智能测验</a></li>
+
+    <li class="nav navbar-nav navbar-right" >
+      <a href="../index.html" class="login-yes" ><span id="login-out">退出登录</span></a>
+    </li>
+    <li class="nav navbar-nav navbar-right" style="margin: 11px 10px 0px 0px;">
+      <span class="login-yes login-span-yes">你好！某某某</span>
+    </li>
+    <li class="nav navbar-nav navbar-right" >
+      <a href="../index.html" class="login-no">请先登录</a>
+    </li>
+    <li class="nav navbar-nav navbar-right" style="margin: 11px 10px 0px 0px;">
+      <span class="login-no" > 未登录 </span>
+    </li>
+  </ul>
+
+  <!--    课程展示部分-->
+  <div class="nav-contents course">
+
+    <h2>Chapter2</h2>
+    <div class="Chapter1" style="padding-left: 30px ">
+      <p><a href="videoplayer_etm2021.html?id=31">(1) 域、笛卡尔积、关系</a></p>
+      <p><a href="videoplayer_etm2021.html?id=32">(2) 关系的码</a></p>
+      <p><a href="videoplayer_etm2021.html?id=33">(3) 关系的完整性约束</a></p>
+      <p><a href="videoplayer_etm2021.html?id=35">(5) 关系演算</a></p>
+    </div>
+    <h2>Chapter3</h2>
+    <div class="Chapter1" style="padding-left: 30px ">
+      <p><a href="videoplayer_etm2021.html?id=36">(1) SQL基本介绍</a></p>
+      <p><a href="videoplayer_etm2021.html?id=37">(2) 数据定义概述</a></p>
+      <p><a href="videoplayer_etm2021.html?id=38">(3) 基本表类型</a></p>
+      <p><a href="videoplayer_etm2021.html?id=39">(4) 单表查询</a></p>
+      <p><a href="videoplayer_etm2021.html?id=40">(5) 连接查询</a></p>
+      <p><a href="videoplayer_etm2021.html?id=41">(6) 嵌套查询</a></p>
+      <p><a href="videoplayer_etm2021.html?id=42">(7) 数据更新</a></p>
+    </div>
+    <h2>Chapter4</h2>
+    <div class="Chapter1" style="padding-left: 30px ">
+      <p><a href="videoplayer_etm2021.html?id=43">(1) 数据库安全性</a></p>
+      <p><a href="videoplayer_etm2021.html?id=44">(2) 数据库的安全保护</a></p>
+    </div>
+    <h2>Chapter5</h2>
+    <div class="Chapter1" style="padding-left: 30px ">
+      <p><a href="videoplayer_etm2021.html?id=45">(1) 数据库完整性概念和分类</a></p>
+      <p><a href="videoplayer_etm2021.html?id=46">(2) 表完整性与列完整性</a></p>
+      <p><a href="videoplayer_etm2021.html?id=47">(3) 触发器</a></p>
+    </div>
+    <h2>Chapter6</h2>
+    <div class="Chapter1" style="padding-left: 30px ">
+      <p><a href="videoplayer_etm2021.html?id=48">(1) 函数依赖</a></p>
+      <p><a href="videoplayer_etm2021.html?id=49">(2) 范式</a></p>
+      <p><a href="videoplayer_etm2021.html?id=50">(3) 模式分解</a></p>
+    </div>
+    <h2>Chapter7</h2>
+    <div class="Chapter1" style="padding-left: 30px ">
+      <p><a href="videoplayer_etm2021.html?id=51">(1) 概念结构设计</a></p>
+      <p><a href="videoplayer_etm2021.html?id=52">(2) 逻辑结构设计和物理结构设计</a></p>
+      <p><a href="videoplayer_etm2021.html?id=53">(3) 数据库的实施和维护</a></p>
+    </div>
+
+  </div>
+
+  <!--    反思部分 -->
+  <div class="nav-contents reflection" style="display: none;">
+    <h1>反思部分</h1>
+    <!--    这部分可以写反思 以及展示反思内容 跟videoPlayer中的笔记功能是一样的-->
+    <div class=row>
+      <div class="reflections-container">
+        <div class="write-reflections" style="display: block;">
+          <div style="height: 250px;width: 100%;">
+            <!-- <textarea style="height: 200px;width: 80%;" class="write-notes-content"></textarea>
+            <button type="button" class="btn btn-default notes-submit" style=" display: inline-block;position: absolute;bottom: 0px;">提交</button> -->
+            <div class="form-horizontal col-md-7">
+              <div class="form-group">
+                <label class="col-sm-2 control-label">章节标题</label>
+                <div class="col-sm-5">
+                  <input type="text" class="form-control write-reflections-title" id="inputTitle" placeholder="">
+                </div>
+              </div>
+              <div class="form-group">
+                <label  class="col-sm-2 control-label">内容</label>
+                <div class="col-sm-9">
+                  <textarea class="form-control write-reflections-content" rows="5"></textarea>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-3">
+                  <button type="button" class="btn btn-default reflections-submit">添加</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 左对齐 -->
+        <div class="reflections">
+          <!--                    <div class="panel panel-default col-md-8">-->
+          <!--                        <div class="panel-heading ">Panel heading-->
+          <!--                            <div class="btn-group" role="group" >-->
+          <!--                                <button type="button" class="btn btn-default btn-delete">删除</button>-->
+          <!--                                <button type="button" class="btn btn-default btn-update" data-toggle="modal" data-target="#myModal">修改</button>-->
+          <!--                            </div>-->
+          <!--                        </div>-->
+          <!--                        <div class="panel-body">-->
+          <!--                            <p>...</p>-->
+          <!--                        </div>-->
+          <!--                    </div>-->
+          <!--                    <div class="panel panel-default col-md-8">-->
+          <!--                        <div class="panel-heading">Panel heading-->
+          <!--                            <div class="btn-group" role="group" >-->
+          <!--                                <button type="button" class="btn btn-default btn-delete">删除</button>-->
+          <!--                                <button type="button" class="btn btn-default btn-update" data-toggle="modal" data-target="#myModal">修改</button>-->
+          <!--                            </div>-->
+          <!--                        </div>-->
+          <!--                        <div class="panel-body">-->
+          <!--                            <p>...</p>-->
+          <!--                        </div>-->
+          <!--                    </div>-->
+        </div>
+      </div>
+    </div>
+
+    <!-- 点击修改按钮跳出来的模态框部分 -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="exampleModalLabel">修改反思</h4>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="" class="control-label">章节:</label>
+                <input type="text" class="form-control update-reflections-title" id="">
+              </div>
+              <div class="form-group">
+                <label for="message-text" class="control-label">内容:</label>
+                <textarea class="form-control update-reflections-content" id="message-text" rows="5"></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-primary save-update">保存</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-contents multiple-intelli" style="display: none;">
+    <h4><a href="test.html">多元智能测试链接</a></h4>
+  </div>
+
+</div>
+<script type="text/javascript" src="../js/course2020.js"></script>
+<script type="text/javascript" src="../js/base_trace.js"></script>
+</body>
+</html>

@@ -7,17 +7,39 @@
         <id column="id" property="id"></id>
         <result column="user_name" property="userName"></result>
         <result column="user_pass" property="userPass"></result>
+        <result column="course_name" property="courseName"></result>
     </resultMap>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO user_edutec (user_name,user_pass,name,authority) VALUES (#{userName},#{userPass},#{name},#{authority})
+        INSERT INTO user (user_name,user_pass,name,authority) VALUES (#{userName},#{userPass},#{name},#{authority})
     </insert>
 
     <select id="findByUserName" resultMap="UserEntityMap">
-        SELECT * FROM user_edutec WHERE user_name = #{userName}
+        SELECT
+            t3.id,user_name,user_pass,name,authority,course_name
+        FROM(
+                SELECT
+                    t1.id,user_name,user_pass,name,authority,course_id
+                FROM(
+                        SELECT * FROM user WHERE user_name = #{userName}
+                    )t1
+                        JOIN class t2 ON t1.class_id=t2.class_id
+            )t3
+        JOIN course t4 ON t3.course_id = t4.course_id
+
     </select>
 
     <select id="findById" resultMap="UserEntityMap">
-        SELECT * FROM user_edutec WHERE id = #{id}
+        SELECT
+            t3.id,user_name,user_pass,name,authority,course_name
+        FROM(
+                SELECT
+                    t1.id,user_name,user_pass,name,authority,course_id
+                FROM(
+                        SELECT * FROM user WHERE id = #{id}
+                    )t1
+                        JOIN class t2 ON t1.class_id=t2.class_id
+            )t3
+                JOIN course t4 ON t3.course_id = t4.course_id
     </select>
 </mapper>

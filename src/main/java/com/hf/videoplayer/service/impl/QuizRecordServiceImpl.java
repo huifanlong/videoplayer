@@ -17,7 +17,7 @@ public class QuizRecordServiceImpl implements IQuizRecordService {
 
     @Override
     public void creatQuizRecord(QuizRecord quizRecord) {
-        QuizRecord[] resultRecords = quizRecordMapper.findQuizRecordByUidAndQuizId(quizRecord.getQuizId(),quizRecord.getUid());
+        QuizRecord[] resultRecords = quizRecordMapper.findQuizRecordByUidAndQuizId(quizRecord.getVid(),quizRecord.getUid());
         if(resultRecords.length == 0){ //没有答过题
             Integer result = quizRecordMapper.insert(quizRecord);
             if(result != 1){

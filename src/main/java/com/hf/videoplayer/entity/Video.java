@@ -11,6 +11,8 @@ public class Video implements Serializable {
 
     private Integer id;
 
+    private Integer courseId;
+
     private Integer cid;
 
     private String videoName;

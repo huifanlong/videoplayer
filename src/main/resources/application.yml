@@ -7,9 +7,9 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/videoplayer?useUnicode=true&useSSL=false&ch&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
     username: root
-    password: 123456
+    password: in2017912
     hikari:
       max-lifetime: 1800000
       idle-timeout: 600000
 server:
-  port: 8088
+  port: 8080

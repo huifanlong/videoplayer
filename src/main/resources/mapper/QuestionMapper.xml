@@ -5,17 +5,16 @@
 
     <resultMap id="QuestionEntityMap" type="com.hf.videoplayer.entity.Question">
         <id column="id" property="id"></id>
-        <result column="quiz_id" property="quizId"></result>
         <result column="question_id" property="questionId"></result>
         <result column="correct_answer" property="correctAnswer"></result>
     </resultMap>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO quiz_question_edutec_2022 (quiz_id,question_id,title,optionA,optionB,optionC,optionD,correct_answer) VALUES (#{quizId},#{questionId},#{title},#{optionA},#{optionB},#{optionC},#{optionD},#{correctAnswer})
+        INSERT INTO quiz_question (vid,question_id,title,optionA,optionB,optionC,optionD,correct_answer) VALUES (#{vid},#{questionId},#{title},#{optionA},#{optionB},#{optionC},#{optionD},#{correctAnswer})
     </insert>
 
     <select id="findByQuizID" resultMap="QuestionEntityMap">
-        SELECT * FROM quiz_question_edutec_2022 WHERE quiz_id = #{quizId}
+        SELECT * FROM quiz_question WHERE vid = #{vid}
     </select>
 
 </mapper>

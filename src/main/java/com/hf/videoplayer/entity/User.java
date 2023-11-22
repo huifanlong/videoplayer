@@ -19,4 +19,6 @@ public class User implements Serializable {
 
     private Integer authority;
 
+    private String courseName;
+
 }

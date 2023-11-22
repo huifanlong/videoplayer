@@ -21,7 +21,7 @@ $(function(){
         main();
     })
     $("#button2").on("click",function (){  //返回课程页面按钮
-        window.location.href = "../web/course2020.html";
+        window.location.href = "../web/course_edutec.html";
     })
     updateBegin("quiz"+qid);//开始记录此页面登录时间
     window.onbeforeunload = function (){
@@ -169,19 +169,14 @@ $(function(){
     function postData() {
 
         $.post("/quiz_record/create",
-            {"quizId": qid, "answer": answer, "rightQuestionID": right_questionID, "errorQuestionID": error_questionID, "startTime": starttime, "endTime": endtime, "usedTime": time,"score":Math.round(num_of_right/count*100),"numOfRight": num_of_right},
+            {"vid": qid, "answer": answer, "rightQuestionID": right_questionID, "errorQuestionID": error_questionID, "startTime": starttime, "endTime": endtime, "usedTime": time,"score":Math.round(num_of_right/count*100),"numOfRight": num_of_right},
             function (json) {
                 if(json.state!=200){
                     alert(json.message);
+                }else{
+                    console.log("成绩记录成功，vid="+vid);
                 }
             });
     }
 
-    // function gohistory() {
-    //     window.location.href = "../course2020.html";
-    // }
-
-    // function gouserinfo() {
-    //     window.location.href = "{:U('Index/userinfo')}";
-    // }
 })

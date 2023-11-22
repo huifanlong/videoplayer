@@ -16,7 +16,7 @@ public class QuestionMapperTests {
     @Test
     public void insertTest(){
         Question question = new Question();
-        question.setQuizId(100);
+        question.setVid(100);
         question.setQuestionId(100);
         question.setTitle("xxoo");
         question.setOptionA("A");
@@ -29,8 +29,8 @@ public class QuestionMapperTests {
 
     @Test
     public void findByQuizId(){
-        Integer quizID = 1000;
-        Question[] questions = questionMapper.findByQuizID(quizID);
+        Integer vid = 100;
+        Question[] questions = questionMapper.findByQuizID(vid);
         if(questions.length>0){
             for(int i=0;i<questions.length;i++){
                 System.out.println(questions[i].getTitle());

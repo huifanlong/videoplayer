@@ -18,11 +18,11 @@
     </resultMap>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO clickevent_edutec_2022 (uid,vid,event,position,time,state,rate) VALUES (#{uid},#{vid},#{event},#{position},#{time},#{state},#{rate})
+        INSERT INTO clickevent (uid,vid,event,position,time,state,rate) VALUES (#{uid},#{vid},#{event},#{position},#{time},#{state},#{rate})
     </insert>
 
     <select id="findEventsByUidAndVid" resultMap="ClickEventEntityMap">
-        SELECT * FROM clickevent_edutec_2022 WHERE uid = #{uid} AND vid = #{vid}
+        SELECT * FROM clickevent WHERE uid = #{uid} AND vid = #{vid}
     </select>
 
     <insert id="insertMultiple" useGeneratedKeys="true" keyProperty="id">

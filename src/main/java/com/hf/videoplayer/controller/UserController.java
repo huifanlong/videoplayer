@@ -65,6 +65,7 @@ public class UserController extends BaseController{
        session.setAttribute("id",user.getId());
        session.setAttribute("userName",user.getUserName());
        session.setAttribute("name",user.getName());
+       session.setAttribute("courseName",user.getCourseName());
 
 //       System.out.println(getIdFromSession(session));
 //       System.out.println(getUserNameFromSession(session));
